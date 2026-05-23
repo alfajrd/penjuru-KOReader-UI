@@ -1,0 +1,2220 @@
+# Simple UI — KOReader Plugin
+# Copyright (C) 2024 Simple UI Contributors
+# This file is distributed under the same license as the Simple UI package.
+# yokyroll <>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: simpleui\n"
+"Report-Msgid-Bugs-To: yokyroll\n"
+"POT-Creation-Date: 2026-04-11 15:45\n"
+"PO-Revision-Date: 2026-04-11 15:46+0300\n"
+"Last-Translator: Mihai Vasiliu <mihai.vasiliu.93@gmail.com>\n"
+"Language-Team: Moldavian\n"
+"Language: ro_MD\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2);\n"
+"X-Generator: Poedit 3.9\n"
+
+#: desktop_modules/module_reading_goals.lua:624
+msgid "  Physical Books  (%d in %s)"
+msgstr "  Cărți fizice  (%d în %s)"
+
+#: desktop_modules/module_reading_goals.lua:639
+msgid "  Set Goal  (%d min/day)"
+msgstr "  Setează obiectiv  (%d min/zi)"
+
+#: desktop_modules/module_reading_goals.lua:618
+msgid "  Set Goal  (%s)"
+msgstr "  Setează obiectiv  (%s)"
+
+#: desktop_modules/module_reading_goals.lua:638
+msgid "  Set Goal  (disabled)"
+msgstr "  Setează obiectiv  (dezactivat)"
+
+#: desktop_modules/module_recent.lua:125
+msgid "%d%%"
+msgstr "%d%%"
+
+#: desktop_modules/module_coverdeck.lua:571
+#: desktop_modules/module_currently.lua:529
+#: desktop_modules/module_new_books.lua:182
+#: desktop_modules/module_recent.lua:159
+msgid "%d%% Read"
+msgstr "%d%% citit"
+
+#: desktop_modules/module_currently.lua:605
+msgid "%s left"
+msgstr "%s rămas"
+
+#: desktop_modules/module_coverdeck.lua:576
+#: desktop_modules/module_currently.lua:553
+#: desktop_modules/module_currently.lua:603
+#: desktop_modules/module_reading_goals.lua:433
+msgid "%s read"
+msgstr "%s citit"
+
+#: desktop_modules/module_coverdeck.lua:582
+#: desktop_modules/module_currently.lua:572
+msgid "%s remaining"
+msgstr "%s rămas"
+
+#: sui_menu.lua:845
+msgid ""
+"A restart is required to apply the new bar size across all layouts.\n"
+"\n"
+"Restart now?"
+msgstr ""
+"O repornire este necesară pentru a aplica noua mărime a barei pentru toate "
+"aspectele.\n"
+"\n"
+"Repornești acum?"
+
+#: sui_menu.lua:2174
+msgid "About"
+msgstr "Despre"
+
+#: desktop_modules/module_coverdeck.lua:750
+msgid "Above"
+msgstr "Deasupra"
+
+#: sui_menu.lua:1319 desktop_modules/module_quick_actions.lua:288
+msgid "Add at least 2 actions to arrange."
+msgstr "Adaugă cel puțin 2 acțiuni pentru a le putea aranja."
+
+#: desktop_modules/module_tbr.lua:409
+msgid "Add at least 2 books to arrange."
+msgstr "Adaugă cel puțin 2 cărți pentru a le putea aranja."
+
+#: desktop_modules/module_reading_stats.lua:485
+msgid "Add at least 2 stats to arrange."
+msgstr "Adaugă cel puțin 2 statistici pentru a le putea aranja."
+
+#: desktop_modules/module_tbr.lua:265
+msgid "Add to To Be Read"
+msgstr "Adaugă la „De citit”"
+
+#: desktop_modules/module_reading_stats.lua:66
+msgid "All time — Books"
+msgstr "Dintotdeauna — Cărți"
+
+#: desktop_modules/module_reading_stats.lua:65
+msgid "All time — Time"
+msgstr "Dintotdeauna — Timp"
+
+#: desktop_modules/module_reading_goals.lua:607
+msgid "Annual Goal"
+msgstr "Obiectiv anual"
+
+#: sui_menu.lua:1229 desktop_modules/module_reading_goals.lua:353
+msgid "Annual Reading Goal"
+msgstr "Obiectiv anual de citit"
+
+#: sui_config.lua:1626 sui_config.lua:1707 sui_menu.lua:765 sui_menu.lua:835
+#: sui_menu.lua:1736 sui_menu.lua:1771
+msgid "Apply"
+msgstr "Aplică"
+
+#: desktop_modules/module_clock.lua:54
+msgid "April"
+msgstr "aprilie"
+
+#: desktop_modules/module_reading_stats.lua:482
+msgid "Arrange"
+msgstr "Aranjează"
+
+#: sui_menu.lua:1323 desktop_modules/module_quick_actions.lua:300
+msgid "Arrange %s"
+msgstr "Aranjează %s"
+
+#: sui_menu.lua:1045 sui_menu.lua:1096 sui_menu.lua:1111
+msgid "Arrange Buttons"
+msgstr "Aranjează butoanele"
+
+#: desktop_modules/module_collections.lua:622
+#: desktop_modules/module_collections.lua:635
+msgid "Arrange Collections"
+msgstr "Aranjează colecțiile"
+
+#: sui_menu.lua:600 sui_menu.lua:629 sui_menu.lua:1313
+#: desktop_modules/module_currently.lua:863
+#: desktop_modules/module_currently.lua:887
+#: desktop_modules/module_quick_actions.lua:279
+msgid "Arrange Items"
+msgstr "Aranjează elementele"
+
+#: sui_menu.lua:1578
+msgid "Arrange Modules"
+msgstr "Aranjează modulele"
+
+#: desktop_modules/module_reading_stats.lua:491
+msgid "Arrange Reading Stats"
+msgstr "Aranjează statisticile de citit"
+
+#: desktop_modules/module_coverdeck.lua:774
+#: desktop_modules/module_coverdeck.lua:787
+msgid "Arrange Statistics"
+msgstr "Aranjează statisticile"
+
+#: desktop_modules/module_tbr.lua:402 desktop_modules/module_tbr.lua:421
+msgid "Arrange To Be Read list"
+msgstr "Aranjează lista de citit"
+
+#: sui_menu.lua:195 sui_menu.lua:205
+msgid "Arrange tabs"
+msgstr "Aranjează filele"
+
+#: desktop_modules/module_clock.lua:55
+msgid "August"
+msgstr "august"
+
+#: desktop_modules/module_currently.lua:266
+msgid "Author"
+msgstr "Autor"
+
+#: sui_menu.lua:2190
+msgid "Author: %s"
+msgstr "Autor: %s"
+
+#: sui_foldercovers.lua:540 sui_foldercovers.lua:605
+#: desktop_modules/module_collections.lua:583
+msgid "Auto (first book)"
+msgstr ""
+
+#: sui_titlebar.lua:55
+msgid "Back"
+msgstr "Înapoi"
+
+#: desktop_modules/module_collections.lua:662
+msgid "Badge position: Bottom"
+msgstr "Poziția insignei: jos"
+
+#: desktop_modules/module_collections.lua:663
+msgid "Badge position: Top"
+msgstr "Poziția insignei: sus"
+
+#: sui_config.lua:162
+msgid "Battery"
+msgstr "Baterie"
+
+#: desktop_modules/module_coverdeck.lua:758
+msgid "Below"
+msgstr "Dedesubt"
+
+#: sui_quickactions.lua:569
+msgid "Book Info"
+msgstr "Informații carte"
+
+#: sui_bottombar.lua:1035
+msgid "Bookmark browser"
+msgstr "Navigator semne de carte"
+
+#: sui_bottombar.lua:967
+msgid "Bookmark browser not available."
+msgstr "Navigatorul de semne de carte nu este disponibil."
+
+#: sui_config.lua:137
+msgid "Bookmarks"
+msgstr "Marcaje"
+
+#: desktop_modules/module_reading_goals.lua:354
+msgid "Books to read in %s:"
+msgstr "Cărți de citit în %s:"
+
+#: sui_menu.lua:1941 sui_menu.lua:2036 sui_menu.lua:2098
+msgid "Bottom"
+msgstr "Zona inferioară"
+
+#: sui_bottombar.lua:843 sui_menu.lua:802
+msgid "Bottom Bar"
+msgstr "Bara de jos"
+
+#: sui_menu.lua:828
+msgid "Bottom Bar Size"
+msgstr "Mărime bară de jos"
+
+#: sui_menu.lua:810
+msgid ""
+"Bottom Bar will be %s after restart.\n"
+"\n"
+"Restart now?"
+msgstr ""
+"Bara de jos va fi %s după repornire.\n"
+"\n"
+"Repornești acum?"
+
+#: sui_menu.lua:861 sui_menu.lua:864
+msgid "Bottom Margin"
+msgstr "Marginea de jos"
+
+#: sui_menu.lua:862
+msgid "Bottom Margin — %d%%"
+msgstr ""
+
+#: sui_config.lua:139 sui_config.lua:161
+msgid "Brightness"
+msgstr "Luminozitate"
+
+#: sui_menu.lua:1161
+msgid "Button Size"
+msgstr "Mărime buton"
+
+#: sui_bottombar.lua:1060 sui_bottombar.lua:1745 sui_config.lua:1627
+#: sui_config.lua:1708 sui_foldercovers.lua:569 sui_foldercovers.lua:636
+#: sui_menu.lua:562 sui_menu.lua:766 sui_menu.lua:836 sui_menu.lua:1737
+#: sui_menu.lua:1772 sui_quickactions.lua:358 sui_quickactions.lua:444
+#: sui_quickactions.lua:552 sui_quickactions.lua:756 sui_quickactions.lua:827
+#: sui_quickactions.lua:855 sui_quickactions.lua:883 sui_quickactions.lua:899
+#: sui_quickactions.lua:1011 sui_quickactions.lua:1153 sui_updater.lua:421
+#: sui_updater.lua:438 desktop_modules/module_collections.lua:609
+#: desktop_modules/module_quote.lua:959
+#: desktop_modules/module_reading_goals.lua:357
+#: desktop_modules/module_reading_goals.lua:373
+#: desktop_modules/module_reading_goals.lua:390
+msgid "Cancel"
+msgstr "Anulează"
+
+#: desktop_modules/module_reading_stats.lua:433
+msgid "Cards"
+msgstr "Carduri"
+
+#: sui_menu.lua:616 sui_menu.lua:2090
+msgid "Center"
+msgstr "Centru"
+
+#: sui_quickactions.lua:1060
+msgid "Change Icons"
+msgstr "Schimbă pictogramele"
+
+#: sui_menu.lua:2195
+msgid "Check for Updates"
+msgstr "Verifică pentru actualizări"
+
+#: sui_updater.lua:460
+msgid "Checking for updates…"
+msgstr "Se verifică pentru actualizări…"
+
+#: sui_config.lua:159 desktop_modules/module_clock.lua:227
+msgid "Clock"
+msgstr "Ceas"
+
+#: sui_titlebar.lua:59
+msgid "Close"
+msgstr "Închide"
+
+#: sui_quickactions.lua:477
+msgid "Codepoint out of valid Unicode range (0–10FFFF)."
+msgstr "Codul se află în afara intervalului Unicode valid (0–10FFFF)."
+
+#: sui_quickactions.lua:893
+msgid "Collection"
+msgstr "Colecție"
+
+#: desktop_modules/module_collections.lua:570
+#: desktop_modules/module_collections.lua:576
+msgid "Collection is empty."
+msgstr "Colecția este goală."
+
+#: sui_quickactions.lua:1245
+msgid "Collection not available: %s"
+msgstr "Colecția nu este disponibilă: %s"
+
+#: sui_bottombar.lua:1046 sui_config.lua:133 sui_quickactions.lua:571
+#: desktop_modules/module_collections.lua:298
+#: desktop_modules/module_collections.lua:299
+#: desktop_modules/module_collections.lua:318
+#: desktop_modules/module_collections.lua:620
+msgid "Collections"
+msgstr "Colecții"
+
+#: sui_patches.lua:906
+msgid "Collections (%1)"
+msgstr "Colecții (%1)"
+
+#: sui_bottombar.lua:1323
+msgid "Collections not available."
+msgstr "Colecțiile nu sînt disponibile."
+
+#: sui_menu.lua:1165 desktop_modules/module_currently.lua:964
+#: desktop_modules/module_reading_goals.lua:594
+msgid "Compact"
+msgstr "Compact"
+
+#: sui_quickactions.lua:367
+msgid "Confirm"
+msgstr "Confirmă"
+
+#: sui_config.lua:135
+msgid "Continue"
+msgstr "Continuă"
+
+#: desktop_modules/module_coverdeck.lua:325
+msgid "Cover Deck"
+msgstr "Pachet de coperți"
+
+#: desktop_modules/module_collections.lua:613
+msgid "Cover for \"%s\""
+msgstr "Copertă pentru „%s”"
+
+#: desktop_modules/module_collections.lua:651
+#: desktop_modules/module_collections.lua:653
+#: desktop_modules/module_coverdeck.lua:707
+#: desktop_modules/module_coverdeck.lua:708
+#: desktop_modules/module_currently.lua:811
+#: desktop_modules/module_currently.lua:813
+#: desktop_modules/module_new_books.lua:260
+#: desktop_modules/module_new_books.lua:262
+#: desktop_modules/module_recent.lua:256 desktop_modules/module_recent.lua:258
+msgid "Cover size"
+msgstr "Mărime copertă"
+
+#: sui_quickactions.lua:1069
+msgid "Create Quick Action"
+msgstr "Creează o acțiune rapidă"
+
+#: sui_config.lua:1735 desktop_modules/module_currently.lua:296
+#: desktop_modules/module_currently.lua:297
+#: desktop_modules/module_currently.lua:402
+#: desktop_modules/module_currently.lua:981
+msgid "Currently Reading"
+msgstr "Carte în curs"
+
+#: sui_config.lua:555
+msgid "Custom"
+msgstr ""
+
+#: sui_config.lua:165 sui_menu.lua:554
+msgid "Custom Text"
+msgstr "Text personalizat"
+
+#: sui_menu.lua:1138
+msgid "Custom Title Bar"
+msgstr "Bară de titlu personalizată"
+
+#: sui_menu.lua:1149
+msgid ""
+"Custom Title Bar will be %s after restart.\n"
+"\n"
+"Restart now?"
+msgstr ""
+"Bara de titlu personalizată va fi %s după o repornire.\n"
+"\n"
+"Repornești acum?"
+
+#: desktop_modules/module_reading_goals.lua:628
+msgid "Daily Goal"
+msgstr "Obiectiv zilnic"
+
+#: desktop_modules/module_reading_goals.lua:387
+msgid "Daily Reading Goal"
+msgstr "Obiectiv zilnic de citit"
+
+#: desktop_modules/module_reading_stats.lua:64
+msgid "Daily avg — Pages"
+msgstr "Media zilnică — Pagini"
+
+#: desktop_modules/module_reading_stats.lua:63
+msgid "Daily avg — Time"
+msgstr "Media zilnică — Timp"
+
+#: desktop_modules/module_coverdeck.lua:76
+#: desktop_modules/module_currently.lua:269
+msgid "Days of reading"
+msgstr ""
+
+#: desktop_modules/module_clock.lua:56
+msgid "December"
+msgstr "decembrie"
+
+#: sui_menu.lua:352 sui_menu.lua:481 sui_menu.lua:1166 sui_quickactions.lua:512
+#: desktop_modules/module_currently.lua:954
+#: desktop_modules/module_quick_actions.lua:401
+#: desktop_modules/module_quick_actions.lua:406
+#: desktop_modules/module_reading_goals.lua:586
+msgid "Default"
+msgstr "Implicit"
+
+#: sui_quickactions.lua:801 sui_quickactions.lua:820
+msgid "Default (Folder)"
+msgstr ""
+
+#: sui_quickactions.lua:847
+msgid "Default (Plugin)"
+msgstr "Implicit (plugin)"
+
+#: sui_quickactions.lua:875
+msgid "Default (System)"
+msgstr "Implicit (sistem)"
+
+#: desktop_modules/module_quote.lua:1042
+msgid "Default Quotes"
+msgstr ""
+
+#: sui_quickactions.lua:1147 sui_quickactions.lua:1152
+msgid "Delete"
+msgstr "Șterge"
+
+#: sui_quickactions.lua:1151
+msgid "Delete quick action \"%s\"?"
+msgstr "Ștergi acțiunea rapidă „%s”?"
+
+#: sui_quickactions.lua:574
+msgid "Dictionary Lookup"
+msgstr "Căutare în dicționar"
+
+#: sui_menu.lua:1230
+msgid "Digital Goal  (%s)"
+msgstr "Obiectiv digital  (%s)"
+
+#: sui_menu.lua:1756
+msgid "Disable \"Lock Scale\" first to set a custom label scale."
+msgstr ""
+"Dezactivează mai întîi „Blochează scalarea” pentru a seta o scalare pentru "
+"etichete."
+
+#: sui_config.lua:1611
+msgid "Disable \"Lock Scale\" first to set a per-module scale."
+msgstr ""
+"Dezactivează mai întîi „Blochează scalarea” pentru a seta o scalare per "
+"modul."
+
+#: sui_config.lua:163
+msgid "Disk Usage"
+msgstr "Utilizare disc"
+
+#: sui_quickactions.lua:1206
+msgid "Dispatcher not available."
+msgstr "Dispecerul nu este disponibil."
+
+#: sui_menu.lua:389
+msgid "Dot Pager"
+msgstr "Paginare cu puncte"
+
+#: sui_updater.lua:437
+msgid "Download and install"
+msgstr "Descarcă și instalează"
+
+#: sui_updater.lua:348
+msgid "Download error: "
+msgstr "Eroare descărcare: "
+
+#: sui_updater.lua:323
+msgid "Downloading Simple UI %s…"
+msgstr "Se descarcă Simple UI %s…"
+
+#: sui_quickactions.lua:1137
+msgid "Edit"
+msgstr "Editează"
+
+#: sui_menu.lua:546 sui_menu.lua:548
+msgid "Edit Custom Text"
+msgstr "Editează text personalizat"
+
+#: sui_quickactions.lua:702
+msgid "Edit Quick Action"
+msgstr "Editează acțiunile rapide"
+
+#: sui_quickactions.lua:441
+msgid ""
+"Enter the Unicode codepoint (hex) of a Nerd Fonts symbol.\n"
+"You can look up codes with wakamaifondue.com using the file:\n"
+"  /koreader/fonts/nerdfonts/symbols.ttf\n"
+"Leave blank and press OK to remove a Nerd Font icon."
+msgstr ""
+"Tastează codul Unicode (hex) al unui simbol Nerd Fonts.\n"
+"Poți vizualiza codurile prin wakamaifondue.com folosind fișierul:\n"
+"  /koreader/fonts/nerdfonts/symbols.ttf\n"
+"Lasă spațiul gol și apasă OK pentru a șterge pictograma Nerd Fonts."
+
+#: sui_updater.lua:466
+msgid "Error checking for updates."
+msgstr "Eroare la verificarea pentru actualizări."
+
+#: sui_updater.lua:471
+msgid "Error checking for updates: "
+msgstr "Eroare la verificarea pentru actualizări: "
+
+#: sui_menu.lua:457
+msgid "Extra Small"
+msgstr "Extra mic"
+
+#: sui_updater.lua:350
+msgid "Extraction error: "
+msgstr "Eroare extracție: "
+
+#: sui_config.lua:136 sui_quickactions.lua:570
+msgid "Favorites"
+msgstr "Favorite"
+
+#: sui_bottombar.lua:1373
+msgid "Favorites not available."
+msgstr "Favoritele nu sînt disponibile."
+
+#: desktop_modules/module_clock.lua:54
+msgid "February"
+msgstr "februarie"
+
+#: sui_bottombar.lua:989
+msgid "Fetching bookmarks…"
+msgstr "Se preiau semnele de carte…"
+
+#: sui_quickactions.lua:572
+msgid "File Search"
+msgstr "Căutare de fișiere"
+
+#: desktop_modules/module_quick_actions.lua:401
+#: desktop_modules/module_quick_actions.lua:415
+#: desktop_modules/module_reading_stats.lua:443
+msgid "Flat"
+msgstr "Plat"
+
+#: sui_quickactions.lua:891
+msgid "Folder"
+msgstr "Dosar"
+
+#: sui_menu.lua:1979
+msgid "Folder Covers"
+msgstr "Coperți dosare"
+
+#: sui_menu.lua:2058
+msgid "Folder Name"
+msgstr "Nume dosar"
+
+#: sui_menu.lua:2110
+msgid "Folder Name Text Size"
+msgstr "Mărime text nume dosar"
+
+#: sui_quickactions.lua:573
+msgid "Folder Shortcuts"
+msgstr "Scurtături dosare"
+
+#: sui_foldercovers.lua:641
+msgid "Folder cover"
+msgstr "Copertă dosar"
+
+#: desktop_modules/module_clock.lua:51
+msgid "Friday"
+msgstr "vineri"
+
+#: sui_bottombar.lua:1510
+msgid "Frontlight not available on this device."
+msgstr "Iluminarea nu este disponibilă pe acest dispozitiv."
+
+#: sui_menu.lua:349
+msgid "General"
+msgstr "General"
+
+#: sui_menu.lua:1730
+msgid ""
+"Global scale for all modules.\n"
+"Individual overrides in Module Settings take precedence.\n"
+"100% is the default size."
+msgstr ""
+"Scalare globală pentru toate modulele.\n"
+"Setările individuale din „Setări module” au prioritate.\n"
+"Dimensiunea implicită este 100%."
+
+#: sui_menu.lua:1999
+msgid "Group Books by Series"
+msgstr "Grupează cărțile după serie"
+
+#: sui_menu.lua:829
+msgid ""
+"Height of the bottom navigation bar.\n"
+"100% is the default size."
+msgstr ""
+"Înălțimea barei de navigare de jos.\n"
+"Înălțimea implicită este 100%."
+
+#: sui_menu.lua:759
+msgid ""
+"Height of the top status bar.\n"
+"100% is the default size."
+msgstr ""
+"Înălțimea barei de stare de sus.\n"
+"Înălțimea implicită este 100%."
+
+#: sui_menu.lua:373 sui_menu.lua:432 sui_menu.lua:921 sui_menu.lua:2017
+#: sui_menu.lua:2061
+msgid "Hidden"
+msgstr "Ascuns"
+
+#: sui_menu.lua:1346 desktop_modules/module_quick_actions.lua:329
+msgid "Hide Text"
+msgstr "Ascunde textul"
+
+#: sui_menu.lua:528
+msgid "Hide Wi-Fi icon when off"
+msgstr "Ascunde pictograma Wi-Fi cînd este oprit"
+
+#: sui_menu.lua:2132
+msgid "Hide selection underline"
+msgstr "Ascunde sublinierea selecției"
+
+#: sui_menu.lua:440
+msgid ""
+"Hides the pagination bar on the homescreen.\n"
+"Not available when Navpager is active."
+msgstr ""
+"Ascunde bara de paginare din ecranul Acasă.\n"
+"Nu este disponibilă cînd Navpager este activ."
+
+#: sui_bottombar.lua:1039 sui_config.lua:134 sui_quickactions.lua:568
+msgid "History"
+msgstr "Istoric"
+
+#: sui_bottombar.lua:1327
+msgid "History not available."
+msgstr "Istoricul nu este disponibil."
+
+#: sui_config.lua:132
+msgid "Home"
+msgstr "Acasă"
+
+#: sui_menu.lua:386 sui_menu.lua:1821 sui_menu.lua:1939 sui_patches.lua:503
+#: sui_patches.lua:526
+msgid "Home Screen"
+msgstr "Ecranul Acasă"
+
+#: sui_bottombar.lua:1056
+msgid "Home folder"
+msgstr "Dosarul Acasă"
+
+#: sui_bottombar.lua:1058
+msgid "Home folder + subfolders"
+msgstr "Dosarul Acasă + subdosare"
+
+#: sui_homescreen.lua:1041
+msgid "Homescreen"
+msgstr "Ecranul Acasă"
+
+#: sui_bottombar.lua:1368
+msgid "Homescreen not available."
+msgstr "Ecranul Acasă nu este disponibil."
+
+#: sui_quickactions.lua:711 sui_quickactions.lua:715
+msgid "Icon"
+msgstr "Pictogramă"
+
+#: sui_menu.lua:883 sui_menu.lua:886
+msgid "Icon Size"
+msgstr "Mărime pictograme"
+
+#: sui_menu.lua:884
+msgid "Icon Size — %d%%"
+msgstr "Mărime pictograme — %d%%"
+
+#: sui_quickactions.lua:706
+msgid "Icon: Default"
+msgstr "Pictogramă: Implicit"
+
+#: sui_menu.lua:103
+msgid "Icons"
+msgstr "Pictograme"
+
+#: sui_menu.lua:104
+msgid "Icons only"
+msgstr "Doar pictograme"
+
+#: sui_menu.lua:1058
+msgid ""
+"Invalid arrangement.\n"
+"Keep items between the Left and Right separators."
+msgstr ""
+"Aranjament invalid.\n"
+"Păstrează elementele între separatoarele stînga și dreapta."
+
+#: sui_menu.lua:643
+msgid ""
+"Invalid arrangement.\n"
+"Keep the Left, Center and Right separators in order."
+msgstr ""
+"Aranjament invalid.\n"
+"Păstrează separatoarele stînga, centru, și dreapta în această ordine."
+
+#: sui_quickactions.lua:483
+msgid "Invalid input. Please enter 1–6 hexadecimal digits (0–9, A–F)."
+msgstr "Intrare invalidă. Întrodu 1–6 cifre hexazecimale (0–9, A–F)."
+
+#: sui_menu.lua:778 sui_menu.lua:1356 desktop_modules/module_coverdeck.lua:769
+#: desktop_modules/module_currently.lua:983
+#: desktop_modules/module_quick_actions.lua:339
+msgid "Items"
+msgstr "Elemente"
+
+#: desktop_modules/module_clock.lua:54
+msgid "January"
+msgstr "ianuarie"
+
+#: desktop_modules/module_clock.lua:55
+msgid "July"
+msgstr "iulie"
+
+#: desktop_modules/module_clock.lua:55
+msgid "June"
+msgstr "iunie"
+
+#: sui_menu.lua:410
+msgid "KOReader"
+msgstr "KOReader"
+
+#: sui_menu.lua:1764
+msgid "Label Scale"
+msgstr ""
+
+#: sui_menu.lua:903 sui_menu.lua:906
+msgid "Label Size"
+msgstr "Mărime etichete"
+
+#: sui_menu.lua:904
+msgid "Label Size — %d%%"
+msgstr "Mărime etichete — %d%%"
+
+#: sui_menu.lua:1749
+msgid "Labels"
+msgstr "Etichete"
+
+#: sui_menu.lua:1167
+msgid "Large"
+msgstr "Mare"
+
+#: sui_menu.lua:337 sui_menu.lua:742 sui_menu.lua:811 sui_menu.lua:847
+#: sui_menu.lua:1153 sui_menu.lua:1920 sui_updater.lua:361
+msgid "Later"
+msgstr "Mai tîrziu"
+
+#: sui_menu.lua:610 sui_menu.lua:1028
+msgid "Left"
+msgstr "Stînga"
+
+#: sui_config.lua:131 sui_config.lua:403 sui_menu.lua:1960 sui_titlebar.lua:720
+msgid "Library"
+msgstr "Bibliotecă"
+
+#: sui_menu.lua:1171
+msgid "Library Buttons"
+msgstr "Butoane bibliotecă"
+
+#: desktop_modules/module_reading_stats.lua:453
+msgid "List"
+msgstr "Listă"
+
+#: sui_menu.lua:1710
+msgid "Lock Scale"
+msgstr "Blochează scalarea"
+
+#: desktop_modules/module_clock.lua:54
+msgid "March"
+msgstr "martie"
+
+#: desktop_modules/module_collections.lua:709
+msgid "Maximum 5 collections. Remove one first."
+msgstr "Maxim 5 colecții. Șterge una mai întîi."
+
+#: desktop_modules/module_clock.lua:55
+msgid "May"
+msgstr "mai"
+
+#: sui_titlebar.lua:54 sui_titlebar.lua:58
+msgid "Menu"
+msgstr "Meniu"
+
+#: sui_menu.lua:261
+msgid "Minimum 1 tab required in navpager mode."
+msgstr "Cel puțin 1 filă este necesară în modul Navpager."
+
+#: sui_menu.lua:262
+msgid "Minimum 2 tabs required. Select another tab first."
+msgstr "Minim 2 file necesare. Alege mai întîi altă filă."
+
+#: desktop_modules/module_reading_goals.lua:388
+msgid "Minutes per day:"
+msgstr "Minute pe zi:"
+
+#: sui_menu.lua:1727
+msgid "Module Scale"
+msgstr "Scalare module"
+
+#: sui_menu.lua:1702
+msgid "Module Settings"
+msgstr "Setări modul"
+
+#: sui_menu.lua:1721
+msgid "Modules"
+msgstr "Module"
+
+#: sui_menu.lua:1473
+msgid "Modules  (%d)"
+msgstr ""
+
+#: desktop_modules/module_clock.lua:50
+msgid "Monday"
+msgstr "luni"
+
+#: desktop_modules/module_quote.lua:1062
+msgid "My Highlights"
+msgstr "Evidențierile mele"
+
+#: sui_quickactions.lua:800 sui_quickactions.lua:819 sui_quickactions.lua:846
+#: sui_quickactions.lua:874
+msgid "Name"
+msgstr "Nume"
+
+#: sui_menu.lua:1943
+msgid "Navigation Bar"
+msgstr ""
+
+#: sui_menu.lua:362
+msgid "Navpager"
+msgstr "Navpager"
+
+#: sui_menu.lua:369
+msgid ""
+"Navpager enabled.\n"
+"\n"
+"Restart now?"
+msgstr ""
+"Navpager activat.\n"
+"\n"
+"Repornești acum?"
+
+#: sui_quickactions.lua:438
+msgid "Nerd Font Icon"
+msgstr "Pictogramă Nerd Font"
+
+#: sui_quickactions.lua:523
+msgid "Nerd Font symbol…"
+msgstr ""
+
+#: sui_bottombar.lua:1437
+msgid "Network manager unavailable."
+msgstr "Managerul de rețea nu este disponibil."
+
+#: desktop_modules/module_new_books.lua:180
+msgid "New"
+msgstr "Nou"
+
+#: desktop_modules/module_new_books.lua:46
+#: desktop_modules/module_new_books.lua:47
+#: desktop_modules/module_new_books.lua:107
+#: desktop_modules/module_new_books.lua:280
+msgid "New Books"
+msgstr "Cărți noi"
+
+#: sui_quickactions.lua:702
+msgid "New Quick Action"
+msgstr "Acțiune rapidă nouă"
+
+#: sui_quickactions.lua:1008
+msgid "New name…"
+msgstr "Nume nou…"
+
+#: sui_bottombar.lua:293
+msgid "Next"
+msgstr "Urm."
+
+#: sui_updater.lua:419
+msgid ""
+"No automatic update file was found.\n"
+"\n"
+"Open the releases page on GitHub?"
+msgstr ""
+"Nu a fost găsit niciun fișier pentru actualizare automată.\n"
+"\n"
+"Deschizi pagina de release-uri pe GitHub?"
+
+#: sui_bottombar.lua:1395
+msgid "No book in history."
+msgstr "Nicio carte în istoric."
+
+#: sui_foldercovers.lua:594
+msgid "No books found in this folder."
+msgstr "Nicio carte găsită în acest dosar."
+
+#: sui_foldercovers.lua:529
+msgid "No books found in this series."
+msgstr "Nicio carte găsită în această serie."
+
+#: desktop_modules/module_tbr.lua:455
+msgid "No books in To Be Read list."
+msgstr "Nicio carte în lista de citit."
+
+#: sui_homescreen.lua:190
+msgid "No books opened yet"
+msgstr "Nicio carte deschisă încă"
+
+#: desktop_modules/module_collections.lua:673
+msgid "No collections found."
+msgstr "Nicio colecție găsită."
+
+#: desktop_modules/module_collections.lua:378
+msgid "No collections selected"
+msgstr "Nicio colecție selectată"
+
+#: sui_quickactions.lua:1252
+msgid ""
+"No folder, collection or plugin configured.\n"
+"Go to Simple UI → Settings → Quick Actions to set one."
+msgstr ""
+"Nu a fost configurat niciun dosar, colecție sau plugin.\n"
+"Accesează Simple UI → Setări → Acțiuni rapide pentru a seta una."
+
+#: desktop_modules/module_quote.lua:746
+msgid "No highlights found. Open a book and highlight some passages."
+msgstr ""
+"Nicio evidențiere găsită. Deschide o carte și evidențiează niște pasaje."
+
+#: sui_quickactions.lua:536
+msgid "No icons found in:"
+msgstr "Nicio pictogramă găsită în:"
+
+#: sui_quickactions.lua:836
+msgid "No plugins found."
+msgstr "Niciun plugin găsit."
+
+#: desktop_modules/module_quote.lua:712
+msgid "No quotes found."
+msgstr "Niciun citat găsit."
+
+#: desktop_modules/module_reading_stats.lua:286
+msgid "No stats selected"
+msgstr "Nicio statistică selectată"
+
+#: sui_quickactions.lua:864
+msgid "No system actions found."
+msgstr "Nicio acțiune de sistem găsită."
+
+#: desktop_modules/module_clock.lua:56
+msgid "November"
+msgstr "noiembrie"
+
+#: sui_menu.lua:2014
+msgid "Number of Books in Folder"
+msgstr "Numărul de cărți din dosar"
+
+#: sui_menu.lua:1478 sui_menu.lua:2046
+msgid "Number of Pages"
+msgstr "Numărul de pagini"
+
+#: sui_menu.lua:496
+msgid "Number of Pages in Title Bar Always"
+msgstr "Numărul de pagini mereu în bara de titlu"
+
+#: sui_quickactions.lua:451
+msgid "OK"
+msgstr "OK"
+
+#: desktop_modules/module_clock.lua:56
+msgid "October"
+msgstr "octombrie"
+
+#: sui_menu.lua:733 sui_menu.lua:802 sui_menu.lua:992 sui_menu.lua:1138
+#: sui_menu.lua:1821 sui_menu.lua:1902
+msgid "Off"
+msgstr "Dezactivat"
+
+#: sui_menu.lua:733 sui_menu.lua:802 sui_menu.lua:992 sui_menu.lua:1138
+#: sui_menu.lua:1821 sui_menu.lua:1902
+msgid "On"
+msgstr "Activat"
+
+#: sui_homescreen.lua:420 desktop_modules/module_quote.lua:958
+msgid "Open"
+msgstr "Deschide"
+
+#: sui_homescreen.lua:199
+msgid "Open a book to get started"
+msgstr "Deschide o carte pentru a începe"
+
+#: sui_updater.lua:420
+msgid "Open in browser"
+msgstr "Deschide în navigator"
+
+#: sui_homescreen.lua:419 desktop_modules/module_quote.lua:957
+msgid "Open this file?"
+msgstr "Deschizi această carte?"
+
+#: sui_menu.lua:2010
+msgid "Overlays"
+msgstr "Overlay-uri"
+
+#: sui_homescreen.lua:1611 sui_patches.lua:1567
+msgid "Page %1 of %2"
+msgstr ""
+
+#: sui_menu.lua:1944
+msgid "Pagination Bar"
+msgstr ""
+
+#: sui_menu.lua:379
+msgid ""
+"Pagination bar hidden.\n"
+"\n"
+"Restart now?"
+msgstr ""
+"Bara de paginare a fost ascunsă.\n"
+"\n"
+"Repornești acum?"
+
+#: sui_menu.lua:358
+msgid ""
+"Pagination bar set to Default.\n"
+"\n"
+"Restart now?"
+msgstr ""
+"Bara de paginare a fost setată la implicit.\n"
+"\n"
+"Repornești acum?"
+
+#: sui_menu.lua:465 sui_menu.lua:477 sui_menu.lua:489
+msgid ""
+"Pagination bar size will change after restart.\n"
+"\n"
+"Restart now?"
+msgstr ""
+"Mărimea barei de paginare se va schimba după o repornire.\n"
+"\n"
+"Repornești acum?"
+
+#: sui_quickactions.lua:783
+msgid "Path chooser not available."
+msgstr "Selectorul de căi nu este disponibil."
+
+#: desktop_modules/module_recent.lua:304
+msgid "Percentage overlay on cover"
+msgstr "Overlay de procentaj pe copertă"
+
+#: desktop_modules/module_coverdeck.lua:75
+#: desktop_modules/module_currently.lua:268
+#: desktop_modules/module_currently.lua:911
+msgid "Percentage read"
+msgstr ""
+
+#: desktop_modules/module_recent.lua:294
+msgid "Percentage text"
+msgstr ""
+
+#: desktop_modules/module_reading_goals.lua:370
+msgid "Physical Books — %s"
+msgstr "Cărți fizice — %s"
+
+#: desktop_modules/module_reading_goals.lua:371
+msgid "Physical books read this year:"
+msgstr "Cărți fizice citite anul acesta:"
+
+#: sui_menu.lua:2139
+msgid "Placeholder cover for bookless folders"
+msgstr "Copertă implicită pentru dosarele fără cărți"
+
+#: sui_quickactions.lua:895
+msgid "Plugin"
+msgstr "Plugin"
+
+#: sui_quickactions.lua:1237
+msgid "Plugin error: %s"
+msgstr "Eroare plugin: %s"
+
+#: sui_quickactions.lua:1239
+msgid "Plugin not available: %s"
+msgstr ""
+
+#: sui_config.lua:141
+msgid "Power"
+msgstr "Alimentare"
+
+#: sui_bottombar.lua:293
+msgid "Prev"
+msgstr "Ant."
+
+#: desktop_modules/module_currently.lua:267
+#: desktop_modules/module_recent.lua:284
+msgid "Progress bar"
+msgstr ""
+
+#: desktop_modules/module_currently.lua:923
+msgid "Progress bar style"
+msgstr "Stilul barei de progres"
+
+#: sui_menu.lua:1451 sui_menu.lua:1951
+msgid "Quick Actions"
+msgstr "Acțiuni rapide"
+
+#: sui_menu.lua:1955
+msgid "Quick Actions  (%d/%d — %d left)"
+msgstr "Acțiuni rapide  (%d/%d — %d rămase)"
+
+#: sui_menu.lua:1953
+msgid "Quick Actions  (%d/%d — at limit)"
+msgstr "Acțiuni rapide  (%d/%d — la limită)"
+
+#: sui_menu.lua:1289 desktop_modules/module_quick_actions.lua:198
+#: desktop_modules/module_quick_actions.lua:244
+msgid "Quick Actions %d"
+msgstr "Acțiuni rapide %d"
+
+#: sui_bottombar.lua:1736
+msgid "Quit"
+msgstr "Ieșire"
+
+#: desktop_modules/module_quote.lua:822
+msgid "Quote of the Day"
+msgstr "Citatul zilei"
+
+#: desktop_modules/module_quote.lua:1084
+msgid "Quotes + My Highlights"
+msgstr "Citate + Evidențierile mele"
+
+#: sui_config.lua:164
+msgid "RAM Usage"
+msgstr "Utilizare RAM"
+
+#: desktop_modules/module_reading_goals.lua:442
+#: desktop_modules/module_reading_goals.lua:443
+#: desktop_modules/module_reading_goals.lua:468
+#: desktop_modules/module_reading_goals.lua:606
+msgid "Reading Goals"
+msgstr "Obiective citire"
+
+#: desktop_modules/module_reading_stats.lua:218
+msgid "Reading Stats"
+msgstr ""
+
+#: desktop_modules/module_coverdeck.lua:728
+#: desktop_modules/module_recent.lua:62 desktop_modules/module_recent.lua:63
+#: desktop_modules/module_recent.lua:72 desktop_modules/module_recent.lua:281
+msgid "Recent Books"
+msgstr "Cărți recente"
+
+#: desktop_modules/module_tbr.lua:265
+msgid "Remove from To Be Read"
+msgstr "Elimină din „De citit”"
+
+#: sui_quickactions.lua:1006 sui_quickactions.lua:1064
+msgid "Rename"
+msgstr "Redenumește"
+
+#: sui_menu.lua:365
+msgid ""
+"Replaces the pagination bar with Prev/Next arrows at the edges of the bottom "
+"bar.\n"
+"The arrows dim when there is no previous or next page.\n"
+"With navpager active, as few as 1 tab and at most 4 tabs can be configured."
+msgstr ""
+"Înlocuiește bara de paginare cu săgețile „Anteriorul/Următorul” amplasate la "
+"marginile barei de jos.\n"
+"Săgețile se estompează atunci cînd nu există nicio pagină anterioară sau "
+"următoare.\n"
+"Cînd Navpager este activ, se pot configura între 1 și 4 file."
+
+#: sui_menu.lua:1792 sui_quickactions.lua:1015
+msgid "Reset"
+msgstr "Resetează"
+
+#: sui_menu.lua:1791
+msgid "Reset all scales to default (100%)? This cannot be undone."
+msgstr ""
+"Resetezi toate scalările la valoarea implicită (100%)? Această acțiune nu "
+"poate fi anulată."
+
+#: sui_menu.lua:1786
+msgid "Reset to Default Scale"
+msgstr "Resetează la scalarea implicită"
+
+#: sui_bottombar.lua:1715 sui_menu.lua:337 sui_menu.lua:742 sui_menu.lua:811
+#: sui_menu.lua:846 sui_menu.lua:1152 sui_menu.lua:1920 sui_updater.lua:360
+msgid "Restart"
+msgstr "Repornire"
+
+#: sui_menu.lua:1841
+msgid "Return to Book Folder"
+msgstr "Întoarce-te la dosarul cărții"
+
+#: sui_menu.lua:622 sui_menu.lua:1036
+msgid "Right"
+msgstr "Dreapta"
+
+#: desktop_modules/module_clock.lua:51
+msgid "Saturday"
+msgstr "sîmbătă"
+
+#: sui_quickactions.lua:758 sui_quickactions.lua:1026
+#: desktop_modules/module_reading_goals.lua:357
+#: desktop_modules/module_reading_goals.lua:373
+#: desktop_modules/module_reading_goals.lua:390
+msgid "Save"
+msgstr "Salvează"
+
+#: sui_menu.lua:1706 desktop_modules/module_clock.lua:433
+#: desktop_modules/module_clock.lua:435
+#: desktop_modules/module_collections.lua:500
+#: desktop_modules/module_collections.lua:502
+#: desktop_modules/module_coverdeck.lua:698
+#: desktop_modules/module_coverdeck.lua:700
+#: desktop_modules/module_currently.lua:797
+#: desktop_modules/module_currently.lua:799
+#: desktop_modules/module_new_books.lua:246
+#: desktop_modules/module_new_books.lua:248
+#: desktop_modules/module_quick_actions.lua:380
+#: desktop_modules/module_quick_actions.lua:382
+#: desktop_modules/module_quote.lua:1004 desktop_modules/module_quote.lua:1008
+#: desktop_modules/module_reading_goals.lua:566
+#: desktop_modules/module_reading_goals.lua:568
+#: desktop_modules/module_reading_stats.lua:389
+#: desktop_modules/module_reading_stats.lua:391
+#: desktop_modules/module_recent.lua:242 desktop_modules/module_recent.lua:244
+#: desktop_modules/module_tbr.lua:362 desktop_modules/module_tbr.lua:364
+msgid "Scale"
+msgstr "Scalare"
+
+#: desktop_modules/module_currently.lua:827
+msgid ""
+"Scale for all text elements (title, author, progress, time).\n"
+"100% is the default size."
+msgstr ""
+"Scalare pentru toate elementele text (titlu, autor, progres, timp).\n"
+"Mărimea implicită este 100%."
+
+#: desktop_modules/module_quick_actions.lua:394
+msgid ""
+"Scale for the button label text.\n"
+"100% is the default size."
+msgstr ""
+"Scalare pentru eticheta butoanelor.\n"
+"Mărimea implicită este 100%."
+
+#: desktop_modules/module_collections.lua:516
+msgid ""
+"Scale for the collection name text.\n"
+"100% is the default size."
+msgstr ""
+"Scalare pentru textul numelui colecției.\n"
+"Mărimea implicită este 100%."
+
+#: desktop_modules/module_collections.lua:654
+msgid ""
+"Scale for the collection thumbnails only.\n"
+"The label text follows the module scale.\n"
+"100% is the default size."
+msgstr ""
+"Scalare doar pentru miniaturile pentru colecții.\n"
+"Textul etichetei urmează scalarea modulului.\n"
+"Mărimea implicită este 100%."
+
+#: desktop_modules/module_currently.lua:814
+msgid ""
+"Scale for the cover thumbnail only.\n"
+"100% is the default size."
+msgstr ""
+"Scalare doar pentru miniatura coperții.\n"
+"Mărimea implicită este 100%."
+
+#: desktop_modules/module_coverdeck.lua:709
+msgid ""
+"Scale for the cover thumbnails only.\n"
+"100% is the default size."
+msgstr ""
+"Scalare doar pentru miniaturile coperților.\n"
+"Mărimea implicită este 100%."
+
+#: desktop_modules/module_new_books.lua:263
+#: desktop_modules/module_recent.lua:259
+msgid ""
+"Scale for the cover thumbnails only.\n"
+"Text and progress bar follow the module scale.\n"
+"100% is the default size."
+msgstr ""
+"Scalare doar pentru miniaturile coperților.\n"
+"Textul și bara de progres folosesc aceeași scalare ca modulul\n"
+"Mărimea implicită este 100%."
+
+#: sui_menu.lua:2111
+msgid ""
+"Scale for the folder name overlay text.\n"
+"100% is the default size."
+msgstr ""
+"Scalare pentru textul suprapus cu numele dosarului.\n"
+"Mărimea implicită este 100%."
+
+#: desktop_modules/module_new_books.lua:275
+msgid ""
+"Scale for the label text.\n"
+"100% is the default size."
+msgstr ""
+"Scalare pentru textul etichetelor.\n"
+"Mărimea implicită este 100%."
+
+#: desktop_modules/module_recent.lua:273
+msgid ""
+"Scale for the percentage read text.\n"
+"100% is the default size."
+msgstr ""
+"Scalare pentru textul de procentaj citit.\n"
+"Mărimea implicită este 100%."
+
+#: desktop_modules/module_coverdeck.lua:701
+msgid "Scale for this module."
+msgstr "Scalare pentru acest modul."
+
+#: desktop_modules/module_clock.lua:436
+#: desktop_modules/module_collections.lua:503
+#: desktop_modules/module_currently.lua:800
+#: desktop_modules/module_new_books.lua:249
+#: desktop_modules/module_quick_actions.lua:383
+#: desktop_modules/module_quote.lua:1010
+#: desktop_modules/module_reading_goals.lua:569
+#: desktop_modules/module_reading_stats.lua:392
+#: desktop_modules/module_recent.lua:245 desktop_modules/module_tbr.lua:365
+msgid ""
+"Scale for this module.\n"
+"100% is the default size."
+msgstr ""
+"Scalare pentru acest modul.\n"
+"Mărimea implicită este 100%."
+
+#: desktop_modules/module_coverdeck.lua:717
+msgid ""
+"Scale for title and statistics text.\n"
+"100% is the default size."
+msgstr ""
+"Scalare pentru textul titlului și statisticilor.\n"
+"Mărimea implicită este 100%."
+
+#: sui_menu.lua:1729
+msgid ""
+"Scales all modules and labels together.\n"
+"100% is the default size."
+msgstr ""
+"Scalează toate modulele și etichetele împreună.\n"
+"Mărimea implicită este 100%."
+
+#: sui_menu.lua:1765
+msgid ""
+"Scales the section label text above each module.\n"
+"100% is the default size."
+msgstr ""
+"Scalează textul etichetei de secțiune de deasupra fiecărui modul.\n"
+"Mărimea implicită este 100%."
+
+#: sui_menu.lua:2154
+msgid "Scan subfolders for cover"
+msgstr "Scanează subdosarele pentru copertă"
+
+#: sui_titlebar.lua:56
+msgid "Search"
+msgstr "Caută"
+
+#: desktop_modules/module_collections.lua:627
+msgid "Select at least 2 collections to arrange."
+msgstr "Selectează cel puțin 2 colecții pentru a le aranja."
+
+#: desktop_modules/module_clock.lua:56
+msgid "September"
+msgstr "septembrie"
+
+#: sui_menu.lua:2052
+msgid "Series Index"
+msgstr "Index serie"
+
+#: sui_foldercovers.lua:574
+msgid "Series cover"
+msgstr "Copertă serie"
+
+#: sui_menu.lua:567
+msgid "Set"
+msgstr "Setează"
+
+#: sui_foldercovers.lua:664
+msgid "Set folder cover…"
+msgstr "Setează copertă dosar…"
+
+#: sui_foldercovers.lua:664
+msgid "Set series cover…"
+msgstr "Setează copertă serie…"
+
+#: sui_menu.lua:1929
+msgid "Settings"
+msgstr "Setări"
+
+#: sui_menu.lua:780 sui_menu.lua:950 sui_menu.lua:1853
+msgid "Settings on Long Tap"
+msgstr "Setări la atingere lungă"
+
+#: desktop_modules/module_clock.lua:466
+msgid "Show Battery"
+msgstr "Arată bateria"
+
+#: desktop_modules/module_clock.lua:454
+msgid "Show Clock"
+msgstr "Arată ceasul"
+
+#: desktop_modules/module_clock.lua:460
+msgid "Show Date"
+msgstr "Arată data"
+
+#: sui_config.lua:1748
+msgid "Show section label"
+msgstr "Arată eticheta secțiunii"
+
+#: sui_menu.lua:500
+msgid ""
+"Shows \"Page X of Y\" in the title bar subtitle when browsing the library, "
+"history or collections.\n"
+"Navpager enables this automatically.\n"
+"Not available when Navpager is active."
+msgstr ""
+"Arată „Pagina X din Y” în subtitlul barei de titlu atunci cînd răsfoiești "
+"biblioteca, istoricul sau colecțiile.\n"
+"Navpager activează acest lucru automat.\n"
+"Nu este disponibil cînd Navpager este activ."
+
+#: sui_menu.lua:397
+msgid ""
+"Shows a row of dots at the bottom of the homescreen.\n"
+"The active page dot is filled; the others are dimmed.\n"
+"Always active when Navpager is selected."
+msgstr ""
+"Arată un rînd de puncte în subsolul ecranului Acasă.\n"
+"Punctul paginii active este plin; celelalte sînt estompate.\n"
+"Mereu activ cînd Navpager este selectat."
+
+#: desktop_modules/module_currently.lua:926
+msgid "Simple"
+msgstr "Simplu"
+
+#: main.lua:541 main.lua:554 sui_menu.lua:1898 sui_menu.lua:1902
+msgid "Simple UI"
+msgstr "Simple UI"
+
+#: sui_updater.lua:407
+msgid ""
+"Simple UI %s is available!\n"
+"You have %s."
+msgstr ""
+"Simple UI %s este disponibil!\n"
+"Momentan folosești %s."
+
+#: sui_updater.lua:357
+msgid ""
+"Simple UI %s successfully installed.\n"
+"\n"
+"Restart KOReader to apply the update?"
+msgstr ""
+"Simple UI %s s-a instalat cu succes.\n"
+"\n"
+"Repornești KOReader pentru a aplica actualizarea?"
+
+#: sui_updater.lua:399
+msgid "Simple UI is up to date (%s)."
+msgstr "Simple UI este la zi (%s)."
+
+#: sui_menu.lua:1919
+msgid ""
+"Simple UI will be %s after restart.\n"
+"\n"
+"Restart now?"
+msgstr ""
+"Simple UI va fi %s după o repornire\n"
+"\n"
+"Repornești acum?"
+
+#: sui_menu.lua:453 sui_menu.lua:752 sui_menu.lua:822
+msgid "Size"
+msgstr "Mărime"
+
+#: sui_menu.lua:887
+msgid ""
+"Size of the tab icons.\n"
+"100% is the default size."
+msgstr ""
+"Mărimea pictogramelor filelor.\n"
+"Mărimea implicită este 100%."
+
+#: sui_menu.lua:907
+msgid ""
+"Size of the tab label text.\n"
+"100% is the default size."
+msgstr ""
+"Mărimea etichetelor filelor.\n"
+"Mărimea implicită este 100%."
+
+#: desktop_modules/module_reading_stats.lua:473
+msgid ""
+"Size of the text inside the stat cards.\n"
+"Does not affect card size or padding.\n"
+"100% is the default size."
+msgstr ""
+"Mărimea textului din interiorul cardurilor de statistici.\n"
+"Acest lucru nu afectează mărimea cardurilor sau spațierea lor.\n"
+"Mărimea implicită este 100%."
+
+#: sui_bottombar.lua:1726
+msgid "Sleep"
+msgstr "Ațipire"
+
+#: sui_menu.lua:469
+msgid "Small"
+msgstr "Mic"
+
+#: desktop_modules/module_coverdeck.lua:725
+#: desktop_modules/module_quote.lua:1036
+msgid "Source"
+msgstr "Sursă"
+
+#: sui_menu.lua:865
+msgid ""
+"Space below the bottom navigation bar.\n"
+"100% is the default spacing."
+msgstr ""
+"Spațiu de sub bara de navigare de jos.\n"
+"Mărimea implicită este 100%."
+
+#: sui_patches.lua:526 sui_patches.lua:528
+msgid "Start with"
+msgstr "Pornește cu"
+
+#: sui_menu.lua:1831
+msgid "Start with Home Screen"
+msgstr "Pornește cu ecranul Acasă"
+
+#: sui_bottombar.lua:1123 sui_bottombar.lua:1408
+msgid "Statistics plugin not available."
+msgstr "Plugin-ul de statistici nu este disponibil."
+
+#: sui_config.lua:140
+msgid "Stats"
+msgstr "Statistici"
+
+#: desktop_modules/module_currently.lua:951
+msgid "Stats layout"
+msgstr "Aspectul statisticilor"
+
+#: sui_menu.lua:1935
+msgid "Status Bar"
+msgstr ""
+
+#: desktop_modules/module_reading_stats.lua:67
+msgid "Streak"
+msgstr "Serie"
+
+#: sui_menu.lua:1176
+msgid "Sub-pages Buttons"
+msgstr "Butoane pentru subpagini"
+
+#: desktop_modules/module_clock.lua:50
+msgid "Sunday"
+msgstr "duminică"
+
+#: sui_menu.lua:518
+msgid "Swipe Indicator"
+msgstr ""
+
+#: sui_quickactions.lua:897
+msgid "System Actions"
+msgstr "Acțiuni de sistem"
+
+#: sui_quickactions.lua:1203
+msgid "System action error: %s"
+msgstr "Eroare acțiune de sistem: %s"
+
+#: sui_menu.lua:945
+msgid "Tabs  (%d/%d — %d left)"
+msgstr ""
+
+#: sui_menu.lua:943
+msgid "Tabs  (%d/%d — at limit)"
+msgstr "File  (%d/%d — la limită)"
+
+#: sui_menu.lua:103
+msgid "Text"
+msgstr "Text"
+
+#: desktop_modules/module_collections.lua:514
+#: desktop_modules/module_collections.lua:515
+#: desktop_modules/module_currently.lua:825
+#: desktop_modules/module_currently.lua:826
+#: desktop_modules/module_new_books.lua:273
+#: desktop_modules/module_new_books.lua:274
+#: desktop_modules/module_quick_actions.lua:390
+#: desktop_modules/module_quick_actions.lua:393
+#: desktop_modules/module_reading_stats.lua:469
+#: desktop_modules/module_reading_stats.lua:472
+#: desktop_modules/module_recent.lua:271 desktop_modules/module_recent.lua:272
+msgid "Text Size"
+msgstr "Mărime text"
+
+#: desktop_modules/module_reading_stats.lua:470
+msgid "Text Size — %d%%"
+msgstr "Mărime text — %d%%"
+
+#: sui_menu.lua:105
+msgid "Text only"
+msgstr "Doar text"
+
+#: sui_menu.lua:2108 desktop_modules/module_coverdeck.lua:715
+#: desktop_modules/module_coverdeck.lua:716
+msgid "Text size"
+msgstr "Mărime text"
+
+#: sui_patches.lua:675
+msgid "The «To Be Read» collection cannot be renamed."
+msgstr "Colecția „De citit” nu poate fi redenumită."
+
+#: desktop_modules/module_clock.lua:51
+msgid "Thursday"
+msgstr "joi"
+
+#: desktop_modules/module_coverdeck.lua:77
+#: desktop_modules/module_currently.lua:270
+msgid "Time read"
+msgstr "Timp citit"
+
+#: desktop_modules/module_coverdeck.lua:78
+#: desktop_modules/module_currently.lua:271
+msgid "Time remaining"
+msgstr "Timp rămas"
+
+#: sui_titlebar.lua:57 desktop_modules/module_currently.lua:265
+msgid "Title"
+msgstr "Titlu"
+
+#: sui_menu.lua:1936
+msgid "Title Bar"
+msgstr ""
+
+#: desktop_modules/module_coverdeck.lua:747
+msgid "Title Position"
+msgstr "Poziție titlu"
+
+#: desktop_modules/module_coverdeck.lua:736 desktop_modules/module_tbr.lua:229
+#: desktop_modules/module_tbr.lua:230 desktop_modules/module_tbr.lua:244
+#: desktop_modules/module_tbr.lua:280 desktop_modules/module_tbr.lua:398
+msgid "To Be Read"
+msgstr "De citit"
+
+#: desktop_modules/module_tbr.lua:450
+msgid "To Be Read books"
+msgstr "Cărți de citit"
+
+#: sui_patches.lua:723 sui_patches.lua:762 sui_patches.lua:794
+#: sui_patches.lua:835
+msgid "To Be Read list is full (max. 5 books)."
+msgstr "Lista „De citit” este plină (max. 5 cărți)."
+
+#: desktop_modules/module_reading_goals.lua:509
+#: desktop_modules/module_reading_goals.lua:511
+#: desktop_modules/module_reading_goals.lua:534
+#: desktop_modules/module_reading_goals.lua:537
+msgid "Today"
+msgstr "Astăzi"
+
+#: desktop_modules/module_reading_stats.lua:62
+msgid "Today — Pages"
+msgstr "Astăzi — Pagini"
+
+#: desktop_modules/module_reading_stats.lua:61
+msgid "Today — Time"
+msgstr "Astăzi — Timp"
+
+#: sui_menu.lua:1933 sui_menu.lua:2028 sui_menu.lua:2082
+msgid "Top"
+msgstr "Zona superioară"
+
+#: sui_menu.lua:733 sui_topbar.lua:507
+msgid "Top Bar"
+msgstr "Bara de sus"
+
+#: sui_menu.lua:758
+msgid "Top Bar Size"
+msgstr "Mărimea barei de sus"
+
+#: sui_menu.lua:741
+msgid ""
+"Top Bar will be %s after restart.\n"
+"\n"
+"Restart now?"
+msgstr ""
+"Bara de sus va fi %s după o repornire.\n"
+"\n"
+"Repornești acum?"
+
+#: sui_homescreen.lua:1681
+msgid "Top Margin  (%d%%)"
+msgstr ""
+
+#: sui_menu.lua:921
+msgid "Top separator"
+msgstr ""
+
+#: sui_menu.lua:2071
+msgid "Transparent"
+msgstr "Transparent"
+
+#: desktop_modules/module_clock.lua:50
+msgid "Tuesday"
+msgstr "marți"
+
+#: sui_menu.lua:934 desktop_modules/module_quick_actions.lua:402
+#: desktop_modules/module_reading_goals.lua:584
+#: desktop_modules/module_reading_stats.lua:430
+msgid "Type"
+msgstr "Stil"
+
+#: sui_menu.lua:2122
+msgid "Uniformize Covers (2:3)"
+msgstr "Uniformizează coperțile (2:3)"
+
+#: sui_updater.lua:377
+msgid "Update cancelled."
+msgstr "Actualizarea a fost anulată."
+
+#: sui_updater.lua:487
+msgid "Update check cancelled."
+msgstr "Verificarea pentru actualizări a fost anulată."
+
+#: sui_menu.lua:2200
+msgid "Updater module not found."
+msgstr "Modulul de actualizare nu a fost găsit."
+
+#: sui_menu.lua:419
+msgid ""
+"Uses the standard KOReader pagination bar on the homescreen.\n"
+"Not available when Navpager is active."
+msgstr ""
+"Folosește bara de paginare standard a KOReader pe ecranul Acasă.\n"
+"Nu este disponibilă cînd Navpager este activ."
+
+#: sui_menu.lua:2185
+msgid "Version: %s"
+msgstr ""
+
+#: sui_homescreen.lua:1684
+msgid ""
+"Vertical space above this module.\n"
+"100% is the default spacing."
+msgstr ""
+"Spațiu vertical deasupra acestui modul.\n"
+"Mărimea implicită este 100%."
+
+#: sui_menu.lua:921
+msgid "Visible"
+msgstr "Vizibil"
+
+#: desktop_modules/module_clock.lua:50
+msgid "Wednesday"
+msgstr "miercuri"
+
+#: sui_updater.lua:412
+msgid "What's new:"
+msgstr ""
+
+#: sui_menu.lua:1854
+msgid ""
+"When enabled, long-pressing a section opens its settings menu.\n"
+"Disable this to prevent the settings menu from appearing on long tap."
+msgstr ""
+"Cînd este activată, apăsarea lungă pe o secțiune va deschide meniul de "
+"setări al acesteia.\n"
+"Dezactivează asta pentru a preveni apariția meniului de setări la apăsarea "
+"lungă."
+
+#: sui_menu.lua:951
+msgid ""
+"When enabled, long-pressing the bottom bar opens its settings menu.\n"
+"Disable this to prevent the settings menu from appearing on long tap."
+msgstr ""
+"Cînd este activată, apăsarea lungă pe bara de jos va deschide meniul de "
+"setări al acesteia.\n"
+"Dezactivează asta pentru a preveni apariția meniului de setări la apăsarea "
+"lungă."
+
+#: sui_menu.lua:781
+msgid ""
+"When enabled, long-pressing the top bar opens its settings menu.\n"
+"Disable this to prevent the settings menu from appearing on long tap."
+msgstr ""
+"Cînd este activată, apăsarea lungă pe bara de sus va deschide meniul de "
+"setări al acesteia.\n"
+"Dezactivează asta pentru a preveni apariția meniului de setări la apăsarea "
+"lungă."
+
+#: sui_menu.lua:1842
+msgid ""
+"When enabled, opening the file browser after finishing or closing a book "
+"navigates to the folder the book is in, matching native KOReader behaviour.\n"
+"When disabled (default), SimpleUI always returns to the library root.\n"
+"This option works independently of \"Start with Home Screen\"."
+msgstr ""
+"Cînd este activată, deschiderea navigatorului de fișiere după terminarea sau "
+"închiderea unei cărți va naviga către dosarul în care se află cartea, exact "
+"ca comportamentul nativ al KOReader.\n"
+"Cînd este dezactivată (implicit), Simple UI se va întoarce automat în "
+"rădăcina bibliotecii."
+
+#: sui_config.lua:138
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+#: sui_bottombar.lua:1445
+msgid "Wi-Fi off"
+msgstr "Wi-Fi oprit"
+
+#: sui_config.lua:160
+msgid "WiFi"
+msgstr "WiFi"
+
+#: sui_bottombar.lua:1432
+msgid "WiFi not available on this device."
+msgstr "WiFi nu este disponibil pe acest dispozitiv."
+
+#: sui_quickactions.lua:575
+msgid "Wikipedia Lookup"
+msgstr "Căutare pe Wikipedia"
+
+#: desktop_modules/module_currently.lua:936
+msgid "With percentage"
+msgstr ""
+
+#: desktop_modules/module_quote.lua:748
+msgid "Your highlights"
+msgstr "Evidențierile tale"
+
+#: sui_updater.lua:410
+msgid ""
+"\n"
+"\n"
+"Download and install now?"
+msgstr ""
+"\n"
+"\n"
+"Descarci și instalezi acum?"
+
+#: desktop_modules/module_reading_stats.lua:66
+msgid "books finished"
+msgstr "cărți terminate"
+
+#: desktop_modules/module_reading_stats.lua:63
+msgid "daily avg (7 days)"
+msgstr "media zilnică (7 zile)"
+
+#: desktop_modules/module_reading_stats.lua:68
+msgid "day streak"
+msgstr "zi în serie"
+
+#: desktop_modules/module_reading_stats.lua:68
+msgid "days streak"
+msgstr "zile în serie"
+
+#: sui_quickactions.lua:960
+msgid "default"
+msgstr "implicit"
+
+#: sui_menu.lua:741 sui_menu.lua:810 sui_menu.lua:1150 sui_menu.lua:1919
+msgid "disabled"
+msgstr "dezactivat"
+
+#: sui_quickactions.lua:800
+msgid "e.g. Comics…"
+msgstr ""
+
+#: sui_quickactions.lua:846
+msgid "e.g. Rakuyomi…"
+msgstr ""
+
+#: sui_quickactions.lua:819
+msgid "e.g. Sci-Fi…"
+msgstr "ex: Sci-Fi…"
+
+#: sui_quickactions.lua:874
+msgid "e.g. Sleep, Refresh…"
+msgstr "ex: Ațipire, Reîmprospătare…"
+
+#: sui_menu.lua:741 sui_menu.lua:810 sui_menu.lua:1150 sui_menu.lua:1919
+msgid "enabled"
+msgstr "activat"
+
+#: sui_quickactions.lua:440
+msgid "hex code, e.g. E001"
+msgstr ""
+
+#: desktop_modules/module_reading_stats.lua:68
+msgid "no streak"
+msgstr "nicio serie"
+
+#: sui_quickactions.lua:1113 sui_quickactions.lua:1129
+msgid "not configured"
+msgstr ""
+
+#: desktop_modules/module_reading_stats.lua:61
+msgid "of reading today"
+msgstr "de citit astăzi"
+
+#: desktop_modules/module_reading_stats.lua:65
+msgid "of reading, all time"
+msgstr "de citit, din tot timpul"
+
+#: desktop_modules/module_reading_stats.lua:62
+msgid "pages read today"
+msgstr "pagini citite astăzi"
+
+#: desktop_modules/module_reading_stats.lua:64
+msgid "pages/day (7 days)"
+msgstr ""
+
+#: sui_menu.lua:238 sui_menu.lua:1336
+#: desktop_modules/module_collections.lua:689
+#: desktop_modules/module_quick_actions.lua:319
+#: desktop_modules/module_reading_stats.lua:507
+msgid "  (%d left)"
+msgid_plural "  (%d left)"
+msgstr[0] "  (%s rămasă)"
+msgstr[1] "  (%s rămase)"
+msgstr[2] "  (%s rămase)"
+
+#: desktop_modules/module_reading_goals.lua:617
+msgid "  Set Goal  (%d book in %s)"
+msgid_plural "  Set Goal  (%d books in %s)"
+msgstr[0] "  Setează obiectiv  (%d carte în %s)"
+msgstr[1] "  Setează obiectiv  (%d cărți în %s)"
+msgstr[2] "  Setează obiectiv  (%d de cărți în %s)"
+
+#: desktop_modules/module_reading_goals.lua:417
+msgid "%d book"
+msgid_plural "%d books"
+msgstr[0] "%d carte"
+msgstr[1] "%d cărți"
+msgstr[2] "%d de cărți"
+
+#: desktop_modules/module_coverdeck.lua:574
+#: desktop_modules/module_currently.lua:540
+#: desktop_modules/module_currently.lua:607
+msgid "%d day of reading"
+msgid_plural "%d days of reading"
+msgstr[0] "%d zi de citit"
+msgstr[1] "%d zile de citit"
+msgstr[2] "%d de zile de citit"
+
+#: desktop_modules/module_reading_goals.lua:416
+msgid "%d/%d book"
+msgid_plural "%d/%d books"
+msgstr[0] "%d/%d carte"
+msgstr[1] "%d/%d cărți"
+msgstr[2] "%d/%d de cărți"
+
+#: sui_menu.lua:1230
+msgid "Digital: %d book in %s"
+msgid_plural "Digital: %d books in %s"
+msgstr[0] "Digital: %d carte în %s"
+msgstr[1] "Digital: %d cărți în %s"
+msgstr[2] "Digital: %d de cărți în %s"
+
+#: sui_menu.lua:1236
+msgid "Physical: %d book in %s"
+msgid_plural "Physical: %d books in %s"
+msgstr[0] "Fizic: %d carte în %s"
+msgstr[1] "Fizic: %d cărți în %s"
+msgstr[2] "Fizic: %d de cărți în %s"
+
+#: sui_menu.lua:556
+msgid ""
+"Text shown in the top bar.\n"
+"Maximum %d character."
+msgid_plural ""
+"Text shown in the top bar.\n"
+"Maximum %d characters."
+msgstr[0] ""
+"Textul afișat în bara superioară.\n"
+"Maxim %d caracter."
+msgstr[1] ""
+"Textul afișat în bara superioară.\n"
+"Maxim %d caractere."
+msgstr[2] ""
+"Textul afișat în bara superioară.\n"
+"Maxim %d de caractere."
+
+#: sui_menu.lua:1300 desktop_modules/module_quick_actions.lua:262
+msgid "The maximum of %d action per module has been reached. Remove one first."
+msgid_plural ""
+"The maximum of %d actions per module has been reached. Remove one first."
+msgstr[0] ""
+"Numărul maxim de %d acțiune pe modul a fost atins. Șterge una mai întîi."
+msgstr[1] ""
+"Numărul maxim de %d acțiuni pe modul a fost atins. Șterge una mai întîi."
+msgstr[2] ""
+"Numărul maxim de %d de acțiuni pe modul a fost atins. Șterge una mai întîi."
+
+#: sui_quickactions.lua:1074
+msgid "The maximum of %d quick action has been reached. Delete one first."
+msgid_plural ""
+"The maximum of %d quick actions has been reached. Delete one first."
+msgstr[0] ""
+"Numărul maxim de %d acțiune rapidă a fost atins. Șterge una mai întîi."
+msgstr[1] ""
+"Numărul maxim de %d acțiuni rapide a fost atins. Șterge una mai întîi."
+msgstr[2] ""
+"Numărul maxim de %d de acțiuni rapide a fost atins. Șterge una mai întîi."
+
+#: desktop_modules/module_reading_stats.lua:419
+msgid "The maximum of %d stat per row has been reached. Remove one first."
+msgid_plural ""
+"The maximum of %d stats per row has been reached. Remove one first."
+msgstr[0] ""
+"Numărul maxim de %d acțiune pe modul a fost atins. Șterge una mai întîi."
+msgstr[1] ""
+"Numărul maxim de %d acțiuni pe modul a fost atins. Șterge una mai întîi."
+msgstr[2] ""
+"Numărul maxim de %d de acțiuni pe modul a fost atins. Șterge una mai întîi."
+
+#: sui_menu.lua:271
+msgid "The maximum of %d tab has been reached. Remove one first."
+msgid_plural "The maximum of %d tabs has been reached. Remove one first."
+msgstr[0] "Numărul maxim de %d filă a fost atins. Șterge una mai întîi."
+msgstr[1] "Numărul maxim de %d file a fost atins. Șterge una mai întîi."
+msgstr[2] "Numărul maxim de %d de file a fost atins. Șterge una mai întîi."
+
+#~ msgid "%d days of reading"
+#~ msgstr "%d zile de citit"
+
+#~ msgid "1 day of reading"
+#~ msgstr "1 zi de citit"
+
+#~ msgid "Could not retrieve version information."
+#~ msgstr "Nu s-a putut prelua informația de versiune."
+
+#~ msgid "Enable at least 2 modules to arrange."
+#~ msgstr "Activează cel puțin 2 module pentru a le aranja."
+
+#~ msgid ""
+#~ "Maximum number of modules shown on each page.\n"
+#~ "Swipe left/right on the Home Screen to turn pages."
+#~ msgstr ""
+#~ "Numărul maxim de module afișat pe fiecare pagină.\n"
+#~ "Glisează stînga/dreapta pe ecranul Acasă pentru a întoarce paginile."
+
+#~ msgid "Modules per Page"
+#~ msgstr "Module per pagină"
+
+#~ msgid "Modules per Page  (%d)"
+#~ msgstr "Module per pagină  (%d)"
+
+#~ msgid ""
+#~ "Simple UI %s is available!\n"
+#~ "Current version: %s\n"
+#~ "\n"
+#~ "Download and install now?"
+#~ msgstr ""
+#~ "Simple UI %s este disponibil!\n"
+#~ "Versiunea curentă: %s\n"
+#~ "\n"
+#~ "Descarci și instalezi acum?"
+
+#~ msgid "Maximum %d stats per row. Remove one first."
+#~ msgstr ""
+#~ "Numărul maxim %d de statistici pe rînd a fost atins. Șterge una mai întîi."
+
+#~ msgid "    Size"
+#~ msgstr "    Mărime"
+
+#~ msgid "Maximum %d modules active. Disable one first."
+#~ msgstr "Maxim %d de module active. Șterge unul mai întîi."
+
+#~ msgid ""
+#~ "Module limit disabled. Enabling too many modules may slow down the "
+#~ "homescreen significantly and modules may be clipped at the bottom of the "
+#~ "page."
+#~ msgstr ""
+#~ "Limita de module a fost dezactivată. Activarea prea multor module poate "
+#~ "încetini ecranul principal semnificativ iar modulele pot fi tăiate în "
+#~ "partea de jos a paginii."
+
+#~ msgid "Modules  (%d — no limit)"
+#~ msgstr "Module  (%d — fără limită)"
+
+#~ msgid "Modules  (%d/%d — %d left)"
+#~ msgstr "Module  (%d/%d - %d rămase)"
+
+#~ msgid "Modules  (%d/%d — at limit)"
+#~ msgstr "Module  (%d/%d — la limită)"
+
+#~ msgid "No Module Limit  ⚠ not recommended"
+#~ msgstr "Fără limită de module  ⚠ Nerecomandat"
+
+#~ msgid "Page number in title bar"
+#~ msgstr "Numărul de pagină în bara de titlu."
+
+#~ msgid "Path"
+#~ msgstr "Cale"
+
+#~ msgid ""
+#~ "Simple UI was updated (%s → %s).\n"
+#~ "\n"
+#~ "A restart is recommended to apply all changes cleanly."
+#~ msgstr ""
+#~ "Simple UI a fost actualizat (%s → %s).\n"
+#~ "\n"
+#~ "O repornire este recomandată pentru a aplica toate schimbările în mod "
+#~ "corespunzător."
+
+#~ msgid "hidden"
+#~ msgstr "ascuns"
+
+#~ msgid "visible"
+#~ msgstr "vizibil"
+
+#~ msgid "1 day"
+#~ msgstr "1 zi"
+
+#~ msgid "%d days"
+#~ msgstr "%d zile"
+
+#~ msgid "%s TO GO"
+#~ msgstr "%s DE PARCURS"
+
+#~ msgid "Date"
+#~ msgstr "Dată"
+
+#~ msgid ""
+#~ "Folder not found:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Dosar negăsit:\n"
+#~ "%s"
+
+#~ msgid ""
+#~ "Path is not a folder:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Calea nu este un dosar:\n"
+#~ "%s"
+
+#~ msgid "Show Labels"
+#~ msgstr "Afișează etichete"
+
+#~ msgid "e.g. My Library"
+#~ msgstr "de ex., Biblioteca mea…"
+
+#~ msgid "More Options"
+#~ msgstr "Mai multe opțiuni"
+
+#~ msgid "Cover size  —  %d%%"
+#~ msgstr "Mărimea coperții  —  %d%%"
+
+#~ msgid "Labels  —  %d%%"
+#~ msgstr "Etichete  —  %d%%"
+
+#~ msgid "Scale  —  %d%%"
+#~ msgstr "Scală  —  %d%%"
+
+#~ msgid "Scale  —  %d%% / %d%%"
+#~ msgstr "Scală  —  %d%% / %d%%"
+
+#~ msgid "Size  —  %d%%"
+#~ msgstr "Mărime  —  %d%%"
+
+#~ msgid "Badge"
+#~ msgstr "Insignă"
+
+#~ msgid "Label"
+#~ msgstr "Etichetă"

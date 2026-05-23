@@ -1,0 +1,1281 @@
+# Simple UI — KOReader Plugin
+# Swedish translation
+# Copyright (C) 2024 Simple UI Contributors
+# This file is distributed under the same license as the Simple UI package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: simpleui\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-03-16 21:54+0000\n"
+"PO-Revision-Date: 2026-03-24 00:00+0100\n"
+"Last-Translator: \n"
+"Language-Team: Swedish\n"
+"Language: sv_SE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+msgid "  Physical Books  (%d in %s)"
+msgstr "  Fysiska böcker  (%d av %s)"
+
+msgid "%d books"
+msgstr "%d böcker"
+
+msgid "%d%% Read"
+msgstr "%d%% läst"
+
+msgid "%d/%d books"
+msgstr "%d/%d böcker"
+
+msgid "%s TO GO"
+msgstr "%s KVAR"
+
+msgid "%s read"
+msgstr "%s läst"
+
+msgid "All time — Books"
+msgstr "Totalt — Böcker"
+
+msgid "All time — Time"
+msgstr "Totalt — Tid"
+
+msgid "Annual Goal"
+msgstr "Årsmål"
+
+msgid "Annual Reading Goal"
+msgstr "Årligt läsmål"
+
+msgid "Books to read in %s:"
+msgstr "Böcker att läsa under %s:"
+
+msgid "Collection"
+msgstr "Samling"
+
+msgid "Collection is empty."
+msgstr "Samlingen är tom."
+
+msgid "Collection not available: %s"
+msgstr "Samlingen ej tillgänglig: %s"
+
+msgid "Collections"
+msgstr "Samlingar"
+
+msgid "Collections not available."
+msgstr "Samlingar ej tillgängliga."
+
+msgid "Continue"
+msgstr "Fortsätt"
+
+msgid "Currently Reading"
+msgstr "Läser just nu"
+
+msgid "Daily Goal"
+msgstr "Dagsmål"
+
+msgid "Daily Reading Goal"
+msgstr "Dagligt läsmål"
+
+msgid "Daily avg — Pages"
+msgstr "Dagligt snitt — Sidor"
+
+msgid "Daily avg — Time"
+msgstr "Dagligt snitt — Tid"
+
+msgid "Digital Goal  (%s)"
+msgstr "Digitalt mål  (%s)"
+
+msgid "Digital: %d books in %s"
+msgstr "Digitalt: %d böcker på %s"
+
+msgid "Favorites"
+msgstr "Favoriter"
+
+msgid "Favorites not available."
+msgstr "Favoriter ej tillgängliga."
+
+msgid "History"
+msgstr "Historik"
+
+msgid "History not available."
+msgstr "Historik ej tillgänglig."
+
+msgid "Home"
+msgstr "Hem"
+
+msgid "Home Screen"
+msgstr "Startsida"
+
+msgid "Homescreen"
+msgstr "Startsida"
+
+msgid "Homescreen not available."
+msgstr "Startsidan ej tillgänglig."
+
+msgid "Library"
+msgstr "Bibliotek"
+
+msgid "No book in history."
+msgstr "Inga böcker i historiken."
+
+msgid "No books opened yet"
+msgstr "Inga böcker öppnade ännu"
+
+msgid "No collections found."
+msgstr "Inga samlingar hittades."
+
+msgid "No collections selected"
+msgstr "Inga samlingar valda"
+
+msgid "No quotes found."
+msgstr "Inga citat hittades."
+
+msgid "No stats selected"
+msgstr "Ingen statistik vald"
+
+msgid "Open a book to get started"
+msgstr "Öppna en bok för att komma igång"
+
+msgid "Physical Books — %s"
+msgstr "Fysiska böcker — %s"
+
+msgid "Physical books read this year:"
+msgstr "Fysiska böcker lästa i år:"
+
+msgid "Physical: %d books in %s"
+msgstr "Fysiskt: %d böcker på %s"
+
+msgid "Quote of the Day"
+msgstr "Dagens citat"
+
+msgid "Reading Goals"
+msgstr "Läsmål"
+
+msgid "Reading Stats"
+msgstr "Lässtatistik"
+
+msgid "New Books"
+msgstr "Nya böcker"
+
+msgid "New"
+msgstr "Ny"
+
+msgid "Recent Books"
+msgstr "Pågående böcker"
+
+msgid "Simple UI"
+msgstr "Simple UI"
+
+msgid "Statistics plugin not available."
+msgstr "Statistiktillägget ej tillgängligt."
+
+msgid "Streak"
+msgstr "Svit"
+
+msgid "Today"
+msgstr "Idag"
+
+msgid "Today — Pages"
+msgstr "Idag — Sidor"
+
+msgid "Today — Time"
+msgstr "Idag — Tid"
+
+msgid "books finished"
+msgstr "avslutade böcker"
+
+msgid "daily avg (7 days)"
+msgstr "dagligt snitt (7 dagar)"
+
+msgid "1 day of reading"
+msgstr "1 dag med läsning"
+
+msgid "day streak"
+msgstr "dag i rad"
+
+msgid "days streak"
+msgstr "dagar i rad"
+
+msgid "of reading today"
+msgstr "läsning idag"
+
+msgid "of reading, all time"
+msgstr "läsning totalt"
+
+msgid "pages read today"
+msgstr "sidor lästa idag"
+
+msgid "pages/day (7 days)"
+msgstr "sidor/dag (7 dagar)"
+
+msgid "Sunday"
+msgstr "söndag"
+
+msgid "Monday"
+msgstr "måndag"
+
+msgid "Tuesday"
+msgstr "tisdag"
+
+msgid "Wednesday"
+msgstr "onsdag"
+
+msgid "Thursday"
+msgstr "torsdag"
+
+msgid "Friday"
+msgstr "fredag"
+
+msgid "Saturday"
+msgstr "lördag"
+
+msgid "January"
+msgstr "januari"
+
+msgid "February"
+msgstr "februari"
+
+msgid "March"
+msgstr "mars"
+
+msgid "April"
+msgstr "april"
+
+msgid "May"
+msgstr "maj"
+
+msgid "June"
+msgstr "juni"
+
+msgid "July"
+msgstr "juli"
+
+msgid "August"
+msgstr "augusti"
+
+msgid "September"
+msgstr "september"
+
+msgid "October"
+msgstr "oktober"
+
+msgid "November"
+msgstr "november"
+
+msgid "December"
+msgstr "december"
+
+msgid "My Highlights"
+msgstr "Mina markeringar"
+
+msgid "Your highlights"
+msgstr "Dina markeringar"
+
+msgid "Quotes + My Highlights"
+msgstr "Citat + mina markeringar"
+
+msgid "No highlights found. Open a book and highlight some passages."
+msgstr "Inga markeringar hittades. Öppna en bok och markera några textstycken."
+
+msgid "Flat"
+msgstr "Platt"
+
+msgid "Row"
+msgstr "Rad"
+
+msgid "Cards"
+msgstr "Kort"
+
+msgid "List"
+msgstr "Lista"
+
+msgid "Arrange"
+msgstr "Ordna"
+
+msgid "Cancel"
+msgstr "Avbryt"
+
+msgid "Apply"
+msgstr "Verkställ"
+
+msgid "Back"
+msgstr "Tillbaka"
+
+msgid "Close"
+msgstr "Stäng"
+
+msgid "Confirm"
+msgstr "Bekräfta"
+
+msgid "Delete"
+msgstr "Ta bort"
+
+msgid "Edit"
+msgstr "Redigera"
+
+msgid "Rename"
+msgstr "Döp om"
+
+msgid "Save"
+msgstr "Spara"
+
+msgid "Search"
+msgstr "Sök"
+
+msgid "Reset"
+msgstr "Återställ"
+
+msgid "Restart"
+msgstr "Starta om"
+
+msgid "Settings"
+msgstr "Inställningar"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "On"
+msgstr "På"
+
+msgid "Off"
+msgstr "Av"
+
+msgid "Default"
+msgstr "Standard"
+
+msgid "Auto (first book)"
+msgstr "Auto (första boken)"
+
+msgid "Folder Covers"
+msgstr "Mappomslag"
+
+msgid "Set folder cover…"
+msgstr "Välj mappomslag…"
+
+msgid "No books found in this folder."
+msgstr "Inga böcker hittades i den här mappen."
+
+msgid "Folder cover"
+msgstr "Mappomslag"
+
+msgid "Number of Books in Folder"
+msgstr "Antal böcker i mapp"
+
+msgid "Cover size"
+msgstr "Omslagsstorlek"
+
+msgid "Module Settings"
+msgstr "Modulinställningar"
+
+msgid "Modules"
+msgstr "Moduler"
+
+msgid "Scale"
+msgstr "Skala"
+
+msgid "Scale for all text elements (title, author, progress, time).\n100% is the default size."
+msgstr "Skala för alla textelement (titel, författare, förlopp, tid).\n100% är standardstorleken."
+
+msgid "Scale for the button label text.\n100% is the default size."
+msgstr "Skala för knappetikettstext.\n100% är standardstorleken."
+
+msgid "Scale for the collection name text.\n100% is the default size."
+msgstr "Skala för samlingsnamntext.\n100% är standardstorleken."
+
+msgid "Scale for the collection thumbnails only.\nThe label text follows the module scale.\n100% is the default size."
+msgstr "Skala för samlingarnas miniatyrbilder.\nEtiketttexten följer modulskalan.\n100% är standardstorleken."
+
+msgid "Scale for the cover thumbnail only.\n100% is the default size."
+msgstr "Skala för omslagsminiatyrbilden.\n100% är standardstorleken."
+
+msgid "Scale for the cover thumbnails only.\nText and progress bar follow the module scale.\n100% is the default size."
+msgstr "Skala för omslagsminiatyrer.\nText och förloppsindikator följer modulskalan.\n100% är standardstorleken."
+
+msgid "Scale for the label text.\n100% is the default size."
+msgstr "Skala för etikettstext.\n100% är standardstorleken."
+
+msgid "Scale for the percentage read text.\n100% is the default size."
+msgstr "Skala för procenttext.\n100% är standardstorleken."
+
+msgid "Scale for this module.\n100% is the default size."
+msgstr "Skala för denna modul.\n100% är standardstorleken."
+
+msgid "Scales all modules and labels together.\n100% is the default size."
+msgstr "Skalar alla moduler och etiketter tillsammans.\n100% är standardstorleken."
+
+msgid "Scales the section label text above each module.\n100% is the default size."
+msgstr "Skalar sektionsetiketttexten ovanför varje modul.\n100% är standardstorleken."
+
+msgid "Show label"
+msgstr "Visa etiketten"
+
+msgid "Label Size"
+msgstr "Etikettstorlek"
+
+msgid "Quick Actions"
+msgstr "Snabbåtgärder"
+
+msgid "Navigation Bar"
+msgstr "Navigationslist"
+
+msgid "Battery"
+msgstr "Batteri"
+
+msgid "Brightness"
+msgstr "Ljusstyrka"
+
+msgid "Clock"
+msgstr "Klocka"
+
+msgid "Progress bar"
+msgstr "Förloppsindikator"
+
+msgid "Pagination Bar"
+msgstr "Sidindelningslist"
+
+msgid "Hide Text"
+msgstr "Dölj text"
+
+msgid "Show Battery"
+msgstr "Visa batteri"
+
+msgid "Percentage read"
+msgstr "Procent läst"
+
+msgid "Percentage text"
+msgstr "Procenttext"
+
+msgid "Days of reading"
+msgstr "Läsdagar"
+
+msgid "Minutes per day:"
+msgstr "Minuter per dag:"
+
+msgid "Default Quotes"
+msgstr "Standardcitat"
+
+msgid "Add at least 2 actions to arrange."
+msgstr "Lägg till minst 2 åtgärder för att arrangera."
+
+msgid "Add at least 2 stats to arrange."
+msgstr "Lägg till minst 2 statistik för att arrangera."
+
+msgid "Arrange %s"
+msgstr "Arrangera %s"
+
+msgid "Arrange Buttons"
+msgstr "Arrangera knappar"
+
+msgid "Arrange Collections"
+msgstr "Arrangera samlingar"
+
+msgid "Arrange Items"
+msgstr "Arrangera objekt"
+
+msgid "Arrange Modules"
+msgstr "Arrangera moduler"
+
+msgid "Arrange Reading Stats"
+msgstr "Arrangera lässtatistik"
+
+msgid "Arrange tabs"
+msgstr "Arrangera flikar"
+
+msgid "Author"
+msgstr "Författare"
+
+msgid "Badge position: Bottom"
+msgstr "Märkesposition: Nederkant"
+
+msgid "Badge position: Top"
+msgstr "Märkesposition: Överkant"
+
+msgid "Book Info"
+msgstr "Bokinfo"
+
+msgid "Bookmark browser not available."
+msgstr "Bokmärkesbläddrare inte tillgänglig."
+
+msgid "Bookmark browser"
+msgstr "Bokmärkesbläddrare"
+
+msgid "Bookmarks"
+msgstr "Bokmärken"
+
+msgid "Bottom Bar Size"
+msgstr "Nedre stapelstorlek"
+
+msgid "Bottom Bar will be %s after restart.\n\nRestart now?"
+msgstr "Nedre stapel kommer vara %s efter omstart.\n\nOmstarta nu?"
+
+msgid "Bottom Bar"
+msgstr "Nedre stapel"
+
+msgid "Bottom Margin — %d%%"
+msgstr "Nedre marginal — %d%%"
+
+msgid "Bottom Margin"
+msgstr "Nedre marginal"
+
+msgid "Bottom"
+msgstr "Underst"
+
+msgid "Button Size"
+msgstr "Knappstorlek"
+
+msgid "Center"
+msgstr "Mitten"
+
+msgid "Change Icons"
+msgstr "Byt ikoner"
+
+msgid "Compact"
+msgstr "Kompakt"
+
+msgid "Cover for \"%s\""
+msgstr "Omslag för \"%s\""
+
+msgid "Create Quick Action"
+msgstr "Skapa snabbåtgärd"
+
+msgid "Custom Title Bar will be %s after restart.\n\nRestart now?"
+msgstr "Anpassad titelrad kommer vara %s efter omstart.\n\nOmstarta nu?"
+
+msgid "Custom Title Bar"
+msgstr "Anpassad titelrad"
+
+msgid "Custom"
+msgstr "Anpassad"
+
+msgid "Default (Folder)"
+msgstr "Standard (mapp)"
+
+msgid "Default (Plugin)"
+msgstr "Standard (tillägg)"
+
+msgid "Default (System)"
+msgstr "Standard (system)"
+
+msgid "Delete quick action \"%s\"?"
+msgstr "Ta bort snabbåtgärd \"%s\"?"
+
+msgid "Dictionary Lookup"
+msgstr "Ordbokssökning"
+
+msgid "Disable \"Lock Scale\" first to set a custom label scale."
+msgstr "Inaktivera \"Lås skala\" först för att ange en anpassad etiketskala."
+
+msgid "Disk Usage"
+msgstr "Diskanvändning"
+
+msgid "Dispatcher not available."
+msgstr "Dispatcher inte tillgänglig."
+
+msgid "Edit Quick Action"
+msgstr "Redigera snabbåtgärd"
+
+msgid "Enable at least 2 modules to arrange."
+msgstr "Aktivera minst 2 moduler för att arrangera."
+
+msgid "Extra Small"
+msgstr "Extra liten"
+
+msgid "Fetching bookmarks\xe2\x80\xa6"
+msgstr "Hämtar bokmärken…"
+
+msgid "File Search"
+msgstr "Filsökning"
+
+msgid "Folder Name"
+msgstr "Mappnamn"
+
+msgid "Folder Shortcuts"
+msgstr "Mappgenvägar"
+
+msgid "Folder"
+msgstr "Mapp"
+
+msgid "Frontlight not available on this device."
+msgstr "Frontljus inte tillgängligt på denna enhet."
+
+msgid "Hidden"
+msgstr "Dold"
+
+msgid "Hide selection underline"
+msgstr "Dölj markeringsunderstrykning"
+
+msgid "Home folder + subfolders"
+msgstr "Hemmapp + undermappar"
+
+msgid "Home folder"
+msgstr "Hemmapp"
+
+msgid "Icon Size — %d%%"
+msgstr "Ikonstorlek — %d%%"
+
+msgid "Icon Size"
+msgstr "Ikonstorlek"
+
+msgid "Icon"
+msgstr "Ikon"
+
+msgid "Icon: Default"
+msgstr "Ikon: Standard"
+
+msgid "Icons only"
+msgstr "Endast ikoner"
+
+msgid "Icons"
+msgstr "Ikoner"
+
+msgid "Invalid arrangement.\nKeep items between the Left and Right separators."
+msgstr "Ogiltigt arrangemang.\nHåll objekt mellan Vänster- och Höger-avgränsarna."
+
+msgid "Invalid arrangement.\nKeep the Left, Center and Right separators in order."
+msgstr "Ogiltigt arrangemang.\nHåll Vänster, Mitten och Höger-avgränsarna i ordning."
+
+msgid "Items"
+msgstr "Objekt"
+
+msgid "Label Scale"
+msgstr "Etiketskala"
+
+msgid "Label Size — %d%%"
+msgstr "Etiketstorlek — %d%%"
+
+msgid "Labels"
+msgstr "Etiketter"
+
+msgid "Large"
+msgstr "Stor"
+
+msgid "Later"
+msgstr "Senare"
+
+msgid "Left"
+msgstr "Vänster"
+
+msgid "Library Buttons"
+msgstr "Biblioteksknappar"
+
+msgid "Lock Scale"
+msgstr "Lås skala"
+
+msgid "Maximum %d actions per module reached. Remove one first."
+msgstr "Maximalt %d åtgärder per modul nått. Ta bort en först."
+
+msgid "Maximum %d modules active. Disable one first."
+msgstr "Maximalt %d moduler aktiva. Inaktivera en först."
+
+msgid "Maximum %d quick actions reached. Delete one first."
+msgstr "Maximalt %d snabbåtgärder nått. Ta bort en först."
+
+msgid "Maximum %d stats per row. Remove one first."
+msgstr "Maximalt %d statistik per rad. Ta bort en först."
+
+msgid "Maximum %d tabs reached. Remove one first."
+msgstr "Maximalt %d flikar nått. Ta bort en först."
+
+msgid "Maximum 5 collections. Remove one first."
+msgstr "Maximalt 5 samlingar. Ta bort en först."
+
+msgid "Menu"
+msgstr "Meny"
+
+msgid "Minimum 1 tab required in navpager mode."
+msgstr "Minst 1 flik krävs i navpager-läge."
+
+msgid "Minimum 2 tabs required. Select another tab first."
+msgstr "Minst 2 flikar krävs. Välj en annan flik först."
+
+msgid "Module Scale"
+msgstr "Modulskala"
+
+msgid "Modules  (%d — no limit)"
+msgstr "Moduler  (%d — ingen gräns)"
+
+msgid "Modules  (%d/%d — %d left)"
+msgstr "Moduler  (%d/%d — %d kvar)"
+
+msgid "Modules  (%d/%d — at limit)"
+msgstr "Moduler  (%d/%d — vid gränsen)"
+
+msgid "Name"
+msgstr "Namn"
+
+msgid "disabled"
+msgstr "inaktiverad"
+
+msgid "enabled"
+msgstr "aktiverad"
+
+msgid "hidden"
+msgstr "dold"
+
+msgid "not configured"
+msgstr "ej konfigurerad"
+
+msgid "visible"
+msgstr "synlig"
+
+msgid "Navpager will be %s after restart.\n\nRestart now?"
+msgstr "Navpager kommer vara %s efter omstart.\n\nOmstarta nu?"
+
+msgid "Navpager"
+msgstr "Navpager"
+
+msgid "Nerd Font Icon"
+msgstr "Nerd Font-ikon"
+
+msgid "Nerd Font symbol\xe2\x80\xa6"
+msgstr "Nerd Font-symbol…"
+
+msgid "Network manager unavailable."
+msgstr "Nätverkshanterare inte tillgänglig."
+
+msgid "New Quick Action"
+msgstr "Ny snabbåtgärd"
+
+msgid "New name\xe2\x80\xa6"
+msgstr "Nytt namn…"
+
+msgid "Next"
+msgstr "Nästa"
+
+msgid "No Module Limit  \xe2\x9a\xa0 not recommended"
+msgstr "Ingen modulbegränsning  ⚠ rekommenderas ej"
+
+msgid "No icons found in:"
+msgstr "Inga ikoner hittades i:"
+
+msgid "No plugins found."
+msgstr "Inga tillägg hittades."
+
+msgid "No system actions found."
+msgstr "Inga systemåtgärder hittades."
+
+msgid "Number of Pages"
+msgstr "Antal sidor"
+
+msgid "Open"
+msgstr "Öppna"
+
+msgid "Overlays"
+msgstr "Övertäckningar"
+
+msgid "Page %1 of %2"
+msgstr "Sida %1 av %2"
+
+msgid "Page number in title bar"
+msgstr "Sidnummer i titelraden"
+
+msgid "Path chooser not available."
+msgstr "Sökvägsväljare inte tillgänglig."
+
+msgid "Path"
+msgstr "Sökväg"
+
+msgid "Percentage overlay on cover"
+msgstr "Procentövertäckning på omslaget"
+
+msgid "Plugin error: %s"
+msgstr "Tilläggsfel: %s"
+
+msgid "Plugin not available: %s"
+msgstr "Tillägg inte tillgängligt: %s"
+
+msgid "Plugin"
+msgstr "Tillägg"
+
+msgid "Power"
+msgstr "Ström"
+
+msgid "Prev"
+msgstr "Föregående"
+
+msgid "Progress bar style"
+msgstr "Förloppsindikatorstil"
+
+msgid "Quick Actions  (%d/%d — %d left)"
+msgstr "Snabbåtgärder  (%d/%d — %d kvar)"
+
+msgid "Quick Actions  (%d/%d — at limit)"
+msgstr "Snabbåtgärder  (%d/%d — vid gränsen)"
+
+msgid "Quick Actions %d"
+msgstr "Snabbåtgärder %d"
+
+msgid "Quit"
+msgstr "Avsluta"
+
+msgid "RAM Usage"
+msgstr "RAM-användning"
+
+msgid "Reset all scales to default (100%)? This cannot be undone."
+msgstr "Återställ alla skalor till standard (100%)? Det går ej att ångra."
+
+msgid "Reset to Default Scale"
+msgstr "Återställ till standardskala"
+
+msgid "Right"
+msgstr "Höger"
+
+msgid "Select at least 2 collections to arrange."
+msgstr "Välj minst 2 samlingar för att arrangera."
+
+msgid "Show Date"
+msgstr "Visa datum"
+
+msgid "Space below the bottom navigation bar.\n100% is the default spacing."
+msgstr "Utrymme under navigationsraden.\n100% är standardavståndet."
+
+msgid "Simple UI was updated (%s \xe2\x86\x92 %s).\n\nA restart is recommended to apply all changes cleanly."
+msgstr "Simple UI uppdaterades (%s → %s).\n\nEn omstart rekommenderas för att alla ändringar ska tillämpas korrekt."
+
+msgid "Simple UI will be %s after restart.\n\nRestart now?"
+msgstr "Simple UI kommer vara %s efter omstart.\n\nOmstarta nu?"
+
+msgid "Simple"
+msgstr "Enkel"
+
+msgid "Size"
+msgstr "Storlek"
+
+msgid "Small"
+msgstr "Liten"
+
+msgid "Source"
+msgstr "Källa"
+
+msgid "Start with Home Screen"
+msgstr "Starta med hemskärmen"
+
+msgid "Start with"
+msgstr "Starta med"
+
+msgid "Stats"
+msgstr "Statistik"
+
+msgid "Status Bar"
+msgstr "Statusfält"
+
+msgid "Visible"
+msgstr "Synlig"
+
+msgid "Sub-pages Buttons"
+msgstr "Undersidesknappar"
+
+msgid "Swipe Indicator"
+msgstr "Svepindikator"
+
+msgid "System Actions"
+msgstr "Systemåtgärder"
+
+msgid "System action error: %s"
+msgstr "Systemåtgärdsfel: %s"
+
+msgid "Tabs  (%d/%d — %d left)"
+msgstr "Flikar  (%d/%d — %d kvar)"
+
+msgid "Tabs  (%d/%d — at limit)"
+msgstr "Flikar  (%d/%d — vid gränsen)"
+
+msgid "Text Size — %d%%"
+msgstr "Textstorlek — %d%%"
+
+msgid "Text Size"
+msgstr "Textstorlek"
+
+msgid "Text only"
+msgstr "Endast text"
+
+msgid "Text"
+msgstr "Text"
+
+msgid "Time read"
+msgstr "Lästid"
+
+msgid "Time remaining"
+msgstr "Återstående tid"
+
+msgid "Title Bar"
+msgstr "Titelrad"
+
+msgid "Title"
+msgstr "Titel"
+
+msgid "Top Bar Size"
+msgstr "Övre stapelstorlek"
+
+msgid "Top Bar will be %s after restart.\n\nRestart now?"
+msgstr "Övre stapel kommer vara %s efter omstart.\n\nOmstarta nu?"
+
+msgid "Top Bar"
+msgstr "Övre stapel"
+
+msgid "Top Margin  (%d%%)"
+msgstr "Övre marginal  (%d%%)"
+
+msgid "Top separator"
+msgstr "Övre avskiljare"
+
+msgid "Top"
+msgstr "Överst"
+
+msgid "Transparent"
+msgstr "Transparent"
+
+msgid "Uniformize Covers (2:3)"
+msgstr "Uniformera omslag (2:3)"
+
+msgid "Wi-Fi off"
+msgstr "Wi-Fi av"
+
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+msgid "WiFi not available on this device."
+msgstr "WiFi inte tillgängligt på denna enhet."
+
+msgid "WiFi"
+msgstr "WiFi"
+
+msgid "Wikipedia Lookup"
+msgstr "Wikipediasökning"
+
+msgid "With percentage"
+msgstr "Med procent"
+
+msgid "default"
+msgstr "standard"
+
+msgid "    Size"
+msgstr "    Storlek"
+
+msgid "Open \"%s\" to see this highlight?"
+msgstr "Öppna \"%s\" för att se den här markeringen?"
+
+msgid "e.g. Comics\xe2\x80\xa6"
+msgstr "t.ex. Serier…"
+
+msgid "  Scan subfolders for cover"
+msgstr "  Sök i undermappar efter omslag"
+
+msgid "  Set Goal  (%d books in %s)"
+msgstr "  Sätt mål  (%d böcker under %s)"
+
+msgid "  Set Goal  (%d min/day)"
+msgstr "  Sätt mål  (%d min/dag)"
+
+msgid "  Set Goal  (%s)"
+msgstr "  Sätt mål  (%s)"
+
+msgid "  Set Goal  (disabled)"
+msgstr "  Sätt mål  (inaktiverat)"
+
+msgid "%d days"
+msgstr "%d dagar"
+
+msgid "%d days of reading"
+msgstr "%d läsdagar"
+
+msgid "%d%%"
+msgstr "%d%%"
+
+msgid "%s left"
+msgstr "%s kvar"
+
+msgid "%s remaining"
+msgstr "%s kvar"
+
+msgid "1 day"
+msgstr "1 dag"
+
+msgid "A restart is required to apply the new bar size across all layouts.\n\nRestart now?"
+msgstr "En omstart krävs för att tillämpa den nya stapelstorleken för alla layouter.\n\nOmstarta nu?"
+
+msgid "About"
+msgstr "Om"
+
+msgid "Add at least 2 books to arrange."
+msgstr "Lägg till minst 2 böcker för att arrangera."
+
+msgid "Add to To Be Read"
+msgstr "Lägg till i Ska läsas"
+
+msgid "Arrange To Be Read list"
+msgstr "Arrangera Ska läsas-listan"
+
+msgid "Author: %s"
+msgstr "Upphovsperson: %s"
+
+msgid "Check for Updates"
+msgstr "Sök efter uppdateringar"
+
+msgid "Checking for updates..."
+msgstr "Söker efter uppdateringar..."
+
+msgid "Codepoint out of valid Unicode range (0–10FFFF)."
+msgstr "Kodpunkt utanför giltigt Unicode-intervall (0–10FFFF)."
+
+msgid "Could not retrieve version information."
+msgstr "Kunde inte hämta versionsinformation."
+
+msgid "Disable \"Lock Scale\" first to set a per-module scale."
+msgstr "Inaktivera \"Lås skala\" först för att ange en per-modulskala."
+
+msgid "Dot Pager"
+msgstr "Punktbläddring"
+
+msgid "Download and install"
+msgstr "Ladda ned och installera"
+
+msgid "Download error: "
+msgstr "Nedladdningsfel: "
+
+msgid "Downloading Simple UI "
+msgstr "Laddar ned Simple UI "
+
+msgid "Enter the Unicode codepoint (hex) of a Nerd Fonts symbol.\nYou can look up codes with wakamaifondue.com using the file:\n  /koreader/fonts/nerdfonts/symbols.ttf\nLeave blank and press OK to remove a Nerd Font icon."
+msgstr "Ange Unicode-kodpunkten (hex) för en Nerd Fonts-symbol.\nDu kan slå upp koder på wakamaifondue.com med filen:\n  /koreader/fonts/nerdfonts/symbols.ttf\nLämna tomt och tryck OK för att ta bort en Nerd Font-ikon."
+
+msgid "Error checking for updates: "
+msgstr "Fel vid sökning efter uppdateringar: "
+
+msgid "Extraction error: "
+msgstr "Extraheringsfel: "
+
+msgid "General"
+msgstr "Allmänt"
+
+msgid "Global scale for all modules.\nIndividual overrides in Module Settings take precedence.\n100% is the default size."
+msgstr "Global skala för alla moduler.\nIndividuella åsidosättningar i Modulinställningar har företräde.\n100% är standardstorleken."
+
+msgid "Group Books by Series"
+msgstr "Gruppera böcker efter serie"
+
+msgid "Height of the bottom navigation bar.\n100% is the default size."
+msgstr "Höjd på nedre navigationsraden.\n100% är standardstorleken."
+
+msgid "Height of the top status bar.\n100% is the default size."
+msgstr "Höjd på övre statusfältet.\n100% är standardstorleken."
+
+msgid "Hide Wi-Fi icon when off"
+msgstr "Dölj Wi-Fi-ikon när av"
+
+msgid "Hides the pagination bar on the homescreen.\nNot available when Navpager is active."
+msgstr "Döljer sidindelningslisten på startsidan.\nEj tillgänglig när Navpager är aktiv."
+
+msgid "Invalid input. Please enter 1–6 hexadecimal digits (0–9, A–F)."
+msgstr "Ogiltigt indata. Ange 1–6 hexadecimala siffror (0–9, A–F)."
+
+msgid "Maximum number of modules shown on each page.\nSwipe left/right on the Home Screen to turn pages."
+msgstr "Maximalt antal moduler som visas på varje sida.\nSvep vänster/höger på startsidan för att bläddra."
+
+msgid "Module limit disabled. Enabling too many modules may slow down the homescreen significantly and modules may be clipped at the bottom of the page."
+msgstr "Modulbegränsning inaktiverad. Att aktivera för många moduler kan göra startsidan märkbart långsammare och moduler kan klippas i sidans nederkant."
+
+msgid "Modules  (%d)"
+msgstr "Moduler  (%d)"
+
+msgid "Modules per Page"
+msgstr "Moduler per sida"
+
+msgid "Modules per Page  (%d)"
+msgstr "Moduler per sida  (%d)"
+
+msgid "Navpager enabled.\n\nRestart now?"
+msgstr "Navpager aktiverad.\n\nOmstarta nu?"
+
+msgid "No books found in this series."
+msgstr "Inga böcker hittades i den här serien."
+
+msgid "No books in To Be Read list."
+msgstr "Inga böcker i Ska läsas-listan."
+
+msgid "No folder, collection or plugin configured.\nGo to Simple UI → Settings → Quick Actions to set one."
+msgstr "Ingen mapp, samling eller tillägg konfigurerat.\nGå till Simple UI → Inställningar → Snabbåtgärder för att ange en."
+
+msgid "Number of Pages in Title Bar Always"
+msgstr "Antal sidor alltid i titelraden"
+
+msgid "Open in browser"
+msgstr "Öppna i webbläsare"
+
+msgid "Open this file?"
+msgstr "Öppna den här filen?"
+
+msgid "Pagination bar hidden.\n\nRestart now?"
+msgstr "Sidindelningslisten dold.\n\nOmstarta nu?"
+
+msgid "Pagination bar set to Default.\n\nRestart now?"
+msgstr "Sidindelningslisten återställd till Standard.\n\nOmstarta nu?"
+
+msgid "Pagination bar size will change after restart.\n\nRestart now?"
+msgstr "Sidindelningslistens storlek ändras efter omstart.\n\nOmstarta nu?"
+
+msgid "Pagination bar will be %s after restart.\n\nRestart now?"
+msgstr "Sidindelningslisten kommer vara %s efter omstart.\n\nOmstarta nu?"
+
+msgid "Placeholder cover for bookless folders"
+msgstr "Platshållaromslag för mappar utan böcker"
+
+msgid "Remove from To Be Read"
+msgstr "Ta bort från Ska läsas"
+
+msgid "Replaces the pagination bar with Prev/Next arrows at the edges of the bottom bar.\nThe arrows dim when there is no previous or next page.\nWith navpager active, as few as 1 tab and at most 4 tabs can be configured."
+msgstr "Ersätter sidindelningslisten med Föregående/Nästa-pilar vid kanterna av det nedre fältet.\nPilarna tonas ned när det inte finns föregående eller nästa sida.\nMed navpager aktiv kan som minst 1 och som mest 4 flikar konfigureras."
+
+msgid "Return to Book Folder"
+msgstr "Återgå till bokens mapp"
+
+msgid "Scan subfolders for cover"
+msgstr "Sök i undermappar efter omslag"
+
+msgid "Series Index"
+msgstr "Serieindex"
+
+msgid "Series cover"
+msgstr "Serieomslag"
+
+msgid "Set series cover…"
+msgstr "Välj serieomslag…"
+
+msgid "Settings on Long Tap"
+msgstr "Inställningar vid långtryck"
+
+msgid "Shows \"Page X of Y\" in the title bar subtitle when browsing the library, history or collections.\nNavpager enables this automatically.\nNot available when Navpager is active."
+msgstr "Visar \"Sida X av Y\" i titelradens underrubrik vid bläddring i biblioteket, historiken eller samlingar.\nNavpager aktiverar detta automatiskt.\nEj tillgänglig när Navpager är aktiv."
+
+msgid "Shows a row of dots at the bottom of the homescreen.\nThe active page dot is filled; the others are dimmed.\nAlways active when Navpager is selected."
+msgstr "Visar en rad punkter längst ned på startsidan.\nDen aktiva sidans punkt är fylld; de andra är nedtonade.\nAlltid aktiv när Navpager är vald."
+
+msgid "Simple UI %s is available (you have %s).\n\nNo automatic update file was found.\n\nOpen the releases page on GitHub?"
+msgstr "Simple UI %s finns tillgängligt (du har %s).\n\nIngen automatisk uppdateringsfil hittades.\n\nÖppna releasesidan på GitHub?"
+
+msgid "Simple UI %s is available!\nCurrent version: %s\n\nDownload and install now?"
+msgstr "Simple UI %s finns tillgängligt!\nAktuell version: %s\n\nLadda ned och installera nu?"
+
+msgid "Simple UI %s successfully installed.\n\nRestart KOReader to apply the update?"
+msgstr "Simple UI %s installerades framgångsrikt.\n\nOmstarta KOReader för att tillämpa uppdateringen?"
+
+msgid "Simple UI is up to date (%s)."
+msgstr "Simple UI är uppdaterat (%s)."
+
+msgid "Size of the tab icons.\n100% is the default size."
+msgstr "Storlek på flikarnas ikoner.\n100% är standardstorleken."
+
+msgid "Size of the tab label text.\n100% is the default size."
+msgstr "Storlek på flikarnas etikettstext.\n100% är standardstorleken."
+
+msgid "Size of the text inside the stat cards.\nDoes not affect card size or padding.\n100% is the default size."
+msgstr "Storlek på texten inuti statistikkorten.\nPåverkar inte kortstorlek eller utfyllnad.\n100% är standardstorleken."
+
+msgid "Sleep"
+msgstr "Vila"
+
+msgid "Stats layout"
+msgstr "Statistiklayout"
+
+msgid "To Be Read"
+msgstr "Ska läsas"
+
+msgid "To Be Read books"
+msgstr "Ska läsas-böcker"
+
+msgid "Uses the standard KOReader pagination bar on the homescreen.\nNot available when Navpager is active."
+msgstr "Använder standard-sidindelningslisten i KOReader på startsidan.\nEj tillgänglig när Navpager är aktiv."
+
+msgid "Version: %s"
+msgstr "Version: %s"
+
+msgid "Vertical space above this module.\n100% is the default spacing."
+msgstr "Vertikalt utrymme ovanför denna modul.\n100% är standardavståndet."
+
+msgid "When enabled, long-pressing a section opens its settings menu.\nDisable this to prevent the settings menu from appearing on long tap."
+msgstr "När aktiverat öppnar ett långtryck på en sektion dess inställningsmeny.\nInaktivera för att hindra inställningsmenyn från att visas vid långtryck."
+
+msgid "When enabled, long-pressing the bottom bar opens its settings menu.\nDisable this to prevent the settings menu from appearing on long tap."
+msgstr "När aktiverat öppnar ett långtryck på den nedre stapeln dess inställningsmeny.\nInaktivera för att hindra inställningsmenyn från att visas vid långtryck."
+
+msgid "When enabled, long-pressing the top bar opens its settings menu.\nDisable this to prevent the settings menu from appearing on long tap."
+msgstr "När aktiverat öppnar ett långtryck på den övre stapeln dess inställningsmeny.\nInaktivera för att hindra inställningsmenyn från att visas vid långtryck."
+
+msgid "When enabled, opening the file browser after finishing or closing a book navigates to the folder the book is in, matching native KOReader behaviour.\nWhen disabled (default), SimpleUI always returns to the library root."
+msgstr "När aktiverat navigerar filbläddraren till bokens mapp efter att boken avslutas eller stängs, i linje med KOReaders standardbeteende.\nNär inaktiverat (standard) återgår SimpleUI alltid till biblioteksroten."
+
+msgid "e.g. Rakuyomi…"
+msgstr "t.ex. Rakuyomi…"
+
+msgid "e.g. Sci-Fi…"
+msgstr "t.ex. Science Fiction…"
+
+msgid "e.g. Sleep, Refresh…"
+msgstr "t.ex. Vila, Uppdatera…"
+
+msgid "hex code, e.g. E001"
+msgstr "hexkod, t.ex. E001"
+
+msgid "no streak"
+msgstr "ingen svit"
+
+# Hardcover module
+msgid "Hardcover"
+msgstr "Hardcover"
+
+msgid "Hardcover — Goal"
+msgstr "Hardcover — Mål"
+
+msgid "no goal synced"
+msgstr "inget mål synkat"
+
+msgid "Hardcover: ange API-nyckel i modulinställningarna."
+msgstr "Hardcover: ange API-nyckel i modulinställningarna."
+
+msgid "Hardcover: hämtar data…"
+msgstr "Hardcover: hämtar data…"
+
+msgid "Hardcover: kunde inte hämta data. Kontrollera API-nyckeln och nätverket."
+msgstr "Hardcover: kunde inte hämta data. Kontrollera API-nyckeln och nätverket."
+
+msgid "API-nyckel: (ej angiven)"
+msgstr "API-nyckel: (ej angiven)"
+
+msgid "API-nyckel: ****"
+msgstr "API-nyckel: ****"
+
+msgid "Hardcover API-nyckel"
+msgstr "Hardcover API-nyckel"
+
+msgid "hardcover.app → Inställningar → Utvecklare"
+msgstr "hardcover.app → Inställningar → Utvecklare"
+
+msgid "Uppdatera nu"
+msgstr "Uppdatera nu"
+
+msgid "Uppdateringsintervall: %d min"
+msgstr "Uppdateringsintervall: %d min"
+
+msgid "Uppdateringsintervall (minuter)"
+msgstr "Uppdateringsintervall (minuter)"
+
+msgid "Text Size"
+msgstr "Textstorlek"
+
+msgid "Text Size — %d%%"
+msgstr "Textstorlek — %d%%"
+
+msgid "Size of the text inside the Hardcover widget.\n100% is the default size."
+msgstr "Storleken på texten i Hardcover-widgeten.\n100% är standardstorleken."
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "Card"
+msgstr "Kort"
+
+msgid "Row"
+msgstr "Rad"
+

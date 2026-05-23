@@ -1,0 +1,1994 @@
+# Simple UI — KOReader plugin
+# Turkish Translation
+# Safa Burak Erenkara <safaburak@gmail.com>, 2026.
+# Ayberk Tepeli <ayberktepeli55@gmail.com>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: simpleui\n"
+"POT-Creation-Date: 2026-04-14 21:00\n"
+"PO-Revision-Date: 2026-05-20 16:46+0300\n"
+"Last-Translator: Ayberk Tepeli <ayberktepeli55@gmail.com>\n"
+"Language-Team: Turkish\n"
+"Language: tr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: desktop_modules/module_reading_goals.lua:626
+msgid "  Physical Books  (%d in %s)"
+msgstr "  Fiziksel Kitaplar  (%d adet, %s)"
+
+#: desktop_modules/module_reading_goals.lua:641
+msgid "  Set Goal  (%d min/day)"
+msgstr "  Hedef Belirle  (%d dk/gün)"
+
+#: desktop_modules/module_reading_goals.lua:620
+msgid "  Set Goal  (%s)"
+msgstr "  Hedef Belirle  (%s)"
+
+#: desktop_modules/module_reading_goals.lua:640
+msgid "  Set Goal  (disabled)"
+msgstr "  Hedef Belirle  (devre dışı)"
+
+#: desktop_modules/module_recent.lua:125
+msgid "%d%%"
+msgstr "%%%d"
+
+#: desktop_modules/module_currently.lua:529
+#: desktop_modules/module_new_books.lua:182
+#: desktop_modules/module_coverdeck.lua:571
+#: desktop_modules/module_recent.lua:159
+msgid "%d%% Read"
+msgstr "%%%d Okundu"
+
+#: desktop_modules/module_currently.lua:605
+msgid "%s left"
+msgstr "%s kaldı"
+
+#: desktop_modules/module_currently.lua:553
+#: desktop_modules/module_currently.lua:603
+#: desktop_modules/module_reading_goals.lua:434
+#: desktop_modules/module_coverdeck.lua:576
+msgid "%s read"
+msgstr "%s okundu"
+
+#: desktop_modules/module_currently.lua:572
+#: desktop_modules/module_coverdeck.lua:582
+msgid "%s remaining"
+msgstr "%s kaldı"
+
+#: sui_menu.lua:849
+msgid "A restart is required to apply the new bar size across all layouts.\n\nRestart now?"
+msgstr "Yeni çubuk boyutunu tüm düzenlerde uygulamak için yeniden başlatma gerekiyor.\n\nŞimdi yeniden başlatılsın mı?"
+
+#: sui_menu.lua:2221
+msgid "About"
+msgstr "Hakkında"
+
+#: desktop_modules/module_coverdeck.lua:750
+msgid "Above"
+msgstr "Yukarıda"
+
+#: sui_menu.lua:1323
+#: desktop_modules/module_quick_actions.lua:293
+msgid "Add at least 2 actions to arrange."
+msgstr "Düzenlemek için en az 2 eylem ekleyin."
+
+#: desktop_modules/module_tbr.lua:409
+msgid "Add at least 2 books to arrange."
+msgstr "Düzenlemek için en az 2 kitap ekleyin."
+
+#: desktop_modules/module_reading_stats.lua:485
+msgid "Add at least 2 stats to arrange."
+msgstr "Düzenlemek için en az 2 istatistik ekleyin."
+
+#: desktop_modules/module_tbr.lua:265
+msgid "Add to To Be Read"
+msgstr "Okunacaklar Listesine Ekle"
+
+#: desktop_modules/module_reading_stats.lua:66
+msgid "All time — Books"
+msgstr "Tüm zamanlar — Kitaplar"
+
+#: desktop_modules/module_reading_stats.lua:65
+msgid "All time — Time"
+msgstr "Tüm zamanlar — Süre"
+
+#: desktop_modules/module_reading_goals.lua:609
+msgid "Annual Goal"
+msgstr "Yıllık Hedef"
+
+#: sui_menu.lua:1233
+#: desktop_modules/module_reading_goals.lua:354
+msgid "Annual Reading Goal"
+msgstr "Yıllık Okuma Hedefi"
+
+#: sui_config.lua:1653
+#: sui_config.lua:1734
+#: sui_menu.lua:769
+#: sui_menu.lua:839
+#: sui_menu.lua:1740
+#: sui_menu.lua:1775
+msgid "Apply"
+msgstr "Uygula"
+
+#: desktop_modules/module_clock.lua:54
+msgid "April"
+msgstr "Nisan"
+
+#: desktop_modules/module_reading_stats.lua:482
+msgid "Arrange"
+msgstr "Düzenle"
+
+#: sui_menu.lua:1327
+#: desktop_modules/module_quick_actions.lua:305
+msgid "Arrange %s"
+msgstr "%s Düzenle"
+
+#: sui_menu.lua:1049
+#: sui_menu.lua:1100
+#: sui_menu.lua:1115
+msgid "Arrange Buttons"
+msgstr "Düğmeleri Düzenle"
+
+#: desktop_modules/module_collections.lua:622
+#: desktop_modules/module_collections.lua:635
+msgid "Arrange Collections"
+msgstr "Koleksiyonları Düzenle"
+
+#: sui_menu.lua:604
+#: sui_menu.lua:633
+#: sui_menu.lua:1317
+#: desktop_modules/module_currently.lua:863
+#: desktop_modules/module_currently.lua:887
+#: desktop_modules/module_quick_actions.lua:284
+msgid "Arrange Items"
+msgstr "Öğeleri Düzenle"
+
+#: sui_menu.lua:1582
+msgid "Arrange Modules"
+msgstr "Modülleri Düzenle"
+
+#: desktop_modules/module_reading_stats.lua:491
+msgid "Arrange Reading Stats"
+msgstr "Okuma İstatistiklerini Düzenle"
+
+#: desktop_modules/module_coverdeck.lua:774
+#: desktop_modules/module_coverdeck.lua:787
+msgid "Arrange Statistics"
+msgstr "İstatistikleri Düzenle"
+
+#: desktop_modules/module_tbr.lua:402
+#: desktop_modules/module_tbr.lua:421
+msgid "Arrange To Be Read list"
+msgstr "Okunacaklar Listesini Düzenle"
+
+#: sui_menu.lua:199
+#: sui_menu.lua:209
+msgid "Arrange tabs"
+msgstr "Sekmeleri düzenle"
+
+#: desktop_modules/module_clock.lua:55
+msgid "August"
+msgstr "Ağustos"
+
+#: desktop_modules/module_currently.lua:266
+msgid "Author"
+msgstr "Yazar"
+
+#: sui_menu.lua:2237
+msgid "Author: %s"
+msgstr "Yazar: %s"
+
+#: sui_config.lua:144
+#: sui_browsemeta.lua:57
+msgid "Authors"
+msgstr "Yazarlar"
+
+#: sui_browsemeta.lua:742
+#: sui_foldercovers.lua:555
+#: sui_foldercovers.lua:620
+#: desktop_modules/module_collections.lua:583
+msgid "Auto (first book)"
+msgstr "Otomatik (ilk kitap)"
+
+#: sui_titlebar.lua:55
+msgid "Back"
+msgstr "Geri"
+
+#: desktop_modules/module_collections.lua:662
+msgid "Badge position: Bottom"
+msgstr "Rozet konumu: Alt"
+
+#: desktop_modules/module_collections.lua:663
+msgid "Badge position: Top"
+msgstr "Rozet konumu: Üst"
+
+#: sui_config.lua:168
+msgid "Battery"
+msgstr "Pil"
+
+#: desktop_modules/module_coverdeck.lua:758
+msgid "Below"
+msgstr "Aşağıda"
+
+#: sui_quickactions.lua:619
+msgid "Book Info"
+msgstr "Kitap Bilgisi"
+
+#: sui_bottombar.lua:1029
+msgid "Bookmark browser"
+msgstr "Yer işareti tarayıcısı"
+
+#: sui_bottombar.lua:961
+msgid "Bookmark browser not available."
+msgstr "Yer işareti tarayıcısı kullanılamıyor."
+
+#: sui_config.lua:139
+msgid "Bookmarks"
+msgstr "Yer İşaretleri"
+
+#: desktop_modules/module_reading_goals.lua:355
+msgid "Books to read in %s:"
+msgstr "%s içinde okunacak kitaplar:"
+
+#: sui_menu.lua:1945
+#: sui_menu.lua:2080
+#: sui_menu.lua:2142
+msgid "Bottom"
+msgstr "Alt"
+
+#: sui_menu.lua:806
+#: sui_bottombar.lua:837
+msgid "Bottom Bar"
+msgstr "Alt Çubuk"
+
+#: sui_menu.lua:832
+msgid "Bottom Bar Size"
+msgstr "Alt Çubuk Boyutu"
+
+#: sui_menu.lua:814
+msgid "Bottom Bar will be %s after restart.\n\nRestart now?"
+msgstr "Alt Çubuk yeniden başlatıldıktan sonra %s olacak.\n\nŞimdi yeniden başlatılsın mı?"
+
+#: sui_menu.lua:865
+#: sui_menu.lua:868
+msgid "Bottom Margin"
+msgstr "Alt Kenar Boşluğu"
+
+#: sui_menu.lua:866
+msgid "Bottom Margin — %d%%"
+msgstr "Alt Kenar Boşluğu — %%%d"
+
+#: sui_config.lua:141
+#: sui_config.lua:167
+msgid "Brightness"
+msgstr "Parlaklık"
+
+#: sui_titlebar.lua:57
+msgid "Browse"
+msgstr "Göz At"
+
+#: sui_browsemeta.lua:421
+msgid "Browse by"
+msgstr "Şuna göre göz at:"
+
+#: sui_menu.lua:1983
+msgid "Browse by Author / Series"
+msgstr "Yazar / Seriye Göre Göz At"
+
+#: sui_bottombar.lua:1412
+msgid "Browse by Authors/Series not available."
+msgstr "Yazar/Seriye Göre Göz Atma kullanılamıyor."
+
+#: sui_titlebar.lua:817
+msgid "Browse library"
+msgstr "Kütüphaneye göz at"
+
+#: sui_menu.lua:1165
+msgid "Button Size"
+msgstr "Düğme Boyutu"
+
+#: sui_titlebar.lua:835
+msgid "By author"
+msgstr "Yazara göre"
+
+#: sui_titlebar.lua:848
+msgid "By series"
+msgstr "Seriye göre"
+
+#: sui_quickactions.lua:408
+#: sui_quickactions.lua:494
+#: sui_quickactions.lua:602
+#: sui_quickactions.lua:806
+#: sui_quickactions.lua:877
+#: sui_quickactions.lua:905
+#: sui_quickactions.lua:933
+#: sui_quickactions.lua:949
+#: sui_quickactions.lua:1061
+#: sui_quickactions.lua:1203
+#: sui_config.lua:1654
+#: sui_config.lua:1735
+#: sui_browsemeta.lua:774
+#: sui_menu.lua:566
+#: sui_menu.lua:770
+#: sui_menu.lua:840
+#: sui_menu.lua:1741
+#: sui_menu.lua:1776
+#: sui_bottombar.lua:1054
+#: sui_bottombar.lua:1765
+#: sui_updater.lua:421
+#: sui_updater.lua:438
+#: sui_foldercovers.lua:584
+#: sui_foldercovers.lua:651
+#: sui_titlebar.lua:861
+#: desktop_modules/module_collections.lua:609
+#: desktop_modules/module_reading_goals.lua:358
+#: desktop_modules/module_reading_goals.lua:374
+#: desktop_modules/module_reading_goals.lua:391
+#: desktop_modules/module_quote.lua:1115
+msgid "Cancel"
+msgstr "İptal"
+
+#: desktop_modules/module_reading_stats.lua:433
+msgid "Cards"
+msgstr "Kartlar"
+
+#: sui_menu.lua:620
+#: sui_menu.lua:2134
+msgid "Center"
+msgstr "Orta"
+
+#: sui_quickactions.lua:1110
+msgid "Change Icons"
+msgstr "Simgeleri Değiştir"
+
+#: sui_menu.lua:2242
+msgid "Check for Updates"
+msgstr "Güncellemeleri Denetle"
+
+#: sui_updater.lua:460
+msgid "Checking for updates…"
+msgstr "Güncellemeler denetleniyor…"
+
+#: sui_config.lua:165
+#: desktop_modules/module_clock.lua:227
+msgid "Clock"
+msgstr "Saat"
+
+#: sui_titlebar.lua:60
+msgid "Close"
+msgstr "Kapat"
+
+#: sui_quickactions.lua:527
+msgid "Codepoint out of valid Unicode range (0–10FFFF)."
+msgstr "Kod noktası geçerli Unicode aralığının (0–10FFFF) dışında."
+
+#: sui_quickactions.lua:943
+msgid "Collection"
+msgstr "Koleksiyon"
+
+#: desktop_modules/module_collections.lua:570
+#: desktop_modules/module_collections.lua:576
+msgid "Collection is empty."
+msgstr "Koleksiyon boş."
+
+#: sui_quickactions.lua:1295
+msgid "Collection not available: %s"
+msgstr "Koleksiyon bulunamadı: %s"
+
+#: sui_quickactions.lua:621
+#: sui_config.lua:135
+#: sui_bottombar.lua:1040
+#: desktop_modules/module_collections.lua:298
+#: desktop_modules/module_collections.lua:299
+#: desktop_modules/module_collections.lua:318
+#: desktop_modules/module_collections.lua:620
+msgid "Collections"
+msgstr "Koleksiyonlar"
+
+#: sui_patches.lua:1062
+msgid "Collections (%1)"
+msgstr "Koleksiyonlar (%1)"
+
+#: sui_bottombar.lua:1317
+msgid "Collections not available."
+msgstr "Koleksiyonlar kullanılamıyor."
+
+#: sui_menu.lua:1169
+#: desktop_modules/module_currently.lua:964
+#: desktop_modules/module_reading_goals.lua:596
+msgid "Compact"
+msgstr "Kompakt"
+
+#: sui_quickactions.lua:417
+msgid "Confirm"
+msgstr "Onayla"
+
+#: sui_config.lua:137
+msgid "Continue"
+msgstr "Devam Et"
+
+#: desktop_modules/module_coverdeck.lua:325
+msgid "Cover Deck"
+msgstr "Kapak Galerisi"
+
+#: desktop_modules/module_collections.lua:613
+msgid "Cover for \"%s\""
+msgstr "\"%s\" için kapak"
+
+#: desktop_modules/module_collections.lua:651
+#: desktop_modules/module_collections.lua:653
+#: desktop_modules/module_currently.lua:811
+#: desktop_modules/module_currently.lua:813
+#: desktop_modules/module_new_books.lua:260
+#: desktop_modules/module_new_books.lua:262
+#: desktop_modules/module_coverdeck.lua:707
+#: desktop_modules/module_coverdeck.lua:708
+#: desktop_modules/module_recent.lua:256
+#: desktop_modules/module_recent.lua:258
+msgid "Cover size"
+msgstr "Kapak boyutu"
+
+#: sui_quickactions.lua:1119
+msgid "Create Quick Action"
+msgstr "Hızlı Eylem Oluştur"
+
+#: sui_config.lua:1762
+#: desktop_modules/module_currently.lua:296
+#: desktop_modules/module_currently.lua:297
+#: desktop_modules/module_currently.lua:402
+#: desktop_modules/module_currently.lua:981
+msgid "Currently Reading"
+msgstr "Şu Anda Okunanlar"
+
+#: sui_config.lua:561
+msgid "Custom"
+msgstr "Özel"
+
+#: desktop_modules/module_quote.lua:1262
+msgid "Custom File"
+msgstr "Özel Dosya"
+
+#: sui_config.lua:171
+#: sui_menu.lua:558
+msgid "Custom Text"
+msgstr "Özel Metin"
+
+#: sui_menu.lua:1142
+msgid "Custom Title Bar"
+msgstr "Özel Başlık Çubuğu"
+
+#: sui_menu.lua:1153
+msgid "Custom Title Bar will be %s after restart.\n\nRestart now?"
+msgstr "Özel Başlık Çubuğu yeniden başlatıldıktan sonra %s olacak.\n\nŞimdi yeniden başlatılsın mı?"
+
+#: desktop_modules/module_reading_goals.lua:630
+msgid "Daily Goal"
+msgstr "Günlük Hedef"
+
+#: desktop_modules/module_reading_goals.lua:388
+msgid "Daily Reading Goal"
+msgstr "Günlük Okuma Hedefi"
+
+#: desktop_modules/module_reading_stats.lua:64
+msgid "Daily avg — Pages"
+msgstr "Günlük ort. — Sayfa"
+
+#: desktop_modules/module_reading_stats.lua:63
+msgid "Daily avg — Time"
+msgstr "Günlük ort. — Süre"
+
+#: desktop_modules/module_currently.lua:269
+#: desktop_modules/module_coverdeck.lua:76
+msgid "Days of reading"
+msgstr "Okuma günleri"
+
+#: desktop_modules/module_clock.lua:56
+msgid "December"
+msgstr "Aralık"
+
+#: sui_quickactions.lua:562
+#: sui_menu.lua:356
+#: sui_menu.lua:485
+#: sui_menu.lua:1170
+#: sui_titlebar.lua:821
+#: desktop_modules/module_currently.lua:954
+#: desktop_modules/module_reading_goals.lua:588
+#: desktop_modules/module_quick_actions.lua:406
+#: desktop_modules/module_quick_actions.lua:411
+msgid "Default"
+msgstr "Varsayılan"
+
+#: sui_quickactions.lua:851
+#: sui_quickactions.lua:870
+msgid "Default (Folder)"
+msgstr "Varsayılan (Klasör)"
+
+#: sui_quickactions.lua:897
+msgid "Default (Plugin)"
+msgstr "Varsayılan (Eklenti)"
+
+#: sui_quickactions.lua:925
+msgid "Default (System)"
+msgstr "Varsayılan (Sistem)"
+
+#: desktop_modules/module_quote.lua:1198
+msgid "Default Quotes"
+msgstr "Varsayılan Alıntılar"
+
+#: sui_quickactions.lua:1197
+#: sui_quickactions.lua:1202
+msgid "Delete"
+msgstr "Sil"
+
+#: sui_quickactions.lua:1201
+msgid "Delete quick action \"%s\"?"
+msgstr "\"%s\" hızlı eylemi silinsin mi?"
+
+#: sui_quickactions.lua:624
+msgid "Dictionary Lookup"
+msgstr "Sözlükte Ara"
+
+#: sui_menu.lua:1234
+msgid "Digital Goal  (%s)"
+msgstr "Dijital Hedef  (%s)"
+
+#: sui_menu.lua:1760
+msgid "Disable \"Lock Scale\" first to set a custom label scale."
+msgstr "Özel bir etiket ölçeği ayarlamak için önce \"Ölçeği Kilitle\" seçeneğini devre dışı bırakın."
+
+#: sui_config.lua:1638
+msgid "Disable \"Lock Scale\" first to set a per-module scale."
+msgstr "Modül başına ölçek ayarlamak için önce \"Ölçeği Kilitle\" seçeneğini devre dışı bırakın."
+
+#: sui_config.lua:169
+msgid "Disk Usage"
+msgstr "Disk Kullanımı"
+
+#: sui_quickactions.lua:1256
+msgid "Dispatcher not available."
+msgstr "Dağıtıcı kullanılamıyor."
+
+#: sui_menu.lua:393
+msgid "Dot Pager"
+msgstr "Noktalı Sayfalayıcı"
+
+#: sui_updater.lua:437
+msgid "Download and install"
+msgstr "İndir ve kur"
+
+#: sui_updater.lua:348
+msgid "Download error: "
+msgstr "İndirme hatası: "
+
+#: sui_updater.lua:323
+msgid "Downloading Simple UI %s…"
+msgstr "Simple UI %s indiriliyor…"
+
+#: sui_quickactions.lua:1187
+msgid "Edit"
+msgstr "Düzenle"
+
+#: sui_menu.lua:550
+#: sui_menu.lua:552
+msgid "Edit Custom Text"
+msgstr "Özel Metni Düzenle"
+
+#: sui_quickactions.lua:752
+msgid "Edit Quick Action"
+msgstr "Hızlı Eylemi Düzenle"
+
+#: sui_bottombar.lua:1416
+msgid "Enable 'Browse by Author / Series' in the library menu first."
+msgstr "Önce kütüphane menüsünden 'Yazar / Seriye Göre Göz At' seçeneğini etkinleştirin."
+
+#: sui_quickactions.lua:491
+msgid "Enter the Unicode codepoint (hex) of a Nerd Fonts symbol.\nYou can look up codes with wakamaifondue.com using the file:\n  /koreader/fonts/nerdfonts/symbols.ttf\nLeave blank and press OK to remove a Nerd Font icon."
+msgstr "Nerd Fonts sembolünün Unicode kod noktasını (hex) girin.\nKodları wakamaifondue.com adresinde şu dosya ile bulabilirsiniz:\n  /koreader/fonts/nerdfonts/symbols.ttf\nNerd Font simgesini kaldırmak için boş bırakıp Tamam'a basın."
+
+#: sui_updater.lua:466
+msgid "Error checking for updates."
+msgstr "Güncellemeler denetlenirken hata oluştu."
+
+#: sui_updater.lua:471
+msgid "Error checking for updates: "
+msgstr "Güncellemeler denetlenirken hata oluştu: "
+
+#: sui_menu.lua:461
+msgid "Extra Small"
+msgstr "Çok Küçük"
+
+#: sui_updater.lua:350
+msgid "Extraction error: "
+msgstr "Çıkarma hatası: "
+
+#: sui_quickactions.lua:620
+#: sui_config.lua:138
+msgid "Favorites"
+msgstr "Favoriler"
+
+#: sui_bottombar.lua:1367
+msgid "Favorites not available."
+msgstr "Favoriler kullanılamıyor."
+
+#: desktop_modules/module_clock.lua:54
+msgid "February"
+msgstr "Şubat"
+
+#: sui_bottombar.lua:983
+msgid "Fetching bookmarks\\xe2\\x80\\xa6"
+msgstr "Yer işaretleri alınıyor\\xe2\\x80\\xa6"
+
+#: sui_quickactions.lua:622
+msgid "File Search"
+msgstr "Dosya Arama"
+
+#: desktop_modules/module_reading_stats.lua:443
+#: desktop_modules/module_quick_actions.lua:406
+#: desktop_modules/module_quick_actions.lua:420
+msgid "Flat"
+msgstr "Düz"
+
+#: sui_quickactions.lua:941
+msgid "Folder"
+msgstr "Klasör"
+
+#: sui_menu.lua:2023
+msgid "Folder Covers"
+msgstr "Klasör Kapakları"
+
+#: sui_menu.lua:2102
+msgid "Folder Name"
+msgstr "Klasör Adı"
+
+#: sui_menu.lua:2154
+msgid "Folder Name Text Size"
+msgstr "Klasör Adı Metin Boyutu"
+
+#: sui_quickactions.lua:623
+msgid "Folder Shortcuts"
+msgstr "Klasör Kısayolları"
+
+#: sui_foldercovers.lua:656
+msgid "Folder cover"
+msgstr "Klasör kapağı"
+
+#: desktop_modules/module_clock.lua:51
+msgid "Friday"
+msgstr "Cuma"
+
+#: sui_bottombar.lua:1527
+msgid "Frontlight not available on this device."
+msgstr "Ön ışık bu cihazda kullanılamıyor."
+
+#: sui_menu.lua:353
+msgid "General"
+msgstr "Genel"
+
+#: sui_menu.lua:1734
+msgid "Global scale for all modules.\nIndividual overrides in Module Settings take precedence.\n100% is the default size."
+msgstr "Tüm modüller için genel ölçek.\nModül Ayarlarındaki bireysel geçersiz kılmalar önceliklidir.\nVarsayılan boyut %100'dür."
+
+#: sui_menu.lua:2043
+msgid "Group Books by Series"
+msgstr "Kitapları Seriye Göre Grupla"
+
+#: sui_menu.lua:833
+msgid "Height of the bottom navigation bar.\n100% is the default size."
+msgstr "Alt gezinme çubuğunun yüksekliği.\nVarsayılan boyut %100'dür."
+
+#: sui_menu.lua:763
+msgid "Height of the top status bar.\n100% is the default size."
+msgstr "Üst durum çubuğunun yüksekliği.\nVarsayılan boyut %100'dür."
+
+#: sui_menu.lua:377
+#: sui_menu.lua:436
+#: sui_menu.lua:925
+#: sui_menu.lua:2061
+#: sui_menu.lua:2105
+msgid "Hidden"
+msgstr "Gizli"
+
+#: sui_menu.lua:1350
+#: desktop_modules/module_quick_actions.lua:334
+msgid "Hide Text"
+msgstr "Metni Gizle"
+
+#: sui_menu.lua:532
+msgid "Hide Wi-Fi icon when off"
+msgstr "Kapalıyken Wi-Fi simgesini gizle"
+
+#: sui_menu.lua:2176
+msgid "Hide selection underline"
+msgstr "Seçim alt çizgisini gizle"
+
+#: sui_menu.lua:444
+msgid "Hides the pagination bar on the homescreen.\nNot available when Navpager is active."
+msgstr "Ana ekranda sayfalandırma çubuğunu gizler.\nNavpager aktifken kullanılamaz."
+
+#: sui_quickactions.lua:618
+#: sui_config.lua:136
+#: sui_bottombar.lua:1033
+msgid "History"
+msgstr "Geçmiş"
+
+#: sui_bottombar.lua:1321
+msgid "History not available."
+msgstr "Geçmiş kullanılamıyor."
+
+#: sui_config.lua:134
+msgid "Home"
+msgstr "Ana Sayfa"
+
+#: sui_patches.lua:659
+#: sui_patches.lua:682
+#: sui_menu.lua:390
+#: sui_menu.lua:1825
+#: sui_menu.lua:1943
+msgid "Home Screen"
+msgstr "Ana Ekran"
+
+#: sui_bottombar.lua:1050
+msgid "Home folder"
+msgstr "Ana klasör"
+
+#: sui_bottombar.lua:1052
+msgid "Home folder + subfolders"
+msgstr "Ana klasör + alt klasörler"
+
+#: sui_homescreen.lua:1080
+msgid "Homescreen"
+msgstr "Ana Ekran"
+
+#: sui_bottombar.lua:1362
+msgid "Homescreen not available."
+msgstr "Ana Ekran kullanılamıyor."
+
+#: sui_quickactions.lua:761
+#: sui_quickactions.lua:765
+msgid "Icon"
+msgstr "Simge"
+
+#: sui_menu.lua:887
+#: sui_menu.lua:890
+msgid "Icon Size"
+msgstr "Simge Boyutu"
+
+#: sui_menu.lua:888
+msgid "Icon Size — %d%%"
+msgstr "Simge Boyutu — %%%d"
+
+#: sui_quickactions.lua:756
+msgid "Icon: Default"
+msgstr "Simge: Varsayılan"
+
+#: sui_menu.lua:107
+msgid "Icons"
+msgstr "Simgeler"
+
+#: sui_menu.lua:108
+msgid "Icons only"
+msgstr "Yalnızca Simgeler"
+
+#: sui_menu.lua:1062
+msgid "Invalid arrangement.\nKeep items between the Left and Right separators."
+msgstr "Geçersiz düzenleme.\nÖğeleri Sol ve Sağ ayırıcılar arasında tutun."
+
+#: sui_menu.lua:647
+msgid "Invalid arrangement.\nKeep the Left, Center and Right separators in order."
+msgstr "Geçersiz düzenleme.\nSol, Orta ve Sağ ayırıcıları sırayla tutun."
+
+#: sui_quickactions.lua:533
+msgid "Invalid input. Please enter 1–6 hexadecimal digits (0–9, A–F)."
+msgstr "Geçersiz giriş. Lütfen 1-6 arası onaltılık (hex) basamak girin (0-9, A-F)."
+
+#: sui_menu.lua:782
+#: sui_menu.lua:1360
+#: desktop_modules/module_currently.lua:983
+#: desktop_modules/module_coverdeck.lua:769
+#: desktop_modules/module_quick_actions.lua:344
+msgid "Items"
+msgstr "Öğeler"
+
+#: desktop_modules/module_clock.lua:54
+msgid "January"
+msgstr "Ocak"
+
+#: desktop_modules/module_clock.lua:55
+msgid "July"
+msgstr "Temmuz"
+
+#: desktop_modules/module_clock.lua:55
+msgid "June"
+msgstr "Haziran"
+
+#: sui_menu.lua:414
+msgid "KOReader"
+msgstr "KOReader"
+
+#: sui_menu.lua:1768
+msgid "Label Scale"
+msgstr "Etiket Ölçeği"
+
+#: sui_menu.lua:907
+#: sui_menu.lua:910
+msgid "Label Size"
+msgstr "Etiket Boyutu"
+
+#: sui_menu.lua:908
+msgid "Label Size — %d%%"
+msgstr "Etiket Boyutu — %%%d"
+
+#: sui_menu.lua:1753
+msgid "Labels"
+msgstr "Etiketler"
+
+#: sui_menu.lua:1171
+msgid "Large"
+msgstr "Büyük"
+
+#: sui_menu.lua:341
+#: sui_menu.lua:746
+#: sui_menu.lua:815
+#: sui_menu.lua:851
+#: sui_menu.lua:1157
+#: sui_menu.lua:1924
+#: sui_updater.lua:361
+msgid "Later"
+msgstr "Daha Sonra"
+
+#: sui_menu.lua:614
+#: sui_menu.lua:1032
+msgid "Left"
+msgstr "Sol"
+
+#: sui_config.lua:133
+#: sui_config.lua:409
+#: sui_menu.lua:1964
+#: sui_titlebar.lua:967
+msgid "Library"
+msgstr "Kütüphane"
+
+#: sui_menu.lua:1175
+msgid "Library Buttons"
+msgstr "Kütüphane Düğmeleri"
+
+#: desktop_modules/module_reading_stats.lua:453
+msgid "List"
+msgstr "Liste"
+
+#: sui_menu.lua:1714
+msgid "Lock Scale"
+msgstr "Ölçeği Kilitle"
+
+#: desktop_modules/module_clock.lua:54
+msgid "March"
+msgstr "Mart"
+
+#: desktop_modules/module_collections.lua:709
+msgid "Maximum 5 collections. Remove one first."
+msgstr "Maksimum 5 koleksiyon. Önce birini kaldırın."
+
+#: desktop_modules/module_clock.lua:55
+msgid "May"
+msgstr "Mayıs"
+
+#: sui_titlebar.lua:54
+#: sui_titlebar.lua:59
+msgid "Menu"
+msgstr "Menü"
+
+#: sui_menu.lua:265
+msgid "Minimum 1 tab required in navpager mode."
+msgstr "Navpager modunda en az 1 sekme gereklidir."
+
+#: sui_menu.lua:266
+msgid "Minimum 2 tabs required. Select another tab first."
+msgstr "En az 2 sekme gereklidir. Önce başka bir sekme seçin."
+
+#: desktop_modules/module_reading_goals.lua:389
+msgid "Minutes per day:"
+msgstr "Günlük dakika:"
+
+#: sui_menu.lua:1731
+msgid "Module Scale"
+msgstr "Modül Ölçeği"
+
+#: sui_menu.lua:1706
+msgid "Module Settings"
+msgstr "Modül Ayarları"
+
+#: sui_menu.lua:1725
+msgid "Modules"
+msgstr "Modüller"
+
+#: sui_menu.lua:1477
+msgid "Modules  (%d)"
+msgstr "Modüller  (%d)"
+
+#: desktop_modules/module_clock.lua:50
+msgid "Monday"
+msgstr "Pazartesi"
+
+#: desktop_modules/module_quote.lua:1218
+msgid "My Highlights"
+msgstr "Vurgularım"
+
+#: sui_quickactions.lua:850
+#: sui_quickactions.lua:869
+#: sui_quickactions.lua:896
+#: sui_quickactions.lua:924
+msgid "Name"
+msgstr "Ad"
+
+#: sui_menu.lua:1947
+msgid "Navigation Bar"
+msgstr "Gezinme Çubuğu"
+
+#: sui_menu.lua:366
+msgid "Navpager"
+msgstr "Navpager"
+
+#: sui_menu.lua:373
+msgid "Navpager enabled.\n\nRestart now?"
+msgstr "Navpager etkinleştirildi.\n\nŞimdi yeniden başlatılsın mı?"
+
+#: sui_quickactions.lua:488
+msgid "Nerd Font Icon"
+msgstr "Nerd Font Simgesi"
+
+#: sui_quickactions.lua:573
+msgid "Nerd Font symbol…"
+msgstr "Nerd Font sembolü…"
+
+#: sui_bottombar.lua:1454
+msgid "Network manager unavailable."
+msgstr "Ağ yöneticisi kullanılamıyor."
+
+#: desktop_modules/module_new_books.lua:180
+msgid "New"
+msgstr "Yeni"
+
+#: desktop_modules/module_new_books.lua:46
+#: desktop_modules/module_new_books.lua:47
+#: desktop_modules/module_new_books.lua:107
+#: desktop_modules/module_new_books.lua:280
+msgid "New Books"
+msgstr "Yeni Kitaplar"
+
+#: sui_quickactions.lua:752
+msgid "New Quick Action"
+msgstr "Yeni Hızlı Eylem"
+
+#: sui_quickactions.lua:1058
+msgid "New name…"
+msgstr "Yeni ad…"
+
+#: sui_bottombar.lua:288
+msgid "Next"
+msgstr "İleri"
+
+#: desktop_modules/module_quote.lua:1275
+msgid "No .lua files found in custom_quotes/"
+msgstr "custom_quotes/ klasöründe .lua dosyası bulunamadı"
+
+#: sui_updater.lua:419
+msgid "No automatic update file was found.\n\nOpen the releases page on GitHub?"
+msgstr "Otomatik güncelleme dosyası bulunamadı.\n\nGitHub sürümler sayfası açılsın mı?"
+
+#: sui_bottombar.lua:1389
+msgid "No book in history."
+msgstr "Geçmişte kitap yok."
+
+#: sui_foldercovers.lua:609
+msgid "No books found in this folder."
+msgstr "Bu klasörde kitap bulunamadı."
+
+#: sui_foldercovers.lua:544
+msgid "No books found in this series."
+msgstr "Bu seride kitap bulunamadı."
+
+#: sui_browsemeta.lua:731
+msgid "No books found."
+msgstr "Kitap bulunamadı."
+
+#: desktop_modules/module_tbr.lua:455
+msgid "No books in To Be Read list."
+msgstr "Okunacaklar listesinde kitap yok."
+
+#: sui_homescreen.lua:190
+msgid "No books opened yet"
+msgstr "Henüz hiçbir kitap açılmadı"
+
+#: desktop_modules/module_collections.lua:673
+msgid "No collections found."
+msgstr "Koleksiyon bulunamadı."
+
+#: desktop_modules/module_collections.lua:378
+msgid "No collections selected"
+msgstr "Koleksiyon seçilmedi"
+
+#: desktop_modules/module_quote.lua:831
+msgid "No custom quotes found. Add a .lua file to the plugin\\'s desktop_modules/custom_quotes/ folder and select it in Settings."
+msgstr "Özel alıntı bulunamadı. Eklentinin desktop_modules/custom_quotes/ klasörüne bir .lua dosyası ekleyin ve Ayarlar'dan seçin."
+
+#: sui_quickactions.lua:1302
+msgid "No folder, collection or plugin configured.\nGo to Simple UI \\xe2\\x86\\x92 Settings \\xe2\\x86\\x92 Quick Actions to set one."
+msgstr "Hiçbir klasör, koleksiyon veya eklenti yapılandırılmadı.\nBir tane ayarlamak için Simple UI \\xe2\\x86\\x92 Ayarlar \\xe2\\x86\\x92 Hızlı Eylemler yolunu izleyin."
+
+#: desktop_modules/module_quote.lua:895
+msgid "No highlights found. Open a book and highlight some passages."
+msgstr "Vurgu bulunamadı. Bir kitap açıp bazı bölümleri vurgulayın."
+
+#: sui_quickactions.lua:586
+msgid "No icons found in:"
+msgstr "Şurada simge bulunamadı:"
+
+#: sui_quickactions.lua:886
+msgid "No plugins found."
+msgstr "Eklenti bulunamadı."
+
+#: desktop_modules/module_quote.lua:861
+msgid "No quotes found."
+msgstr "Alıntı bulunamadı."
+
+#: desktop_modules/module_reading_stats.lua:286
+msgid "No stats selected"
+msgstr "İstatistik seçilmedi"
+
+#: sui_quickactions.lua:914
+msgid "No system actions found."
+msgstr "Sistem eylemi bulunamadı."
+
+#: desktop_modules/module_clock.lua:56
+msgid "November"
+msgstr "Kasım"
+
+#: sui_menu.lua:2058
+msgid "Number of Books in Folder"
+msgstr "Klasördeki Kitap Sayısı"
+
+#: sui_menu.lua:1482
+#: sui_menu.lua:2090
+msgid "Number of Pages"
+msgstr "Sayfa Sayısı"
+
+#: sui_menu.lua:500
+msgid "Number of Pages in Title Bar Always"
+msgstr "Sayfa Sayısını Başlık Çubuğunda Her Zaman Göster"
+
+#: sui_quickactions.lua:501
+msgid "OK"
+msgstr "Tamam"
+
+#: desktop_modules/module_clock.lua:56
+msgid "October"
+msgstr "Ekim"
+
+#: sui_menu.lua:737
+#: sui_menu.lua:806
+#: sui_menu.lua:996
+#: sui_menu.lua:1142
+#: sui_menu.lua:1825
+#: sui_menu.lua:1906
+msgid "Off"
+msgstr "Kapalı"
+
+#: sui_menu.lua:737
+#: sui_menu.lua:806
+#: sui_menu.lua:996
+#: sui_menu.lua:1142
+#: sui_menu.lua:1825
+#: sui_menu.lua:1906
+msgid "On"
+msgstr "Açık"
+
+#: sui_homescreen.lua:420
+#: desktop_modules/module_quote.lua:1114
+msgid "Open"
+msgstr "Aç"
+
+#: sui_homescreen.lua:199
+msgid "Open a book to get started"
+msgstr "Başlamak için bir kitap açın"
+
+#: sui_updater.lua:420
+msgid "Open in browser"
+msgstr "Tarayıcıda aç"
+
+#: sui_homescreen.lua:419
+#: desktop_modules/module_quote.lua:1113
+msgid "Open this file?"
+msgstr "Bu dosya açılsın mı?"
+
+#: sui_menu.lua:2054
+msgid "Overlays"
+msgstr "Katmanlar"
+
+#: sui_patches.lua:1404
+#: sui_patches.lua:1759
+#: sui_homescreen.lua:1673
+msgid "Page %1 of %2"
+msgstr "Sayfa %1 / %2"
+
+#: sui_menu.lua:1948
+msgid "Pagination Bar"
+msgstr "Sayfalandırma Çubuğu"
+
+#: sui_menu.lua:383
+msgid "Pagination bar hidden.\n\nRestart now?"
+msgstr "Sayfalandırma çubuğu gizlendi.\n\nŞimdi yeniden başlatılsın mı?"
+
+#: sui_menu.lua:362
+msgid "Pagination bar set to Default.\n\nRestart now?"
+msgstr "Sayfalandırma çubuğu Varsayılana ayarlandı.\n\nŞimdi yeniden başlatılsın mı?"
+
+#: sui_menu.lua:469
+#: sui_menu.lua:481
+#: sui_menu.lua:493
+msgid "Pagination bar size will change after restart.\n\nRestart now?"
+msgstr "Sayfalandırma çubuğu boyutu yeniden başlatmadan sonra değişecek.\n\nŞimdi yeniden başlatılsın mı?"
+
+#: sui_quickactions.lua:833
+msgid "Path chooser not available."
+msgstr "Yol seçici kullanılamıyor."
+
+#: desktop_modules/module_recent.lua:304
+msgid "Percentage overlay on cover"
+msgstr "Kapakta yüzde katmanı"
+
+#: desktop_modules/module_currently.lua:268
+#: desktop_modules/module_currently.lua:911
+#: desktop_modules/module_coverdeck.lua:75
+msgid "Percentage read"
+msgstr "Okunma yüzdesi"
+
+#: desktop_modules/module_recent.lua:294
+msgid "Percentage text"
+msgstr "Yüzde metni"
+
+#: desktop_modules/module_reading_goals.lua:371
+msgid "Physical Books — %s"
+msgstr "Fiziksel Kitaplar — %s"
+
+#: desktop_modules/module_reading_goals.lua:372
+msgid "Physical books read this year:"
+msgstr "Bu yıl okunan fiziksel kitaplar:"
+
+#: desktop_modules/module_quote.lua:1300
+msgid "Place .lua files in the plugin's desktop_modules/custom_quotes/ folder"
+msgstr ".lua dosyalarını eklentinin desktop_modules/custom_quotes/ klasörüne yerleştirin"
+
+#: sui_menu.lua:2183
+msgid "Placeholder cover for bookless folders"
+msgstr "Boş klasörler için yer tutucu kapak"
+
+#: sui_quickactions.lua:945
+msgid "Plugin"
+msgstr "Eklenti"
+
+#: sui_quickactions.lua:1287
+msgid "Plugin error: %s"
+msgstr "Eklenti hatası: %s"
+
+#: sui_quickactions.lua:1289
+msgid "Plugin not available: %s"
+msgstr "Eklenti bulunamadı: %s"
+
+#: sui_config.lua:143
+msgid "Power"
+msgstr "Güç"
+
+#: sui_bottombar.lua:288
+msgid "Prev"
+msgstr "Önceki"
+
+#: desktop_modules/module_currently.lua:267
+#: desktop_modules/module_recent.lua:284
+msgid "Progress bar"
+msgstr "İlerleme çubuğu"
+
+#: desktop_modules/module_currently.lua:923
+msgid "Progress bar style"
+msgstr "İlerleme çubuğu stili"
+
+#: sui_menu.lua:1455
+#: sui_menu.lua:1955
+msgid "Quick Actions"
+msgstr "Hızlı Eylemler"
+
+#: sui_menu.lua:1959
+msgid "Quick Actions  (%d/%d — %d left)"
+msgstr "Hızlı Eylemler  (%d/%d — %d kaldı)"
+
+#: sui_menu.lua:1957
+msgid "Quick Actions  (%d/%d — at limit)"
+msgstr "Hızlı Eylemler  (%d/%d — sınırda)"
+
+#: sui_menu.lua:1293
+#: desktop_modules/module_quick_actions.lua:199
+#: desktop_modules/module_quick_actions.lua:249
+msgid "Quick Actions %d"
+msgstr "Hızlı Eylemler %d"
+
+#: sui_bottombar.lua:1756
+msgid "Quit"
+msgstr "Çıkış"
+
+#: desktop_modules/module_quote.lua:971
+msgid "Quote of the Day"
+msgstr "Günün Alıntısı"
+
+#: desktop_modules/module_quote.lua:1240
+msgid "Quotes + My Highlights"
+msgstr "Alıntılar + Vurgularım"
+
+#: sui_config.lua:170
+msgid "RAM Usage"
+msgstr "RAM Kullanımı"
+
+#: desktop_modules/module_reading_goals.lua:443
+#: desktop_modules/module_reading_goals.lua:444
+#: desktop_modules/module_reading_goals.lua:469
+#: desktop_modules/module_reading_goals.lua:608
+msgid "Reading Goals"
+msgstr "Okuma Hedefleri"
+
+#: desktop_modules/module_reading_stats.lua:218
+msgid "Reading Stats"
+msgstr "Okuma İstatistikleri"
+
+#: desktop_modules/module_coverdeck.lua:728
+#: desktop_modules/module_recent.lua:62
+#: desktop_modules/module_recent.lua:63
+#: desktop_modules/module_recent.lua:72
+#: desktop_modules/module_recent.lua:281
+msgid "Recent Books"
+msgstr "Son Kitaplar"
+
+#: desktop_modules/module_tbr.lua:265
+msgid "Remove from To Be Read"
+msgstr "Okunacaklar Listesinden Kaldır"
+
+#: sui_quickactions.lua:1056
+#: sui_quickactions.lua:1114
+msgid "Rename"
+msgstr "Yeniden Adlandır"
+
+#: sui_menu.lua:369
+msgid "Replaces the pagination bar with Prev/Next arrows at the edges of the bottom bar.\nThe arrows dim when there is no previous or next page.\nWith navpager active, as few as 1 tab and at most 4 tabs can be configured."
+msgstr "Sayfalandırma çubuğunu alt çubuğun kenarlarındaki Önceki/İleri oklarıyla değiştirir.\nÖnceki veya sonraki sayfa olmadığında oklar kararır.\nNavpager etkinken, en az 1 ve en fazla 4 sekme yapılandırılabilir."
+
+#: sui_quickactions.lua:1065
+#: sui_menu.lua:1796
+msgid "Reset"
+msgstr "Sıfırla"
+
+#: sui_menu.lua:1795
+msgid "Reset all scales to default (100%)? This cannot be undone."
+msgstr "Tüm ölçekler varsayılana (%100) sıfırlansın mı? Bu işlem geri alınamaz."
+
+#: sui_menu.lua:1790
+msgid "Reset to Default Scale"
+msgstr "Varsayılan Ölçeğe Sıfırla"
+
+#: sui_menu.lua:341
+#: sui_menu.lua:746
+#: sui_menu.lua:815
+#: sui_menu.lua:850
+#: sui_menu.lua:1156
+#: sui_menu.lua:1924
+#: sui_bottombar.lua:1735
+#: sui_updater.lua:360
+msgid "Restart"
+msgstr "Yeniden Başlat"
+
+#: sui_menu.lua:1845
+msgid "Return to Book Folder"
+msgstr "Kitap Klasörüne Dön"
+
+#: sui_menu.lua:626
+#: sui_menu.lua:1040
+msgid "Right"
+msgstr "Sağ"
+
+#: desktop_modules/module_clock.lua:51
+msgid "Saturday"
+msgstr "Cumartesi"
+
+#: sui_quickactions.lua:808
+#: sui_quickactions.lua:1076
+#: desktop_modules/module_reading_goals.lua:358
+#: desktop_modules/module_reading_goals.lua:374
+#: desktop_modules/module_reading_goals.lua:391
+msgid "Save"
+msgstr "Kaydet"
+
+#: sui_menu.lua:1710
+#: desktop_modules/module_reading_stats.lua:389
+#: desktop_modules/module_reading_stats.lua:391
+#: desktop_modules/module_collections.lua:500
+#: desktop_modules/module_collections.lua:502
+#: desktop_modules/module_currently.lua:797
+#: desktop_modules/module_currently.lua:799
+#: desktop_modules/module_new_books.lua:246
+#: desktop_modules/module_new_books.lua:248
+#: desktop_modules/module_reading_goals.lua:568
+#: desktop_modules/module_reading_goals.lua:570
+#: desktop_modules/module_clock.lua:461
+#: desktop_modules/module_clock.lua:463
+#: desktop_modules/module_tbr.lua:362
+#: desktop_modules/module_tbr.lua:364
+#: desktop_modules/module_quote.lua:1160
+#: desktop_modules/module_quote.lua:1164
+#: desktop_modules/module_coverdeck.lua:698
+#: desktop_modules/module_coverdeck.lua:700
+#: desktop_modules/module_quick_actions.lua:385
+#: desktop_modules/module_quick_actions.lua:387
+#: desktop_modules/module_recent.lua:242
+#: desktop_modules/module_recent.lua:244
+msgid "Scale"
+msgstr "Ölçek"
+
+#: desktop_modules/module_currently.lua:827
+msgid "Scale for all text elements (title, author, progress, time).\n100% is the default size."
+msgstr "Tüm metin öğeleri (başlık, yazar, ilerleme, süre) için ölçek.\nVarsayılan boyut %100'dür."
+
+#: desktop_modules/module_quick_actions.lua:399
+msgid "Scale for the button label text.\n100% is the default size."
+msgstr "Düğme etiketi metni için ölçek.\nVarsayılan boyut %100'dür."
+
+#: desktop_modules/module_collections.lua:516
+msgid "Scale for the collection name text.\n100% is the default size."
+msgstr "Koleksiyon adı metni için ölçek.\nVarsayılan boyut %100'dür."
+
+#: desktop_modules/module_collections.lua:654
+msgid "Scale for the collection thumbnails only.\nThe label text follows the module scale.\n100% is the default size."
+msgstr "Yalnızca koleksiyon küçük resimleri için ölçek.\nEtiket metni modül ölçeğini takip eder.\nVarsayılan boyut %100'dür."
+
+#: desktop_modules/module_currently.lua:814
+msgid "Scale for the cover thumbnail only.\n100% is the default size."
+msgstr "Yalnızca kapak küçük resmi için ölçek.\nVarsayılan boyut %100'dür."
+
+#: desktop_modules/module_coverdeck.lua:709
+msgid "Scale for the cover thumbnails only.\n100% is the default size."
+msgstr "Yalnızca kapak küçük resimleri için ölçek.\nVarsayılan boyut %100'dür."
+
+#: desktop_modules/module_new_books.lua:263
+#: desktop_modules/module_recent.lua:259
+msgid "Scale for the cover thumbnails only.\nText and progress bar follow the module scale.\n100% is the default size."
+msgstr "Yalnızca kapak küçük resimleri için ölçek.\nMetin ve ilerleme çubuğu modül ölçeğini takip eder.\nVarsayılan boyut %100'dür."
+
+#: sui_menu.lua:2155
+msgid "Scale for the folder name overlay text.\n100% is the default size."
+msgstr "Klasör adı katman metni için ölçek.\nVarsayılan boyut %100'dür."
+
+#: desktop_modules/module_new_books.lua:275
+msgid "Scale for the label text.\n100% is the default size."
+msgstr "Etiket metni için ölçek.\nVarsayılan boyut %100'dür."
+
+#: desktop_modules/module_recent.lua:273
+msgid "Scale for the percentage read text.\n100% is the default size."
+msgstr "Okunan yüzde metni için ölçek.\nVarsayılan boyut %100'dür."
+
+#: desktop_modules/module_coverdeck.lua:701
+msgid "Scale for this module."
+msgstr "Bu modül için ölçek."
+
+#: desktop_modules/module_reading_stats.lua:392
+#: desktop_modules/module_collections.lua:503
+#: desktop_modules/module_currently.lua:800
+#: desktop_modules/module_new_books.lua:249
+#: desktop_modules/module_reading_goals.lua:571
+#: desktop_modules/module_clock.lua:464
+#: desktop_modules/module_tbr.lua:365
+#: desktop_modules/module_quote.lua:1166
+#: desktop_modules/module_quick_actions.lua:388
+#: desktop_modules/module_recent.lua:245
+msgid "Scale for this module.\n100% is the default size."
+msgstr "Bu modül için ölçek.\nVarsayılan boyut %100'dür."
+
+#: desktop_modules/module_coverdeck.lua:717
+msgid "Scale for title and statistics text.\n100% is the default size."
+msgstr "Başlık ve istatistik metni için ölçek.\nVarsayılan boyut %100'dür."
+
+#: sui_menu.lua:1733
+msgid "Scales all modules and labels together.\n100% is the default size."
+msgstr "Tüm modülleri ve etiketleri birlikte ölçeklendirir.\nVarsayılan boyut %100'dür."
+
+#: sui_menu.lua:1769
+msgid "Scales the section label text above each module.\n100% is the default size."
+msgstr "Her modülün üzerindeki bölüm etiketi metnini ölçeklendirir.\nVarsayılan boyut %100'dür."
+
+#: sui_menu.lua:2198
+msgid "Scan subfolders for cover"
+msgstr "Kapak için alt klasörleri tara"
+
+#: sui_titlebar.lua:56
+msgid "Search"
+msgstr "Ara"
+
+#: desktop_modules/module_collections.lua:627
+msgid "Select at least 2 collections to arrange."
+msgstr "Düzenlemek için en az 2 koleksiyon seçin."
+
+#: desktop_modules/module_clock.lua:56
+msgid "September"
+msgstr "Eylül"
+
+#: sui_config.lua:146
+#: sui_browsemeta.lua:58
+msgid "Series"
+msgstr "Seri"
+
+#: sui_menu.lua:2096
+msgid "Series Index"
+msgstr "Seri Dizini"
+
+#: sui_foldercovers.lua:589
+msgid "Series cover"
+msgstr "Seri kapağı"
+
+#: sui_menu.lua:571
+msgid "Set"
+msgstr "Ayarla"
+
+#: sui_foldercovers.lua:693
+msgid "Set folder cover…"
+msgstr "Klasör kapağını ayarla…"
+
+#: sui_foldercovers.lua:689
+msgid "Set series cover…"
+msgstr "Seri kapağını ayarla…"
+
+#: sui_foldercovers.lua:691
+msgid "Set virtual folder cover…"
+msgstr "Sanal klasör kapağını ayarla…"
+
+#: sui_menu.lua:1933
+msgid "Settings"
+msgstr "Ayarlar"
+
+#: sui_menu.lua:784
+#: sui_menu.lua:954
+#: sui_menu.lua:1857
+msgid "Settings on Long Tap"
+msgstr "Uzun Basmada Ayarlar"
+
+#: desktop_modules/module_clock.lua:494
+msgid "Show Battery"
+msgstr "Pili Göster"
+
+#: desktop_modules/module_clock.lua:482
+msgid "Show Clock"
+msgstr "Saati Göster"
+
+#: desktop_modules/module_clock.lua:488
+msgid "Show Date"
+msgstr "Tarihi Göster"
+
+#: sui_config.lua:1775
+msgid "Show section label"
+msgstr "Bölüm etiketini göster"
+
+#: sui_menu.lua:504
+msgid "Shows \"Page X of Y\" in the title bar subtitle when browsing the library, history or collections.\nNavpager enables this automatically.\nNot available when Navpager is active."
+msgstr "Kütüphane, geçmiş veya koleksiyonlara göz atarken başlık çubuğu alt başlığında \"Sayfa X / Y\" gösterir.\nNavpager bunu otomatik olarak etkinleştirir.\nNavpager aktifken kullanılamaz."
+
+#: sui_menu.lua:401
+msgid "Shows a row of dots at the bottom of the homescreen.\nThe active page dot is filled; the others are dimmed.\nAlways active when Navpager is selected."
+msgstr "Ana ekranın altında bir sıra nokta gösterir.\nEtkin sayfa noktası doldurulur, diğerleri soluklaşır.\nNavpager seçildiğinde her zaman etkindir."
+
+#: desktop_modules/module_currently.lua:926
+msgid "Simple"
+msgstr "Basit"
+
+#: sui_menu.lua:1902
+#: sui_menu.lua:1906
+#: main.lua:682
+#: main.lua:695
+msgid "Simple UI"
+msgstr "Simple UI"
+
+#: sui_updater.lua:407
+msgid "Simple UI %s is available!\nYou have %s."
+msgstr "Simple UI %s kullanılabilir!\nSürümünüz %s."
+
+#: sui_updater.lua:357
+msgid "Simple UI %s successfully installed.\n\nRestart KOReader to apply the update?"
+msgstr "Simple UI %s başarıyla kuruldu.\n\nGüncellemeyi uygulamak için KOReader yeniden başlatılsın mı?"
+
+#: sui_updater.lua:399
+msgid "Simple UI is up to date (%s)."
+msgstr "Simple UI güncel (%s)."
+
+#: sui_menu.lua:1923
+msgid "Simple UI will be %s after restart.\n\nRestart now?"
+msgstr "Simple UI yeniden başlatıldıktan sonra %s olacak.\n\nŞimdi yeniden başlatılsın mı?"
+
+#: sui_menu.lua:457
+#: sui_menu.lua:756
+#: sui_menu.lua:826
+msgid "Size"
+msgstr "Boyut"
+
+#: sui_menu.lua:891
+msgid "Size of the tab icons.\n100% is the default size."
+msgstr "Sekme simgelerinin boyutu.\nVarsayılan boyut %100'dür."
+
+#: sui_menu.lua:911
+msgid "Size of the tab label text.\n100% is the default size."
+msgstr "Sekme etiketi metninin boyutu.\nVarsayılan boyut %100'dür."
+
+#: desktop_modules/module_reading_stats.lua:473
+msgid "Size of the text inside the stat cards.\nDoes not affect card size or padding.\n100% is the default size."
+msgstr "İstatistik kartlarının içindeki metnin boyutu.\nKart boyutunu veya dolguyu etkilemez.\nVarsayılan boyut %100'dür."
+
+#: sui_bottombar.lua:1746
+msgid "Sleep"
+msgstr "Uyut"
+
+#: sui_menu.lua:473
+msgid "Small"
+msgstr "Küçük"
+
+#: desktop_modules/module_quote.lua:1192
+#: desktop_modules/module_coverdeck.lua:725
+msgid "Source"
+msgstr "Kaynak"
+
+#: sui_menu.lua:869
+msgid "Space below the bottom navigation bar.\n100% is the default spacing."
+msgstr "Alt gezinme çubuğunun altındaki boşluk.\nVarsayılan boşluk %100'dür."
+
+#: sui_patches.lua:682
+#: sui_patches.lua:684
+msgid "Start with"
+msgstr "Şununla başlat:"
+
+#: sui_menu.lua:1835
+msgid "Start with Home Screen"
+msgstr "Ana Ekran ile Başlat"
+
+#: sui_bottombar.lua:1117
+#: sui_bottombar.lua:1402
+msgid "Statistics plugin not available."
+msgstr "İstatistik eklentisi kullanılamıyor."
+
+#: sui_config.lua:142
+msgid "Stats"
+msgstr "İstatistikler"
+
+#: desktop_modules/module_currently.lua:951
+msgid "Stats layout"
+msgstr "İstatistik düzeni"
+
+#: sui_menu.lua:1939
+msgid "Status Bar"
+msgstr "Durum Çubuğu"
+
+#: desktop_modules/module_reading_stats.lua:67
+msgid "Streak"
+msgstr "Seri"
+
+#: sui_menu.lua:1180
+msgid "Sub-pages Buttons"
+msgstr "Alt Sayfa Düğmeleri"
+
+#: desktop_modules/module_clock.lua:50
+msgid "Sunday"
+msgstr "Pazar"
+
+#: sui_menu.lua:522
+msgid "Swipe Indicator"
+msgstr "Kaydırma Göstergesi"
+
+#: sui_quickactions.lua:947
+msgid "System Actions"
+msgstr "Sistem Eylemleri"
+
+#: sui_quickactions.lua:1253
+msgid "System action error: %s"
+msgstr "Sistem eylemi hatası: %s"
+
+#: sui_menu.lua:949
+msgid "Tabs  (%d/%d — %d left)"
+msgstr "Sekmeler  (%d/%d — %d kaldı)"
+
+#: sui_menu.lua:947
+msgid "Tabs  (%d/%d — at limit)"
+msgstr "Sekmeler  (%d/%d — sınırda)"
+
+#: sui_menu.lua:107
+msgid "Text"
+msgstr "Metin"
+
+#: desktop_modules/module_reading_stats.lua:469
+#: desktop_modules/module_reading_stats.lua:472
+#: desktop_modules/module_collections.lua:514
+#: desktop_modules/module_collections.lua:515
+#: desktop_modules/module_currently.lua:825
+#: desktop_modules/module_currently.lua:826
+#: desktop_modules/module_new_books.lua:273
+#: desktop_modules/module_new_books.lua:274
+#: desktop_modules/module_quick_actions.lua:395
+#: desktop_modules/module_quick_actions.lua:398
+#: desktop_modules/module_recent.lua:271
+#: desktop_modules/module_recent.lua:272
+msgid "Text Size"
+msgstr "Metin Boyutu"
+
+#: desktop_modules/module_reading_stats.lua:470
+msgid "Text Size — %d%%"
+msgstr "Metin Boyutu — %%%d"
+
+#: sui_menu.lua:109
+msgid "Text only"
+msgstr "Yalnızca Metin"
+
+#: sui_menu.lua:2152
+#: desktop_modules/module_coverdeck.lua:715
+#: desktop_modules/module_coverdeck.lua:716
+msgid "Text size"
+msgstr "Metin boyutu"
+
+#: sui_patches.lua:831
+msgid "The «To Be Read» collection cannot be renamed."
+msgstr "«Okunacaklar» koleksiyonu yeniden adlandırılamaz."
+
+#: desktop_modules/module_clock.lua:51
+msgid "Thursday"
+msgstr "Perşembe"
+
+#: desktop_modules/module_currently.lua:270
+#: desktop_modules/module_coverdeck.lua:77
+msgid "Time read"
+msgstr "Okuma süresi"
+
+#: desktop_modules/module_currently.lua:271
+#: desktop_modules/module_coverdeck.lua:78
+msgid "Time remaining"
+msgstr "Kalan süre"
+
+#: sui_titlebar.lua:58
+#: desktop_modules/module_currently.lua:265
+msgid "Title"
+msgstr "Başlık"
+
+#: sui_menu.lua:1940
+msgid "Title Bar"
+msgstr "Başlık Çubuğu"
+
+#: desktop_modules/module_coverdeck.lua:747
+msgid "Title Position"
+msgstr "Başlık Konumu"
+
+#: desktop_modules/module_tbr.lua:229
+#: desktop_modules/module_tbr.lua:230
+#: desktop_modules/module_tbr.lua:244
+#: desktop_modules/module_tbr.lua:280
+#: desktop_modules/module_tbr.lua:398
+#: desktop_modules/module_coverdeck.lua:736
+msgid "To Be Read"
+msgstr "Okunacaklar"
+
+#: desktop_modules/module_tbr.lua:450
+msgid "To Be Read books"
+msgstr "Okunacak kitaplar"
+
+#: sui_patches.lua:879
+#: sui_patches.lua:918
+#: sui_patches.lua:950
+#: sui_patches.lua:991
+msgid "To Be Read list is full (max. 5 books)."
+msgstr "Okunacaklar listesi dolu (maksimum 5 kitap)."
+
+#: desktop_modules/module_reading_goals.lua:511
+#: desktop_modules/module_reading_goals.lua:513
+#: desktop_modules/module_reading_goals.lua:536
+#: desktop_modules/module_reading_goals.lua:539
+msgid "Today"
+msgstr "Bugün"
+
+#: desktop_modules/module_reading_stats.lua:62
+msgid "Today — Pages"
+msgstr "Bugün — Sayfa"
+
+#: desktop_modules/module_reading_stats.lua:61
+msgid "Today — Time"
+msgstr "Bugün — Süre"
+
+#: sui_menu.lua:1937
+#: sui_menu.lua:2072
+#: sui_menu.lua:2126
+msgid "Top"
+msgstr "Üst"
+
+#: sui_menu.lua:737
+#: sui_topbar.lua:507
+msgid "Top Bar"
+msgstr "Üst Çubuk"
+
+#: sui_menu.lua:762
+msgid "Top Bar Size"
+msgstr "Üst Çubuk Boyutu"
+
+#: sui_menu.lua:745
+msgid "Top Bar will be %s after restart.\n\nRestart now?"
+msgstr "Üst Çubuk yeniden başlatıldıktan sonra %s olacak.\n\nŞimdi yeniden başlatılsın mı?"
+
+#: sui_homescreen.lua:1743
+msgid "Top Margin  (%d%%)"
+msgstr "Üst Kenar Boşluğu  (%%%d)"
+
+#: sui_menu.lua:925
+msgid "Top separator"
+msgstr "Üst ayırıcı"
+
+#: sui_menu.lua:2115
+msgid "Transparent"
+msgstr "Şeffaf"
+
+#: desktop_modules/module_clock.lua:50
+msgid "Tuesday"
+msgstr "Salı"
+
+#: sui_menu.lua:938
+#: desktop_modules/module_reading_stats.lua:430
+#: desktop_modules/module_reading_goals.lua:586
+#: desktop_modules/module_quick_actions.lua:407
+msgid "Type"
+msgstr "Tür"
+
+#: sui_menu.lua:2166
+msgid "Uniformize Covers (2:3)"
+msgstr "Kapak Boyutlarını Eşitle (2:3)"
+
+#: sui_updater.lua:377
+msgid "Update cancelled."
+msgstr "Güncelleme iptal edildi."
+
+#: sui_updater.lua:487
+msgid "Update check cancelled."
+msgstr "Güncelleme kontrolü iptal edildi."
+
+#: sui_menu.lua:2247
+msgid "Updater module not found."
+msgstr "Güncelleyici modülü bulunamadı."
+
+#: sui_menu.lua:423
+msgid "Uses the standard KOReader pagination bar on the homescreen.\nNot available when Navpager is active."
+msgstr "Ana ekranda standart KOReader sayfalandırma çubuğunu kullanır.\nNavpager aktifken kullanılamaz."
+
+#: sui_menu.lua:2232
+msgid "Version: %s"
+msgstr "Sürüm: %s"
+
+#: sui_homescreen.lua:1746
+msgid "Vertical space above this module.\n100% is the default spacing."
+msgstr "Bu modülün üzerindeki dikey boşluk.\nVarsayılan boşluk %100'dür."
+
+#: sui_browsemeta.lua:778
+msgid "Virtual folder cover"
+msgstr "Sanal klasör kapağı"
+
+#: sui_menu.lua:925
+msgid "Visible"
+msgstr "Görünür"
+
+#: desktop_modules/module_clock.lua:50
+msgid "Wednesday"
+msgstr "Çarşamba"
+
+#: sui_updater.lua:412
+msgid "What's new:"
+msgstr "Yenilikler:"
+
+#: sui_menu.lua:1858
+msgid "When enabled, long-pressing a section opens its settings menu.\nDisable this to prevent the settings menu from appearing on long tap."
+msgstr "Etkinleştirildiğinde, bir bölüme uzun basmak ayarlar menüsünü açar.\nUzun basıldığında ayarlar menüsünün görünmesini engellemek için bunu devre dışı bırakın."
+
+#: sui_menu.lua:955
+msgid "When enabled, long-pressing the bottom bar opens its settings menu.\nDisable this to prevent the settings menu from appearing on long tap."
+msgstr "Etkinleştirildiğinde, alt çubuğa uzun basmak ayarlar menüsünü açar.\nUzun basıldığında ayarlar menüsünün görünmesini engellemek için bunu devre dışı bırakın."
+
+#: sui_menu.lua:785
+msgid "When enabled, long-pressing the top bar opens its settings menu.\nDisable this to prevent the settings menu from appearing on long tap."
+msgstr "Etkinleştirildiğinde, üst çubuğa uzun basmak ayarlar menüsünü açar.\nUzun basıldığında ayarlar menüsünün görünmesini engellemek için bunu devre dışı bırakın."
+
+#: sui_menu.lua:1846
+msgid "When enabled, opening the file browser after finishing or closing a book navigates to the folder the book is in, matching native KOReader behaviour.\nWhen disabled (default), SimpleUI always returns to the library root.\nThis option works independently of \"Start with Home Screen\"."
+msgstr "Etkinleştirildiğinde, bir kitabı bitirdikten veya kapattıktan sonra dosya tarayıcısını açmak, yerel KOReader davranışıyla eşleşerek kitabın bulunduğu klasöre gider.\nDevre dışı bırakıldığında (varsayılan), SimpleUI her zaman kütüphane köküne döner.\nBu seçenek \"Ana Ekran ile Başlat\" ayarından bağımsız çalışır."
+
+#: sui_config.lua:140
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+
+#: sui_bottombar.lua:1462
+msgid "Wi-Fi off"
+msgstr "Wi-Fi kapalı"
+
+#: sui_config.lua:166
+msgid "WiFi"
+msgstr "WiFi"
+
+#: sui_bottombar.lua:1449
+msgid "WiFi not available on this device."
+msgstr "WiFi bu cihazda kullanılamıyor."
+
+#: sui_quickactions.lua:625
+msgid "Wikipedia Lookup"
+msgstr "Vikipedi'de Ara"
+
+#: desktop_modules/module_currently.lua:936
+msgid "With percentage"
+msgstr "Yüzdeli"
+
+#: desktop_modules/module_quote.lua:897
+msgid "Your highlights"
+msgstr "Vurgularınız"
+
+#: sui_updater.lua:410
+msgid "\n\nDownload and install now?"
+msgstr "\n\nŞimdi indirilip kurulsun mu?"
+
+#: desktop_modules/module_reading_stats.lua:66
+msgid "books finished"
+msgstr "bitirilen kitap"
+
+#: desktop_modules/module_reading_stats.lua:63
+msgid "daily avg (7 days)"
+msgstr "günlük ort. (7 gün)"
+
+#: desktop_modules/module_reading_stats.lua:68
+msgid "day streak"
+msgstr "günlük seri"
+
+#: desktop_modules/module_reading_stats.lua:68
+msgid "days streak"
+msgstr "günlük seri"
+
+#: sui_quickactions.lua:1010
+msgid "default"
+msgstr "varsayılan"
+
+#: sui_menu.lua:745
+#: sui_menu.lua:814
+#: sui_menu.lua:1154
+#: sui_menu.lua:1923
+msgid "disabled"
+msgstr "devre dışı"
+
+#: sui_quickactions.lua:850
+msgid "e.g. Comics…"
+msgstr "örn. Çizgi Romanlar…"
+
+#: sui_quickactions.lua:896
+msgid "e.g. Rakuyomi…"
+msgstr "örn. Rakuyomi…"
+
+#: sui_quickactions.lua:869
+msgid "e.g. Sci-Fi…"
+msgstr "örn. Bilim Kurgu…"
+
+#: sui_quickactions.lua:924
+msgid "e.g. Sleep, Refresh…"
+msgstr "örn. Uyut, Yenile…"
+
+#: sui_menu.lua:745
+#: sui_menu.lua:814
+#: sui_menu.lua:1154
+#: sui_menu.lua:1923
+msgid "enabled"
+msgstr "etkin"
+
+#: sui_quickactions.lua:490
+msgid "hex code, e.g. E001"
+msgstr "hex kodu, örn. E001"
+
+#: desktop_modules/module_reading_stats.lua:68
+msgid "no streak"
+msgstr "seri yok"
+
+#: sui_quickactions.lua:1163
+#: sui_quickactions.lua:1179
+msgid "not configured"
+msgstr "yapılandırılmadı"
+
+#: desktop_modules/module_reading_stats.lua:61
+msgid "of reading today"
+msgstr "bugünkü okuma"
+
+#: desktop_modules/module_reading_stats.lua:65
+msgid "of reading, all time"
+msgstr "tüm zamanların okuması"
+
+#: desktop_modules/module_reading_stats.lua:62
+msgid "pages read today"
+msgstr "bugün okunan sayfa"
+
+#: desktop_modules/module_reading_stats.lua:64
+msgid "pages/day (7 days)"
+msgstr "sayfa/gün (7 gün)"
+
+#: sui_menu.lua:242
+#: sui_menu.lua:1340
+#: desktop_modules/module_reading_stats.lua:507
+#: desktop_modules/module_collections.lua:689
+#: desktop_modules/module_quick_actions.lua:324
+msgid "  (%d left)"
+msgid_plural "  (%d left)"
+msgstr[0] "  (%d kaldı)"
+msgstr[1] "  (%d kaldı)"
+
+#: desktop_modules/module_reading_goals.lua:619
+msgid "  Set Goal  (%d book in %s)"
+msgid_plural "  Set Goal  (%d books in %s)"
+msgstr[0] "  Hedef Belirle  (%d kitap, %s)"
+msgstr[1] "  Hedef Belirle  (%d kitap, %s)"
+
+#: desktop_modules/module_reading_goals.lua:418
+msgid "%d book"
+msgid_plural "%d books"
+msgstr[0] "%d kitap"
+msgstr[1] "%d kitap"
+
+#: desktop_modules/module_currently.lua:540
+#: desktop_modules/module_currently.lua:607
+#: desktop_modules/module_coverdeck.lua:574
+msgid "%d day of reading"
+msgid_plural "%d days of reading"
+msgstr[0] "%d okuma günü"
+msgstr[1] "%d okuma günü"
+
+#: desktop_modules/module_reading_goals.lua:417
+msgid "%d/%d book"
+msgid_plural "%d/%d books"
+msgstr[0] "%d/%d kitap"
+msgstr[1] "%d/%d kitap"
+
+#: sui_menu.lua:1234
+msgid "Digital: %d book in %s"
+msgid_plural "Digital: %d books in %s"
+msgstr[0] "Dijital: %d kitap (%s)"
+msgstr[1] "Dijital: %d kitap (%s)"
+
+#: sui_menu.lua:1240
+msgid "Physical: %d book in %s"
+msgid_plural "Physical: %d books in %s"
+msgstr[0] "Fiziksel: %d kitap (%s)"
+msgstr[1] "Fiziksel: %d kitap (%s)"
+
+#: sui_menu.lua:560
+msgid "Text shown in the top bar.\nMaximum %d character."
+msgid_plural "Text shown in the top bar.\nMaximum %d characters."
+msgstr[0] "Üst çubukta gösterilen metin.\nMaksimum %d karakter."
+msgstr[1] "Üst çubukta gösterilen metin.\nMaksimum %d karakter."
+
+#: sui_menu.lua:1304
+#: desktop_modules/module_quick_actions.lua:267
+msgid "The maximum of %d action per module has been reached. Remove one first."
+msgid_plural "The maximum of %d actions per module has been reached. Remove one first."
+msgstr[0] "Modül başına maksimum %d eylem sınırına ulaşıldı. Önce birini kaldırın."
+msgstr[1] "Modül başına maksimum %d eylem sınırına ulaşıldı. Önce birini kaldırın."
+
+#: sui_quickactions.lua:1124
+msgid "The maximum of %d quick action has been reached. Delete one first."
+msgid_plural "The maximum of %d quick actions has been reached. Delete one first."
+msgstr[0] "Maksimum %d hızlı eylem sınırına ulaşıldı. Önce birini silin."
+msgstr[1] "Maksimum %d hızlı eylem sınırına ulaşıldı. Önce birini silin."
+
+#: desktop_modules/module_reading_stats.lua:419
+msgid "The maximum of %d stat per row has been reached. Remove one first."
+msgid_plural "The maximum of %d stats per row has been reached. Remove one first."
+msgstr[0] "Satır başına maksimum %d istatistik sınırına ulaşıldı. Önce birini kaldırın."
+msgstr[1] "Satır başına maksimum %d istatistik sınırına ulaşıldı. Önce birini kaldırın."
+
+#: sui_menu.lua:275
+msgid "The maximum of %d tab has been reached. Remove one first."
+msgid_plural "The maximum of %d tabs has been reached. Remove one first."
+msgstr[0] "Maksimum %d sekme sınırına ulaşıldı. Önce birini kaldırın."
+msgstr[1] "Maksimum %d sekme sınırına ulaşıldı. Önce birini kaldırın."

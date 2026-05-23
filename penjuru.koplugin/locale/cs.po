@@ -1,0 +1,1737 @@
+# Simple UI — KOReader plugin
+# Translation template
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: simpleui\n"
+"POT-Creation-Date: 2026-04-14 21:00\n"
+"Language: cs_CZ\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n>=2 && n<=4 ? 1 : 2));\n"
+
+#: desktop_modules/module_reading_goals.lua:626
+msgid "  Physical Books  (%d in %s)"
+msgstr "  Fyzické knihy  (%d v %s)"
+#: desktop_modules/module_reading_goals.lua:641
+msgid "  Set Goal  (%d min/day)"
+msgstr "  Nastavit cíl  (%d min/den)"
+#: desktop_modules/module_reading_goals.lua:620
+msgid "  Set Goal  (%s)"
+msgstr "  Nastavit cíl  (%s)"
+#: desktop_modules/module_reading_goals.lua:640
+msgid "  Set Goal  (disabled)"
+msgstr "  Nastavit cíl  (vypnuto)"
+#: desktop_modules/module_recent.lua:125
+msgid "%d%%"
+msgstr "%d%%"
+#: desktop_modules/module_currently.lua:529
+#: desktop_modules/module_new_books.lua:182
+#: desktop_modules/module_coverdeck.lua:571
+#: desktop_modules/module_recent.lua:159
+msgid "%d%% Read"
+msgstr "Přečteno %d%%"
+#: desktop_modules/module_currently.lua:605
+msgid "%s left"
+msgstr "zbývá %s"
+#: desktop_modules/module_currently.lua:553
+#: desktop_modules/module_currently.lua:603
+#: desktop_modules/module_reading_goals.lua:434
+#: desktop_modules/module_coverdeck.lua:576
+msgid "%s read"
+msgstr "přečteno %s"
+#: desktop_modules/module_currently.lua:572
+#: desktop_modules/module_coverdeck.lua:582
+msgid "%s remaining"
+msgstr "zbývá %s"
+#: sui_menu.lua:849
+msgid "A restart is required to apply the new bar size across all layouts.\n"
+"\n"
+"Restart now?"
+msgstr "Pro použití nové velikosti lišty ve všech rozvrženích je nutný restart.\n"
+"\n"
+"Restartovat nyní?"
+#: sui_menu.lua:2221
+msgid "About"
+msgstr "O aplikaci"
+#: desktop_modules/module_coverdeck.lua:750
+msgid "Above"
+msgstr "Nahoře"
+#: sui_menu.lua:1323
+#: desktop_modules/module_quick_actions.lua:293
+msgid "Add at least 2 actions to arrange."
+msgstr "Pro uspořádání přidejte alespoň 2 akce."
+#: desktop_modules/module_tbr.lua:409
+msgid "Add at least 2 books to arrange."
+msgstr "Pro uspořádání přidejte alespoň 2 knihy."
+#: desktop_modules/module_reading_stats.lua:485
+msgid "Add at least 2 stats to arrange."
+msgstr "Pro uspořádání přidejte alespoň 2 statistiky."
+#: desktop_modules/module_tbr.lua:265
+msgid "Add to To Be Read"
+msgstr "Přidat do K přečtení"
+#: desktop_modules/module_reading_stats.lua:66
+msgid "All time — Books"
+msgstr "Celkem — Knihy"
+#: desktop_modules/module_reading_stats.lua:65
+msgid "All time — Time"
+msgstr "Celkem — Čas"
+#: desktop_modules/module_reading_goals.lua:609
+msgid "Annual Goal"
+msgstr "Roční cíl"
+#: sui_menu.lua:1233
+#: desktop_modules/module_reading_goals.lua:354
+msgid "Annual Reading Goal"
+msgstr "Roční čtenářský cíl"
+#: sui_config.lua:1653
+#: sui_config.lua:1734
+#: sui_menu.lua:769
+#: sui_menu.lua:839
+#: sui_menu.lua:1740
+#: sui_menu.lua:1775
+msgid "Apply"
+msgstr "Použít"
+#: desktop_modules/module_clock.lua:54
+msgid "April"
+msgstr "Duben"
+#: desktop_modules/module_reading_stats.lua:482
+msgid "Arrange"
+msgstr "Uspořádat"
+#: sui_menu.lua:1327
+#: desktop_modules/module_quick_actions.lua:305
+msgid "Arrange %s"
+msgstr "Uspořádat %s"
+#: sui_menu.lua:1049
+#: sui_menu.lua:1100
+#: sui_menu.lua:1115
+msgid "Arrange Buttons"
+msgstr "Uspořádat tlačítka"
+#: desktop_modules/module_collections.lua:622
+#: desktop_modules/module_collections.lua:635
+msgid "Arrange Collections"
+msgstr "Uspořádat kolekce"
+#: sui_menu.lua:604
+#: sui_menu.lua:633
+#: sui_menu.lua:1317
+#: desktop_modules/module_currently.lua:863
+#: desktop_modules/module_currently.lua:887
+#: desktop_modules/module_quick_actions.lua:284
+msgid "Arrange Items"
+msgstr "Uspořádat položky"
+#: sui_menu.lua:1582
+msgid "Arrange Modules"
+msgstr "Uspořádat moduly"
+#: desktop_modules/module_reading_stats.lua:491
+msgid "Arrange Reading Stats"
+msgstr "Uspořádat statistiky čtení"
+#: desktop_modules/module_coverdeck.lua:774
+#: desktop_modules/module_coverdeck.lua:787
+msgid "Arrange Statistics"
+msgstr "Uspořádat statistiky"
+#: desktop_modules/module_tbr.lua:402
+#: desktop_modules/module_tbr.lua:421
+msgid "Arrange To Be Read list"
+msgstr "Uspořádat seznam K přečtení"
+#: sui_menu.lua:199
+#: sui_menu.lua:209
+msgid "Arrange tabs"
+msgstr "Uspořádat karty"
+#: desktop_modules/module_clock.lua:55
+msgid "August"
+msgstr "Srpen"
+#: desktop_modules/module_currently.lua:266
+msgid "Author"
+msgstr "Autor"
+#: sui_menu.lua:2237
+msgid "Author: %s"
+msgstr "Autor: %s"
+#: sui_config.lua:144
+#: sui_browsemeta.lua:57
+msgid "Authors"
+msgstr "Autoři"
+#: sui_browsemeta.lua:742
+#: sui_foldercovers.lua:555
+#: sui_foldercovers.lua:620
+#: desktop_modules/module_collections.lua:583
+msgid "Auto (first book)"
+msgstr "Automaticky (první kniha)"
+#: sui_titlebar.lua:55
+msgid "Back"
+msgstr "Zpět"
+#: desktop_modules/module_collections.lua:662
+msgid "Badge position: Bottom"
+msgstr "Pozice štítku: Dole"
+#: desktop_modules/module_collections.lua:663
+msgid "Badge position: Top"
+msgstr "Pozice štítku: Nahoře"
+#: sui_config.lua:168
+msgid "Battery"
+msgstr "Baterie"
+#: desktop_modules/module_coverdeck.lua:758
+msgid "Below"
+msgstr "Dole"
+#: sui_quickactions.lua:619
+msgid "Book Info"
+msgstr "Informace o knize"
+#: sui_bottombar.lua:1029
+msgid "Bookmark browser"
+msgstr "Prohlížeč záložek"
+#: sui_bottombar.lua:961
+msgid "Bookmark browser not available."
+msgstr "Prohlížeč záložek není k dispozici."
+#: sui_config.lua:139
+msgid "Bookmarks"
+msgstr "Záložky"
+#: desktop_modules/module_reading_goals.lua:355
+msgid "Books to read in %s:"
+msgstr "Knihy k přečtení v %s:"
+#: sui_menu.lua:1945
+#: sui_menu.lua:2080
+#: sui_menu.lua:2142
+msgid "Bottom"
+msgstr "Dole"
+#: sui_menu.lua:806
+#: sui_bottombar.lua:837
+msgid "Bottom Bar"
+msgstr "Spodní lišta"
+#: sui_menu.lua:832
+msgid "Bottom Bar Size"
+msgstr "Velikost spodní lišty"
+#: sui_menu.lua:814
+msgid "Bottom Bar will be %s after restart.\n"
+"\n"
+"Restart now?"
+msgstr "Spodní lišta bude po restartu %s.\n"
+"\n"
+"Restartovat nyní?"
+#: sui_menu.lua:865
+#: sui_menu.lua:868
+msgid "Bottom Margin"
+msgstr "Spodní okraj"
+#: sui_menu.lua:866
+msgid "Bottom Margin — %d%%"
+msgstr "Spodní okraj — %d%%"
+#: sui_config.lua:141
+#: sui_config.lua:167
+msgid "Brightness"
+msgstr "Jas"
+#: sui_titlebar.lua:57
+msgid "Browse"
+msgstr "Procházet"
+#: sui_browsemeta.lua:421
+msgid "Browse by"
+msgstr "Procházet podle"
+#: sui_menu.lua:1983
+msgid "Browse by Author / Series"
+msgstr "Procházet podle autora / série"
+#: sui_bottombar.lua:1412
+msgid "Browse by Authors/Series not available."
+msgstr "Procházení podle autorů/sérií není k dispozici."
+#: sui_titlebar.lua:817
+msgid "Browse library"
+msgstr "Procházet knihovnu"
+#: sui_menu.lua:1165
+msgid "Button Size"
+msgstr "Velikost tlačítka"
+#: sui_titlebar.lua:835
+msgid "By author"
+msgstr "Podle autora"
+#: sui_titlebar.lua:848
+msgid "By series"
+msgstr "Podle série"
+#: sui_quickactions.lua:408
+#: sui_quickactions.lua:494
+#: sui_quickactions.lua:602
+#: sui_quickactions.lua:806
+#: sui_quickactions.lua:877
+#: sui_quickactions.lua:905
+#: sui_quickactions.lua:933
+#: sui_quickactions.lua:949
+#: sui_quickactions.lua:1061
+#: sui_quickactions.lua:1203
+#: sui_config.lua:1654
+#: sui_config.lua:1735
+#: sui_browsemeta.lua:774
+#: sui_menu.lua:566
+#: sui_menu.lua:770
+#: sui_menu.lua:840
+#: sui_menu.lua:1741
+#: sui_menu.lua:1776
+#: sui_bottombar.lua:1054
+#: sui_bottombar.lua:1765
+#: sui_updater.lua:421
+#: sui_updater.lua:438
+#: sui_foldercovers.lua:584
+#: sui_foldercovers.lua:651
+#: sui_titlebar.lua:861
+#: desktop_modules/module_collections.lua:609
+#: desktop_modules/module_reading_goals.lua:358
+#: desktop_modules/module_reading_goals.lua:374
+#: desktop_modules/module_reading_goals.lua:391
+#: desktop_modules/module_quote.lua:1115
+msgid "Cancel"
+msgstr "Zrušit"
+#: desktop_modules/module_reading_stats.lua:433
+msgid "Cards"
+msgstr "Karty"
+#: sui_menu.lua:620
+#: sui_menu.lua:2134
+msgid "Center"
+msgstr "Uprostřed"
+#: sui_quickactions.lua:1110
+msgid "Change Icons"
+msgstr "Změnit ikony"
+#: sui_menu.lua:2242
+msgid "Check for Updates"
+msgstr "Zkontrolovat aktualizace"
+#: sui_updater.lua:460
+msgid "Checking for updates…"
+msgstr "Kontrolují se aktualizace…"
+#: sui_config.lua:165
+#: desktop_modules/module_clock.lua:227
+msgid "Clock"
+msgstr "Hodiny"
+#: sui_titlebar.lua:60
+msgid "Close"
+msgstr "Zavřít"
+#: sui_quickactions.lua:527
+msgid "Codepoint out of valid Unicode range (0–10FFFF)."
+msgstr "Kódový bod je mimo platný rozsah Unicode (0–10FFFF)."
+#: sui_quickactions.lua:943
+msgid "Collection"
+msgstr "Kolekce"
+#: desktop_modules/module_collections.lua:570
+#: desktop_modules/module_collections.lua:576
+msgid "Collection is empty."
+msgstr "Kolekce je prázdná."
+#: sui_quickactions.lua:1295
+msgid "Collection not available: %s"
+msgstr "Kolekce není k dispozici: %s"
+#: sui_quickactions.lua:621
+#: sui_config.lua:135
+#: sui_bottombar.lua:1040
+#: desktop_modules/module_collections.lua:298
+#: desktop_modules/module_collections.lua:299
+#: desktop_modules/module_collections.lua:318
+#: desktop_modules/module_collections.lua:620
+msgid "Collections"
+msgstr "Kolekce"
+#: sui_patches.lua:1062
+msgid "Collections (%1)"
+msgstr "Kolekce (%1)"
+#: sui_bottombar.lua:1317
+msgid "Collections not available."
+msgstr "Kolekce nejsou k dispozici."
+#: sui_menu.lua:1169
+#: desktop_modules/module_currently.lua:964
+#: desktop_modules/module_reading_goals.lua:596
+msgid "Compact"
+msgstr "Kompaktní"
+#: sui_quickactions.lua:417
+msgid "Confirm"
+msgstr "Potvrdit"
+#: sui_config.lua:137
+msgid "Continue"
+msgstr "Pokračovat"
+#: desktop_modules/module_coverdeck.lua:325
+msgid "Cover Deck"
+msgstr "Přehled obálek"
+#: desktop_modules/module_collections.lua:613
+msgid "Cover for \"%s\""
+msgstr "Obálka pro \"%s\""
+#: desktop_modules/module_collections.lua:651
+#: desktop_modules/module_collections.lua:653
+#: desktop_modules/module_currently.lua:811
+#: desktop_modules/module_currently.lua:813
+#: desktop_modules/module_new_books.lua:260
+#: desktop_modules/module_new_books.lua:262
+#: desktop_modules/module_coverdeck.lua:707
+#: desktop_modules/module_coverdeck.lua:708
+#: desktop_modules/module_recent.lua:256
+#: desktop_modules/module_recent.lua:258
+msgid "Cover size"
+msgstr "Velikost obálky"
+#: sui_quickactions.lua:1119
+msgid "Create Quick Action"
+msgstr "Vytvořit rychlou akci"
+#: sui_config.lua:1762
+#: desktop_modules/module_currently.lua:296
+#: desktop_modules/module_currently.lua:297
+#: desktop_modules/module_currently.lua:402
+#: desktop_modules/module_currently.lua:981
+msgid "Currently Reading"
+msgstr "Právě čtené"
+#: sui_config.lua:561
+msgid "Custom"
+msgstr "Vlastní"
+#: desktop_modules/module_quote.lua:1262
+msgid "Custom File"
+msgstr "Vlastní soubor"
+#: sui_config.lua:171
+#: sui_menu.lua:558
+msgid "Custom Text"
+msgstr "Vlastní text"
+#: sui_menu.lua:1142
+msgid "Custom Title Bar"
+msgstr "Vlastní horní lišta"
+#: sui_menu.lua:1153
+msgid "Custom Title Bar will be %s after restart.\n"
+"\n"
+"Restart now?"
+msgstr "Vlastní horní lišta bude po restartu %s.\n"
+"\n"
+"Restartovat nyní?"
+#: desktop_modules/module_reading_goals.lua:630
+msgid "Daily Goal"
+msgstr "Denní cíl"
+#: desktop_modules/module_reading_goals.lua:388
+msgid "Daily Reading Goal"
+msgstr "Denní čtenářský cíl"
+#: desktop_modules/module_reading_stats.lua:64
+msgid "Daily avg — Pages"
+msgstr "Denní průměr — Stránky"
+#: desktop_modules/module_reading_stats.lua:63
+msgid "Daily avg — Time"
+msgstr "Denní průměr — Čas"
+#: desktop_modules/module_currently.lua:269
+#: desktop_modules/module_coverdeck.lua:76
+msgid "Days of reading"
+msgstr "Dny čtení"
+#: desktop_modules/module_clock.lua:56
+msgid "December"
+msgstr "Prosinec"
+#: sui_quickactions.lua:562
+#: sui_menu.lua:356
+#: sui_menu.lua:485
+#: sui_menu.lua:1170
+#: sui_titlebar.lua:821
+#: desktop_modules/module_currently.lua:954
+#: desktop_modules/module_reading_goals.lua:588
+#: desktop_modules/module_quick_actions.lua:406
+#: desktop_modules/module_quick_actions.lua:411
+msgid "Default"
+msgstr "Výchozí"
+#: sui_quickactions.lua:851
+#: sui_quickactions.lua:870
+msgid "Default (Folder)"
+msgstr "Výchozí (složka)"
+#: sui_quickactions.lua:897
+msgid "Default (Plugin)"
+msgstr "Výchozí (plugin)"
+#: sui_quickactions.lua:925
+msgid "Default (System)"
+msgstr "Výchozí (systém)"
+#: desktop_modules/module_quote.lua:1198
+msgid "Default Quotes"
+msgstr "Výchozí citáty"
+#: sui_quickactions.lua:1197
+#: sui_quickactions.lua:1202
+msgid "Delete"
+msgstr "Smazat"
+#: sui_quickactions.lua:1201
+msgid "Delete quick action \"%s\"?"
+msgstr "Smazat rychlou akci \"%s\"?"
+#: sui_quickactions.lua:624
+msgid "Dictionary Lookup"
+msgstr "Vyhledat ve slovníku"
+#: sui_menu.lua:1234
+msgid "Digital Goal  (%s)"
+msgstr "Digitální cíl  (%s)"
+#: sui_menu.lua:1760
+msgid "Disable \"Lock Scale\" first to set a custom label scale."
+msgstr "Pro nastavení vlastní velikosti popisků nejprve vypněte „Uzamknout měřítko“."
+#: sui_config.lua:1638
+msgid "Disable \"Lock Scale\" first to set a per-module scale."
+msgstr "Pro nastavení měřítka jednotlivých modulů nejprve vypněte „Uzamknout měřítko“."
+#: sui_config.lua:169
+msgid "Disk Usage"
+msgstr "Využití disku"
+#: sui_quickactions.lua:1256
+msgid "Dispatcher not available."
+msgstr "Dispatcher není k dispozici."
+#: sui_menu.lua:393
+msgid "Dot Pager"
+msgstr "Tečkované stránkování"
+#: sui_updater.lua:437
+msgid "Download and install"
+msgstr "Stáhnout a nainstalovat"
+#: sui_updater.lua:348
+msgid "Download error: "
+msgstr "Chyba při stahování: "
+#: sui_updater.lua:323
+msgid "Downloading Simple UI %s…"
+msgstr "Stahuje se Simple UI %s…"
+#: sui_quickactions.lua:1187
+msgid "Edit"
+msgstr "Upravit"
+#: sui_menu.lua:550
+#: sui_menu.lua:552
+msgid "Edit Custom Text"
+msgstr "Upravit vlastní text"
+#: sui_quickactions.lua:752
+msgid "Edit Quick Action"
+msgstr "Upravit rychlou akci"
+#: sui_bottombar.lua:1416
+msgid "Enable 'Browse by Author / Series' in the library menu first."
+msgstr "Nejprve v nabídce knihovny zapněte „Procházet podle autora / série“."
+#: sui_quickactions.lua:491
+msgid "Enter the Unicode codepoint (hex) of a Nerd Fonts symbol.\n"
+"You can look up codes with wakamaifondue.com using the file:\n"
+"  /koreader/fonts/nerdfonts/symbols.ttf\n"
+"Leave blank and press OK to remove a Nerd Font icon."
+msgstr "Zadejte kódový bod Unicode (hex) symbolu Nerd Fonts.\n"
+"Kódy můžete vyhledat na wakamaifondue.com pomocí souboru:\n"
+"  /koreader/fonts/nerdfonts/symbols.ttf\n"
+"Ponechte prázdné a stiskněte OK pro odstranění ikony Nerd Font."
+#: sui_updater.lua:466
+msgid "Error checking for updates."
+msgstr "Chyba při kontrole aktualizací."
+#: sui_updater.lua:471
+msgid "Error checking for updates: "
+msgstr "Chyba při kontrole aktualizací: "
+#: sui_menu.lua:461
+msgid "Extra Small"
+msgstr "Velmi malé"
+#: sui_updater.lua:350
+msgid "Extraction error: "
+msgstr "Chyba při rozbalování: "
+#: sui_quickactions.lua:620
+#: sui_config.lua:138
+msgid "Favorites"
+msgstr "Oblíbené"
+#: sui_bottombar.lua:1367
+msgid "Favorites not available."
+msgstr "Oblíbené nejsou k dispozici."
+#: desktop_modules/module_clock.lua:54
+msgid "February"
+msgstr "Únor"
+#: sui_bottombar.lua:983
+msgid "Fetching bookmarks\\xe2\\x80\\xa6"
+msgstr "Načítají se záložky\\xe2\\x80\\xa6"
+#: sui_quickactions.lua:622
+msgid "File Search"
+msgstr "Hledání souborů"
+#: desktop_modules/module_reading_stats.lua:443
+#: desktop_modules/module_quick_actions.lua:406
+#: desktop_modules/module_quick_actions.lua:420
+msgid "Flat"
+msgstr "Ploché"
+#: sui_quickactions.lua:941
+msgid "Folder"
+msgstr "Složka"
+#: sui_menu.lua:2023
+msgid "Folder Covers"
+msgstr "Obálky složek"
+#: sui_menu.lua:2102
+msgid "Folder Name"
+msgstr "Název složky"
+#: sui_menu.lua:2154
+msgid "Folder Name Text Size"
+msgstr "Velikost textu názvu složky"
+#: sui_quickactions.lua:623
+msgid "Folder Shortcuts"
+msgstr "Zástupci složek"
+#: sui_foldercovers.lua:656
+msgid "Folder cover"
+msgstr "Obálka složky"
+#: desktop_modules/module_clock.lua:51
+msgid "Friday"
+msgstr "Pátek"
+#: sui_bottombar.lua:1527
+msgid "Frontlight not available on this device."
+msgstr "Přední osvětlení není na tomto zařízení k dispozici."
+#: sui_menu.lua:353
+msgid "General"
+msgstr "Obecné"
+#: sui_menu.lua:1734
+msgid "Global scale for all modules.\n"
+"Individual overrides in Module Settings take precedence.\n"
+"100% is the default size."
+msgstr "Globální měřítko pro všechny moduly.\n"
+"Individuální nastavení v Nastavení modulů mají přednost.\n"
+"100% je výchozí velikost."
+#: sui_menu.lua:2043
+msgid "Group Books by Series"
+msgstr "Seskupit knihy podle série"
+#: sui_menu.lua:833
+msgid "Height of the bottom navigation bar.\n"
+"100% is the default size."
+msgstr "Výška spodní navigační lišty.\n"
+"100% je výchozí velikost."
+#: sui_menu.lua:763
+msgid "Height of the top status bar.\n"
+"100% is the default size."
+msgstr "Výška horní stavové lišty.\n"
+"100% je výchozí velikost."
+#: sui_menu.lua:377
+#: sui_menu.lua:436
+#: sui_menu.lua:925
+#: sui_menu.lua:2061
+#: sui_menu.lua:2105
+msgid "Hidden"
+msgstr "Skryté"
+#: sui_menu.lua:1350
+#: desktop_modules/module_quick_actions.lua:334
+msgid "Hide Text"
+msgstr "Skrýt text"
+#: sui_menu.lua:532
+msgid "Hide Wi-Fi icon when off"
+msgstr "Skrýt ikonu Wi-Fi, když je vypnutá"
+#: sui_menu.lua:2176
+msgid "Hide selection underline"
+msgstr "Skrýt podtržení výběru"
+#: sui_menu.lua:444
+msgid "Hides the pagination bar on the homescreen.\n"
+"Not available when Navpager is active."
+msgstr "Skryje stránkovací lištu na domovské obrazovce.\n"
+"Není dostupné, když je aktivní Navpager."
+#: sui_quickactions.lua:618
+#: sui_config.lua:136
+#: sui_bottombar.lua:1033
+msgid "History"
+msgstr "Historie"
+#: sui_bottombar.lua:1321
+msgid "History not available."
+msgstr "Historie není k dispozici."
+#: sui_config.lua:134
+msgid "Home"
+msgstr "Domů"
+#: sui_patches.lua:659
+#: sui_patches.lua:682
+#: sui_menu.lua:390
+#: sui_menu.lua:1825
+#: sui_menu.lua:1943
+msgid "Home Screen"
+msgstr "Domovská obrazovka"
+#: sui_bottombar.lua:1050
+msgid "Home folder"
+msgstr "Domovská složka"
+#: sui_bottombar.lua:1052
+msgid "Home folder + subfolders"
+msgstr "Domovská složka + podsložky"
+#: sui_homescreen.lua:1080
+msgid "Homescreen"
+msgstr "Domovská obrazovka"
+#: sui_bottombar.lua:1362
+msgid "Homescreen not available."
+msgstr "Domovská obrazovka není k dispozici."
+#: sui_quickactions.lua:761
+#: sui_quickactions.lua:765
+msgid "Icon"
+msgstr "Ikona"
+#: sui_menu.lua:887
+#: sui_menu.lua:890
+msgid "Icon Size"
+msgstr "Velikost ikon"
+#: sui_menu.lua:888
+msgid "Icon Size — %d%%"
+msgstr "Velikost ikony — %d%%"
+#: sui_quickactions.lua:756
+msgid "Icon: Default"
+msgstr "Ikona: Výchozí"
+#: sui_menu.lua:107
+msgid "Icons"
+msgstr "Ikony"
+#: sui_menu.lua:108
+msgid "Icons only"
+msgstr "Pouze ikony"
+#: sui_menu.lua:1062
+msgid "Invalid arrangement.\n"
+"Keep items between the Left and Right separators."
+msgstr "Neplatné uspořádání.\n"
+"Ponechte položky mezi oddělovači Vlevo a Vpravo."
+#: sui_menu.lua:647
+msgid "Invalid arrangement.\n"
+"Keep the Left, Center and Right separators in order."
+msgstr "Neplatné uspořádání.\n"
+"Ponechte oddělovače Vlevo, Uprostřed a Vpravo v tomto pořadí."
+#: sui_quickactions.lua:533
+msgid "Invalid input. Please enter 1–6 hexadecimal digits (0–9, A–F)."
+msgstr "Neplatný vstup. Zadejte prosím 1–6 hexadecimálních číslic (0–9, A–F)."
+#: sui_menu.lua:782
+#: sui_menu.lua:1360
+#: desktop_modules/module_currently.lua:983
+#: desktop_modules/module_coverdeck.lua:769
+#: desktop_modules/module_quick_actions.lua:344
+msgid "Items"
+msgstr "Položky"
+#: desktop_modules/module_clock.lua:54
+msgid "January"
+msgstr "Leden"
+#: desktop_modules/module_clock.lua:55
+msgid "July"
+msgstr "Červenec"
+#: desktop_modules/module_clock.lua:55
+msgid "June"
+msgstr "Červen"
+#: sui_menu.lua:414
+msgid "KOReader"
+msgstr "KOReader"
+#: sui_menu.lua:1768
+msgid "Label Scale"
+msgstr "Měřítko popisků"
+#: sui_menu.lua:907
+#: sui_menu.lua:910
+msgid "Label Size"
+msgstr "Velikost popisků"
+#: sui_menu.lua:908
+msgid "Label Size — %d%%"
+msgstr "Velikost popisků — %d%%"
+#: sui_menu.lua:1753
+msgid "Labels"
+msgstr "Popisky"
+#: sui_menu.lua:1171
+msgid "Large"
+msgstr "Velké"
+#: sui_menu.lua:341
+#: sui_menu.lua:746
+#: sui_menu.lua:815
+#: sui_menu.lua:851
+#: sui_menu.lua:1157
+#: sui_menu.lua:1924
+#: sui_updater.lua:361
+msgid "Later"
+msgstr "Později"
+#: sui_menu.lua:614
+#: sui_menu.lua:1032
+msgid "Left"
+msgstr "Vlevo"
+#: sui_config.lua:133
+#: sui_config.lua:409
+#: sui_menu.lua:1964
+#: sui_titlebar.lua:967
+msgid "Library"
+msgstr "Knihovna"
+#: sui_menu.lua:1175
+msgid "Library Buttons"
+msgstr "Tlačítka knihovny"
+#: desktop_modules/module_reading_stats.lua:453
+msgid "List"
+msgstr "Seznam"
+#: sui_menu.lua:1714
+msgid "Lock Scale"
+msgstr "Uzamknout měřítko"
+#: desktop_modules/module_clock.lua:54
+msgid "March"
+msgstr "Březen"
+#: desktop_modules/module_collections.lua:709
+msgid "Maximum 5 collections. Remove one first."
+msgstr "Maximum je 5 kolekcí. Nejprve jednu odeberte."
+#: desktop_modules/module_clock.lua:55
+msgid "May"
+msgstr "Květen"
+#: sui_titlebar.lua:54
+#: sui_titlebar.lua:59
+msgid "Menu"
+msgstr "Menu"
+#: sui_menu.lua:265
+msgid "Minimum 1 tab required in navpager mode."
+msgstr "V režimu navpager je vyžadována minimálně 1 karta."
+#: sui_menu.lua:266
+msgid "Minimum 2 tabs required. Select another tab first."
+msgstr "Jsou vyžadovány minimálně 2 karty. Nejprve vyberte jinou kartu."
+#: desktop_modules/module_reading_goals.lua:389
+msgid "Minutes per day:"
+msgstr "Minut denně:"
+#: sui_menu.lua:1731
+msgid "Module Scale"
+msgstr "Měřítko modulu"
+#: sui_menu.lua:1706
+msgid "Module Settings"
+msgstr "Nastavení modulů"
+#: sui_menu.lua:1725
+msgid "Modules"
+msgstr "Moduly"
+#: sui_menu.lua:1477
+msgid "Modules  (%d)"
+msgstr "Moduly  (%d)"
+#: desktop_modules/module_clock.lua:50
+msgid "Monday"
+msgstr "Pondělí"
+#: desktop_modules/module_quote.lua:1218
+msgid "My Highlights"
+msgstr "Moje zvýraznění"
+#: sui_quickactions.lua:850
+#: sui_quickactions.lua:869
+#: sui_quickactions.lua:896
+#: sui_quickactions.lua:924
+msgid "Name"
+msgstr "Název"
+#: sui_menu.lua:1947
+msgid "Navigation Bar"
+msgstr "Navigační lišta"
+#: sui_menu.lua:366
+msgid "Navpager"
+msgstr "Navpager"
+#: sui_menu.lua:373
+msgid "Navpager enabled.\n"
+"\n"
+"Restart now?"
+msgstr "Navpager je zapnutý.\n"
+"\n"
+"Restartovat nyní?"
+#: sui_quickactions.lua:488
+msgid "Nerd Font Icon"
+msgstr "Ikona Nerd Font"
+#: sui_quickactions.lua:573
+msgid "Nerd Font symbol…"
+msgstr "Symbol Nerd Font…"
+#: sui_bottombar.lua:1454
+msgid "Network manager unavailable."
+msgstr "Správce sítě není k dispozici."
+#: desktop_modules/module_new_books.lua:180
+msgid "New"
+msgstr "Nové"
+#: desktop_modules/module_new_books.lua:46
+#: desktop_modules/module_new_books.lua:47
+#: desktop_modules/module_new_books.lua:107
+#: desktop_modules/module_new_books.lua:280
+msgid "New Books"
+msgstr "Nové knihy"
+#: sui_quickactions.lua:752
+msgid "New Quick Action"
+msgstr "Nová rychlá akce"
+#: sui_quickactions.lua:1058
+msgid "New name…"
+msgstr "Nový název…"
+#: sui_bottombar.lua:288
+msgid "Next"
+msgstr "Další"
+#: desktop_modules/module_quote.lua:1275
+msgid "No .lua files found in custom_quotes/"
+msgstr "V custom_quotes/ nebyly nalezeny žádné soubory .lua"
+#: sui_updater.lua:419
+msgid "No automatic update file was found.\n"
+"\n"
+"Open the releases page on GitHub?"
+msgstr "Nebyl nalezen žádný soubor automatické aktualizace.\n"
+"\n"
+"Otevřít stránku vydání na GitHubu?"
+#: sui_bottombar.lua:1389
+msgid "No book in history."
+msgstr "V historii není žádná kniha."
+#: sui_foldercovers.lua:609
+msgid "No books found in this folder."
+msgstr "V této složce nebyly nalezeny žádné knihy."
+#: sui_foldercovers.lua:544
+msgid "No books found in this series."
+msgstr "V této sérii nebyly nalezeny žádné knihy."
+#: sui_browsemeta.lua:731
+msgid "No books found."
+msgstr "Nebyly nalezeny žádné knihy."
+#: desktop_modules/module_tbr.lua:455
+msgid "No books in To Be Read list."
+msgstr "V seznamu K přečtení nejsou žádné knihy."
+#: sui_homescreen.lua:190
+msgid "No books opened yet"
+msgstr "Zatím nebyla otevřena žádná kniha"
+#: desktop_modules/module_collections.lua:673
+msgid "No collections found."
+msgstr "Nebyly nalezeny žádné kolekce."
+#: desktop_modules/module_collections.lua:378
+msgid "No collections selected"
+msgstr "Nejsou vybrány žádné kolekce"
+#: desktop_modules/module_quote.lua:831
+msgid "No custom quotes found. Add a .lua file to the plugin\\'s desktop_modules/custom_quotes/ folder and select it in Settings."
+msgstr "Nebyly nalezeny žádné vlastní citáty. Přidejte soubor .lua do složky desktop_modules/custom_quotes/ pluginu a vyberte jej v Nastavení."
+#: sui_quickactions.lua:1302
+msgid "No folder, collection or plugin configured.\n"
+"Go to Simple UI \\xe2\\x86\\x92 Settings \\xe2\\x86\\x92 Quick Actions to set one."
+msgstr "Není nastavena žádná složka, kolekce ani plugin.\n"
+"Přejděte do Simple UI \\xe2\\x86\\x92 Nastavení \\xe2\\x86\\x92 Rychlé akce a jednu nastavte."
+#: desktop_modules/module_quote.lua:895
+msgid "No highlights found. Open a book and highlight some passages."
+msgstr "Nebyla nalezena žádná zvýraznění. Otevřete knihu a zvýrazněte některé pasáže."
+#: sui_quickactions.lua:586
+msgid "No icons found in:"
+msgstr "V tomto umístění nebyly nalezeny žádné ikony:"
+#: sui_quickactions.lua:886
+msgid "No plugins found."
+msgstr "Nebyly nalezeny žádné pluginy."
+#: desktop_modules/module_quote.lua:861
+msgid "No quotes found."
+msgstr "Nebyly nalezeny žádné citáty."
+#: desktop_modules/module_reading_stats.lua:286
+msgid "No stats selected"
+msgstr "Nejsou vybrány žádné statistiky"
+#: sui_quickactions.lua:914
+msgid "No system actions found."
+msgstr "Nebyly nalezeny žádné systémové akce."
+#: desktop_modules/module_clock.lua:56
+msgid "November"
+msgstr "Listopad"
+#: sui_menu.lua:2058
+msgid "Number of Books in Folder"
+msgstr "Počet knih ve složce"
+#: sui_menu.lua:1482
+#: sui_menu.lua:2090
+msgid "Number of Pages"
+msgstr "Počet stránek"
+#: sui_menu.lua:500
+msgid "Number of Pages in Title Bar Always"
+msgstr "Počet stránek v horní liště vždy"
+#: sui_quickactions.lua:501
+msgid "OK"
+msgstr "OK"
+#: desktop_modules/module_clock.lua:56
+msgid "October"
+msgstr "Říjen"
+#: sui_menu.lua:737
+#: sui_menu.lua:806
+#: sui_menu.lua:996
+#: sui_menu.lua:1142
+#: sui_menu.lua:1825
+#: sui_menu.lua:1906
+msgid "Off"
+msgstr "Vypnuto"
+#: sui_menu.lua:737
+#: sui_menu.lua:806
+#: sui_menu.lua:996
+#: sui_menu.lua:1142
+#: sui_menu.lua:1825
+#: sui_menu.lua:1906
+msgid "On"
+msgstr "Zapnuto"
+#: sui_homescreen.lua:420
+#: desktop_modules/module_quote.lua:1114
+msgid "Open"
+msgstr "Otevřít"
+#: sui_homescreen.lua:199
+msgid "Open a book to get started"
+msgstr "Začněte otevřením knihy"
+#: sui_updater.lua:420
+msgid "Open in browser"
+msgstr "Otevřít v prohlížeči"
+#: sui_homescreen.lua:419
+#: desktop_modules/module_quote.lua:1113
+msgid "Open this file?"
+msgstr "Otevřít tento soubor?"
+#: sui_menu.lua:2054
+msgid "Overlays"
+msgstr "Překryvy"
+#: sui_patches.lua:1404
+#: sui_patches.lua:1759
+#: sui_homescreen.lua:1673
+msgid "Page %1 of %2"
+msgstr "Strana %1 z %2"
+#: sui_menu.lua:1948
+msgid "Pagination Bar"
+msgstr "Stránkovací lišta"
+#: sui_menu.lua:383
+msgid "Pagination bar hidden.\n"
+"\n"
+"Restart now?"
+msgstr "Stránkovací lišta je skrytá.\n"
+"\n"
+"Restartovat nyní?"
+#: sui_menu.lua:362
+msgid "Pagination bar set to Default.\n"
+"\n"
+"Restart now?"
+msgstr "Stránkovací lišta je nastavena na Výchozí.\n"
+"\n"
+"Restartovat nyní?"
+#: sui_menu.lua:469
+#: sui_menu.lua:481
+#: sui_menu.lua:493
+msgid "Pagination bar size will change after restart.\n"
+"\n"
+"Restart now?"
+msgstr "Velikost stránkovací lišty se změní po restartu.\n"
+"\n"
+"Restartovat nyní?"
+#: sui_quickactions.lua:833
+msgid "Path chooser not available."
+msgstr "Výběr cesty není k dispozici."
+#: desktop_modules/module_recent.lua:304
+msgid "Percentage overlay on cover"
+msgstr "Překryv procent na obálce"
+#: desktop_modules/module_recent.lua:317
+#: desktop_modules/module_coverdeck.lua:824
+msgid "Show finished books"
+msgstr "Zobrazit dokončené knihy"
+#: desktop_modules/module_currently.lua:268
+#: desktop_modules/module_currently.lua:911
+#: desktop_modules/module_coverdeck.lua:75
+msgid "Percentage read"
+msgstr "Procent přečteno"
+#: desktop_modules/module_recent.lua:294
+msgid "Percentage text"
+msgstr "Text s procenty"
+#: desktop_modules/module_reading_goals.lua:371
+msgid "Physical Books — %s"
+msgstr "Fyzické knihy — %s"
+#: desktop_modules/module_reading_goals.lua:372
+msgid "Physical books read this year:"
+msgstr "Počet fyzických knih přečtených letos:"
+#: desktop_modules/module_quote.lua:1300
+msgid "Place .lua files in the plugin's desktop_modules/custom_quotes/ folder"
+msgstr "Umístěte soubory .lua do složky desktop_modules/custom_quotes/ pluginu"
+#: sui_menu.lua:2183
+msgid "Placeholder cover for bookless folders"
+msgstr "Zástupná obálka pro složky bez knih"
+#: sui_quickactions.lua:945
+msgid "Plugin"
+msgstr "Plugin"
+#: sui_quickactions.lua:1287
+msgid "Plugin error: %s"
+msgstr "Chyba pluginu: %s"
+#: sui_quickactions.lua:1289
+msgid "Plugin not available: %s"
+msgstr "Plugin není k dispozici: %s"
+#: sui_config.lua:143
+msgid "Power"
+msgstr "Napájení"
+#: sui_bottombar.lua:288
+msgid "Prev"
+msgstr "Předch."
+#: desktop_modules/module_currently.lua:267
+#: desktop_modules/module_recent.lua:284
+msgid "Progress bar"
+msgstr "Ukazatel průběhu"
+#: desktop_modules/module_currently.lua:923
+msgid "Progress bar style"
+msgstr "Styl ukazatele průběhu"
+#: sui_menu.lua:1455
+#: sui_menu.lua:1955
+msgid "Quick Actions"
+msgstr "Rychlé akce"
+#: sui_menu.lua:1959
+msgid "Quick Actions  (%d/%d — %d left)"
+msgstr "Rychlé akce  (%d/%d — zbývá %d)"
+#: sui_menu.lua:1957
+msgid "Quick Actions  (%d/%d — at limit)"
+msgstr "Rychlé akce  (%d/%d — na limitu)"
+#: sui_menu.lua:1293
+#: desktop_modules/module_quick_actions.lua:199
+#: desktop_modules/module_quick_actions.lua:249
+msgid "Quick Actions %d"
+msgstr "Rychlé akce %d"
+#: sui_bottombar.lua:1756
+msgid "Quit"
+msgstr "Ukončit"
+#: desktop_modules/module_quote.lua:971
+msgid "Quote of the Day"
+msgstr "Citát dne"
+#: desktop_modules/module_quote.lua:1240
+msgid "Quotes + My Highlights"
+msgstr "Citáty + moje zvýraznění"
+#: sui_config.lua:170
+msgid "RAM Usage"
+msgstr "Využití RAM"
+#: desktop_modules/module_reading_goals.lua:443
+#: desktop_modules/module_reading_goals.lua:444
+#: desktop_modules/module_reading_goals.lua:469
+#: desktop_modules/module_reading_goals.lua:608
+msgid "Reading Goals"
+msgstr "Čtenářské cíle"
+#: desktop_modules/module_reading_stats.lua:218
+msgid "Reading Stats"
+msgstr "Statistiky čtení"
+#: desktop_modules/module_coverdeck.lua:728
+#: desktop_modules/module_recent.lua:62
+#: desktop_modules/module_recent.lua:63
+#: desktop_modules/module_recent.lua:72
+#: desktop_modules/module_recent.lua:281
+msgid "Recent Books"
+msgstr "Nedávné knihy"
+#: desktop_modules/module_tbr.lua:265
+msgid "Remove from To Be Read"
+msgstr "Odebrat z K přečtení"
+#: sui_quickactions.lua:1056
+#: sui_quickactions.lua:1114
+msgid "Rename"
+msgstr "Přejmenovat"
+#: sui_menu.lua:369
+msgid "Replaces the pagination bar with Prev/Next arrows at the edges of the bottom bar.\n"
+"The arrows dim when there is no previous or next page.\n"
+"With navpager active, as few as 1 tab and at most 4 tabs can be configured."
+msgstr "Nahradí stránkovací lištu šipkami Předch./Další na okrajích spodní lišty.\n"
+"Šipky se ztlumí, pokud není předchozí nebo další stránka.\n"
+"Při aktivním navpageru lze nastavit minimálně 1 a maximálně 4 karty."
+#: sui_quickactions.lua:1065
+#: sui_menu.lua:1796
+msgid "Reset"
+msgstr "Obnovit"
+#: sui_menu.lua:1795
+msgid "Reset all scales to default (100%)? This cannot be undone."
+msgstr "Obnovit všechna měřítka na výchozí hodnotu (100 %)? Tuto akci nelze vrátit."
+#: sui_menu.lua:1790
+msgid "Reset to Default Scale"
+msgstr "Obnovit výchozí měřítko"
+#: sui_menu.lua:341
+#: sui_menu.lua:746
+#: sui_menu.lua:815
+#: sui_menu.lua:850
+#: sui_menu.lua:1156
+#: sui_menu.lua:1924
+#: sui_bottombar.lua:1735
+#: sui_updater.lua:360
+msgid "Restart"
+msgstr "Restartovat"
+#: sui_menu.lua:1845
+msgid "Return to Book Folder"
+msgstr "Vrátit se do složky knihy"
+#: sui_menu.lua:626
+#: sui_menu.lua:1040
+msgid "Right"
+msgstr "Vpravo"
+#: desktop_modules/module_clock.lua:51
+msgid "Saturday"
+msgstr "Sobota"
+#: sui_quickactions.lua:808
+#: sui_quickactions.lua:1076
+#: desktop_modules/module_reading_goals.lua:358
+#: desktop_modules/module_reading_goals.lua:374
+#: desktop_modules/module_reading_goals.lua:391
+msgid "Save"
+msgstr "Uložit"
+#: sui_menu.lua:1710
+#: desktop_modules/module_reading_stats.lua:389
+#: desktop_modules/module_reading_stats.lua:391
+#: desktop_modules/module_collections.lua:500
+#: desktop_modules/module_collections.lua:502
+#: desktop_modules/module_currently.lua:797
+#: desktop_modules/module_currently.lua:799
+#: desktop_modules/module_new_books.lua:246
+#: desktop_modules/module_new_books.lua:248
+#: desktop_modules/module_reading_goals.lua:568
+#: desktop_modules/module_reading_goals.lua:570
+#: desktop_modules/module_clock.lua:461
+#: desktop_modules/module_clock.lua:463
+#: desktop_modules/module_tbr.lua:362
+#: desktop_modules/module_tbr.lua:364
+#: desktop_modules/module_quote.lua:1160
+#: desktop_modules/module_quote.lua:1164
+#: desktop_modules/module_coverdeck.lua:698
+#: desktop_modules/module_coverdeck.lua:700
+#: desktop_modules/module_quick_actions.lua:385
+#: desktop_modules/module_quick_actions.lua:387
+#: desktop_modules/module_recent.lua:242
+#: desktop_modules/module_recent.lua:244
+msgid "Scale"
+msgstr "Měřítko"
+#: desktop_modules/module_currently.lua:827
+msgid "Scale for all text elements (title, author, progress, time).\n"
+"100% is the default size."
+msgstr "Měřítko pro všechny textové prvky (název, autor, průběh, čas).\n"
+"100% je výchozí velikost."
+#: desktop_modules/module_quick_actions.lua:399
+msgid "Scale for the button label text.\n"
+"100% is the default size."
+msgstr "Měřítko pro text popisku tlačítka.\n"
+"100% je výchozí velikost."
+#: desktop_modules/module_collections.lua:516
+msgid "Scale for the collection name text.\n"
+"100% is the default size."
+msgstr "Měřítko pro text názvu kolekce.\n"
+"100% je výchozí velikost."
+#: desktop_modules/module_collections.lua:654
+msgid "Scale for the collection thumbnails only.\n"
+"The label text follows the module scale.\n"
+"100% is the default size."
+msgstr "Měřítko pouze pro miniatury kolekcí.\n"
+"Text popisku se řídí měřítkem modulu.\n"
+"100% je výchozí velikost."
+#: desktop_modules/module_currently.lua:814
+msgid "Scale for the cover thumbnail only.\n"
+"100% is the default size."
+msgstr "Měřítko pouze pro miniaturu obálky.\n"
+"100% je výchozí velikost."
+#: desktop_modules/module_coverdeck.lua:709
+msgid "Scale for the cover thumbnails only.\n"
+"100% is the default size."
+msgstr "Měřítko pouze pro miniatury obálek.\n"
+"100% je výchozí velikost."
+#: desktop_modules/module_new_books.lua:263
+#: desktop_modules/module_recent.lua:259
+msgid "Scale for the cover thumbnails only.\n"
+"Text and progress bar follow the module scale.\n"
+"100% is the default size."
+msgstr "Měřítko pouze pro miniatury obálek.\n"
+"Text a ukazatel průběhu se řídí měřítkem modulu.\n"
+"100% je výchozí velikost."
+#: sui_menu.lua:2155
+msgid "Scale for the folder name overlay text.\n"
+"100% is the default size."
+msgstr "Měřítko pro text překryvu názvu složky.\n"
+"100% je výchozí velikost."
+#: desktop_modules/module_new_books.lua:275
+msgid "Scale for the label text.\n"
+"100% is the default size."
+msgstr "Měřítko pro text popisku.\n"
+"100% je výchozí velikost."
+#: desktop_modules/module_recent.lua:273
+msgid "Scale for the percentage read text.\n"
+"100% is the default size."
+msgstr "Měřítko pro text s procenty přečtení.\n"
+"100% je výchozí velikost."
+#: desktop_modules/module_coverdeck.lua:701
+msgid "Scale for this module."
+msgstr "Měřítko pro tento modul."
+#: desktop_modules/module_reading_stats.lua:392
+#: desktop_modules/module_collections.lua:503
+#: desktop_modules/module_currently.lua:800
+#: desktop_modules/module_new_books.lua:249
+#: desktop_modules/module_reading_goals.lua:571
+#: desktop_modules/module_clock.lua:464
+#: desktop_modules/module_tbr.lua:365
+#: desktop_modules/module_quote.lua:1166
+#: desktop_modules/module_quick_actions.lua:388
+#: desktop_modules/module_recent.lua:245
+msgid "Scale for this module.\n"
+"100% is the default size."
+msgstr "Měřítko pro tento modul.\n"
+"100% je výchozí velikost."
+#: desktop_modules/module_coverdeck.lua:717
+msgid "Scale for title and statistics text.\n"
+"100% is the default size."
+msgstr "Měřítko pro text názvu a statistik.\n"
+"100% je výchozí velikost."
+#: sui_menu.lua:1733
+msgid "Scales all modules and labels together.\n"
+"100% is the default size."
+msgstr "Mění měřítko všech modulů a popisků zároveň.\n"
+"100% je výchozí velikost."
+#: sui_menu.lua:1769
+msgid "Scales the section label text above each module.\n"
+"100% is the default size."
+msgstr "Mění měřítko textu popisku sekce nad každým modulem.\n"
+"100% je výchozí velikost."
+#: sui_menu.lua:2198
+msgid "Scan subfolders for cover"
+msgstr "Hledat obálku i v podsložkách"
+#: sui_titlebar.lua:56
+msgid "Search"
+msgstr "Hledat"
+#: desktop_modules/module_collections.lua:627
+msgid "Select at least 2 collections to arrange."
+msgstr "Pro uspořádání vyberte alespoň 2 kolekce."
+#: desktop_modules/module_clock.lua:56
+msgid "September"
+msgstr "Září"
+#: sui_config.lua:146
+#: sui_browsemeta.lua:58
+msgid "Series"
+msgstr "Série"
+#: sui_menu.lua:2096
+msgid "Series Index"
+msgstr "Pořadí v sérii"
+#: sui_foldercovers.lua:589
+msgid "Series cover"
+msgstr "Obálka série"
+#: sui_menu.lua:571
+msgid "Set"
+msgstr "Nastavit"
+#: sui_foldercovers.lua:693
+msgid "Set folder cover…"
+msgstr "Nastavit obálku složky…"
+#: sui_foldercovers.lua:689
+msgid "Set series cover…"
+msgstr "Nastavit obálku série…"
+#: sui_foldercovers.lua:691
+msgid "Set virtual folder cover…"
+msgstr "Nastavit obálku virtuální složky…"
+#: sui_menu.lua:1933
+msgid "Settings"
+msgstr "Nastavení"
+#: sui_menu.lua:784
+#: sui_menu.lua:954
+#: sui_menu.lua:1857
+msgid "Settings on Long Tap"
+msgstr "Nastavení při dlouhém stisku"
+#: sui_menu.lua:2035
+msgid "Settings Tab"
+msgstr "Karta Nastavení"
+#: sui_menu.lua:2036
+msgid "Show or hide the dedicated Simple UI tab in the menu bar.\nWhen hidden, Simple UI settings remain accessible via the main menu.\nTakes effect after a restart."
+msgstr "Zobrazí nebo skryje samostatnou kartu Simple UI v liště nabídek.\nJe-li skrytá, nastavení Simple UI zůstane dostupné přes hlavní nabídku.\nProjeví se po restartu."
+#: sui_menu.lua:2047
+msgid "The Simple UI settings tab will be %s after restart.\n\nRestart now?"
+msgstr "Karta nastavení Simple UI bude po restartu %s.\n\nRestartovat nyní?"
+#: desktop_modules/module_clock.lua:494
+msgid "Show Battery"
+msgstr "Zobrazit baterii"
+#: desktop_modules/module_clock.lua:482
+msgid "Show Clock"
+msgstr "Zobrazit hodiny"
+#: desktop_modules/module_clock.lua:488
+msgid "Show Date"
+msgstr "Zobrazit datum"
+#: sui_config.lua:1775
+msgid "Show section label"
+msgstr "Zobrazit popisek sekce"
+#: sui_menu.lua:504
+msgid "Shows \"Page X of Y\" in the title bar subtitle when browsing the library, history or collections.\n"
+"Navpager enables this automatically.\n"
+"Not available when Navpager is active."
+msgstr "Při procházení knihovny, historie nebo kolekcí zobrazuje v podtitulku horní lišty „Strana X z Y“.\n"
+"Navpager tuto volbu zapíná automaticky.\n"
+"Není dostupné, když je aktivní Navpager."
+#: sui_menu.lua:401
+msgid "Shows a row of dots at the bottom of the homescreen.\n"
+"The active page dot is filled; the others are dimmed.\n"
+"Always active when Navpager is selected."
+msgstr "Zobrazuje řadu teček ve spodní části domovské obrazovky.\n"
+"Tečka aktivní stránky je vyplněná, ostatní jsou ztlumené.\n"
+"Při zvoleném Navpageru je vždy aktivní."
+#: desktop_modules/module_currently.lua:926
+msgid "Simple"
+msgstr "Jednoduchý"
+#: sui_menu.lua:1902
+#: sui_menu.lua:1906
+#: main.lua:682
+#: main.lua:695
+msgid "Simple UI"
+msgstr "Simple UI"
+#: sui_updater.lua:407
+msgid "Simple UI %s is available!\n"
+"You have %s."
+msgstr "Simple UI %s je k dispozici!\nMáte %s."
+#: sui_updater.lua:357
+msgid "Simple UI %s successfully installed.\n"
+"\n"
+"Restart KOReader to apply the update?"
+msgstr "Simple UI %s bylo úspěšně nainstalováno.\n"
+"\n"
+"Restartovat KOReader pro použití aktualizace?"
+#: sui_updater.lua:399
+msgid "Simple UI is up to date (%s)."
+msgstr "Simple UI je aktuální (%s)."
+#: sui_menu.lua:1923
+msgid "Simple UI will be %s after restart.\n"
+"\n"
+"Restart now?"
+msgstr "Simple UI bude po restartu %s.\n\nRestartovat nyní?"
+#: sui_menu.lua:457
+#: sui_menu.lua:756
+#: sui_menu.lua:826
+msgid "Size"
+msgstr "Velikost"
+#: sui_menu.lua:891
+msgid "Size of the tab icons.\n"
+"100% is the default size."
+msgstr "Velikost ikon karet.\n"
+"100% je výchozí velikost."
+#: sui_menu.lua:911
+msgid "Size of the tab label text.\n"
+"100% is the default size."
+msgstr "Velikost textu popisku karty.\n"
+"100% je výchozí velikost."
+#: desktop_modules/module_reading_stats.lua:473
+msgid "Size of the text inside the stat cards.\n"
+"Does not affect card size or padding.\n"
+"100% is the default size."
+msgstr "Velikost textu uvnitř karet statistik.\n"
+"Neovlivňuje velikost karet ani jejich odsazení.\n"
+"100% je výchozí velikost."
+#: sui_bottombar.lua:1746
+msgid "Sleep"
+msgstr "Uspat"
+#: sui_menu.lua:473
+msgid "Small"
+msgstr "Malé"
+#: desktop_modules/module_quote.lua:1192
+#: desktop_modules/module_coverdeck.lua:725
+msgid "Source"
+msgstr "Zdroj"
+#: sui_menu.lua:869
+msgid "Space below the bottom navigation bar.\n"
+"100% is the default spacing."
+msgstr "Prostor pod spodní navigační lištou.\n"
+"100% je výchozí rozestup."
+#: sui_patches.lua:682
+#: sui_patches.lua:684
+msgid "Start with"
+msgstr "Spustit s"
+#: sui_menu.lua:1835
+msgid "Start with Home Screen"
+msgstr "Spustit s domovskou obrazovkou"
+#: sui_bottombar.lua:1117
+#: sui_bottombar.lua:1402
+msgid "Statistics plugin not available."
+msgstr "Plugin statistik není k dispozici."
+#: sui_config.lua:142
+msgid "Stats"
+msgstr "Statistiky"
+#: desktop_modules/module_currently.lua:951
+msgid "Stats layout"
+msgstr "Rozvržení statistik"
+#: sui_menu.lua:1939
+msgid "Status Bar"
+msgstr "Stavová lišta"
+#: desktop_modules/module_reading_stats.lua:67
+msgid "Streak"
+msgstr "Série"
+#: sui_menu.lua:1180
+msgid "Sub-pages Buttons"
+msgstr "Tlačítka podstránek"
+#: desktop_modules/module_clock.lua:50
+msgid "Sunday"
+msgstr "Neděle"
+#: sui_menu.lua:522
+msgid "Swipe Indicator"
+msgstr "Indikátor přejetí"
+#: sui_quickactions.lua:947
+msgid "System Actions"
+msgstr "Systémové akce"
+#: sui_quickactions.lua:1253
+msgid "System action error: %s"
+msgstr "Chyba systémové akce: %s"
+#: sui_menu.lua:949
+msgid "Tabs  (%d/%d — %d left)"
+msgstr "Karty  (%d/%d — zbývá %d)"
+#: sui_menu.lua:947
+msgid "Tabs  (%d/%d — at limit)"
+msgstr "Karty  (%d/%d — na limitu)"
+#: sui_menu.lua:107
+msgid "Text"
+msgstr "Text"
+#: desktop_modules/module_reading_stats.lua:469
+#: desktop_modules/module_reading_stats.lua:472
+#: desktop_modules/module_collections.lua:514
+#: desktop_modules/module_collections.lua:515
+#: desktop_modules/module_currently.lua:825
+#: desktop_modules/module_currently.lua:826
+#: desktop_modules/module_new_books.lua:273
+#: desktop_modules/module_new_books.lua:274
+#: desktop_modules/module_quick_actions.lua:395
+#: desktop_modules/module_quick_actions.lua:398
+#: desktop_modules/module_recent.lua:271
+#: desktop_modules/module_recent.lua:272
+msgid "Text Size"
+msgstr "Velikost textu"
+#: desktop_modules/module_reading_stats.lua:470
+msgid "Text Size — %d%%"
+msgstr "Velikost textu — %d%%"
+#: sui_menu.lua:109
+msgid "Text only"
+msgstr "Pouze text"
+#: sui_menu.lua:2152
+#: desktop_modules/module_coverdeck.lua:715
+#: desktop_modules/module_coverdeck.lua:716
+msgid "Text size"
+msgstr "Velikost textu"
+#: sui_patches.lua:831
+msgid "The «To Be Read» collection cannot be renamed."
+msgstr "Kolekci «K přečtení» nelze přejmenovat."
+#: desktop_modules/module_clock.lua:51
+msgid "Thursday"
+msgstr "Čtvrtek"
+#: desktop_modules/module_currently.lua:270
+#: desktop_modules/module_coverdeck.lua:77
+msgid "Time read"
+msgstr "Čas čtení"
+#: desktop_modules/module_currently.lua:271
+#: desktop_modules/module_coverdeck.lua:78
+msgid "Time remaining"
+msgstr "Zbývající čas"
+#: sui_titlebar.lua:58
+#: desktop_modules/module_currently.lua:265
+msgid "Title"
+msgstr "Název"
+#: sui_menu.lua:1940
+msgid "Title Bar"
+msgstr "Horní lišta"
+#: desktop_modules/module_coverdeck.lua:747
+msgid "Title Position"
+msgstr "Pozice názvu"
+#: desktop_modules/module_tbr.lua:229
+#: desktop_modules/module_tbr.lua:230
+#: desktop_modules/module_tbr.lua:244
+#: desktop_modules/module_tbr.lua:280
+#: desktop_modules/module_tbr.lua:398
+#: desktop_modules/module_coverdeck.lua:736
+msgid "To Be Read"
+msgstr "K přečtení"
+#: desktop_modules/module_tbr.lua:450
+msgid "To Be Read books"
+msgstr "Knihy k přečtení"
+#: sui_patches.lua:879
+#: sui_patches.lua:918
+#: sui_patches.lua:950
+#: sui_patches.lua:991
+msgid "To Be Read list is full (max. 5 books)."
+msgstr "Seznam K přečtení je plný (max. 5 knih)."
+#: desktop_modules/module_reading_goals.lua:511
+#: desktop_modules/module_reading_goals.lua:513
+#: desktop_modules/module_reading_goals.lua:536
+#: desktop_modules/module_reading_goals.lua:539
+msgid "Today"
+msgstr "Dnes"
+#: desktop_modules/module_reading_stats.lua:62
+msgid "Today — Pages"
+msgstr "Dnes — Stránky"
+#: desktop_modules/module_reading_stats.lua:61
+msgid "Today — Time"
+msgstr "Dnes — Čas"
+#: sui_menu.lua:1937
+#: sui_menu.lua:2072
+#: sui_menu.lua:2126
+msgid "Top"
+msgstr "Nahoře"
+#: sui_menu.lua:737
+#: sui_topbar.lua:507
+msgid "Top Bar"
+msgstr "Horní lišta"
+#: sui_menu.lua:762
+msgid "Top Bar Size"
+msgstr "Velikost horní lišty"
+#: sui_menu.lua:745
+msgid "Top Bar will be %s after restart.\n"
+"\n"
+"Restart now?"
+msgstr "Horní lišta bude po restartu %s.\n"
+"\n"
+"Restartovat nyní?"
+#: sui_homescreen.lua:1743
+msgid "Top Margin  (%d%%)"
+msgstr "Horní okraj  (%d%%)"
+#: sui_menu.lua:925
+msgid "Top separator"
+msgstr "Horní oddělovač"
+#: sui_menu.lua:2115
+msgid "Transparent"
+msgstr "Průhledné"
+#: desktop_modules/module_clock.lua:50
+msgid "Tuesday"
+msgstr "Úterý"
+#: sui_menu.lua:938
+#: desktop_modules/module_reading_stats.lua:430
+#: desktop_modules/module_reading_goals.lua:586
+#: desktop_modules/module_quick_actions.lua:407
+msgid "Type"
+msgstr "Typ"
+#: sui_menu.lua:2166
+msgid "Uniformize Covers (2:3)"
+msgstr "Sjednotit obálky (2:3)"
+#: sui_updater.lua:377
+msgid "Update cancelled."
+msgstr "Aktualizace zrušena."
+#: sui_updater.lua:487
+msgid "Update check cancelled."
+msgstr "Kontrola aktualizací zrušena."
+#: sui_menu.lua:2247
+msgid "Updater module not found."
+msgstr "Modul aktualizací nebyl nalezen."
+#: sui_menu.lua:423
+msgid "Uses the standard KOReader pagination bar on the homescreen.\n"
+"Not available when Navpager is active."
+msgstr "Na domovské obrazovce používá standardní stránkovací lištu KOReaderu.\n"
+"Není dostupné, když je aktivní Navpager."
+#: sui_menu.lua:2232
+msgid "Version: %s"
+msgstr "Verze: %s"
+#: sui_homescreen.lua:1746
+msgid "Vertical space above this module.\n"
+"100% is the default spacing."
+msgstr "Svislý prostor nad tímto modulem.\n"
+"100% je výchozí rozestup."
+#: sui_browsemeta.lua:778
+msgid "Virtual folder cover"
+msgstr "Obálka virtuální složky"
+#: sui_menu.lua:925
+msgid "Visible"
+msgstr "Viditelné"
+#: desktop_modules/module_clock.lua:50
+msgid "Wednesday"
+msgstr "Středa"
+#: sui_updater.lua:412
+msgid "What's new:"
+msgstr "Co je nového:"
+#: sui_menu.lua:1858
+msgid "When enabled, long-pressing a section opens its settings menu.\n"
+"Disable this to prevent the settings menu from appearing on long tap."
+msgstr "Je-li zapnuto, dlouhý stisk sekce otevře její nabídku nastavení.\n"
+"Vypněte tuto volbu, pokud nechcete, aby se při dlouhém stisku zobrazovalo menu nastavení."
+#: sui_menu.lua:955
+msgid "When enabled, long-pressing the bottom bar opens its settings menu.\n"
+"Disable this to prevent the settings menu from appearing on long tap."
+msgstr "Je-li zapnuto, dlouhý stisk spodní lišty otevře její nabídku nastavení.\n"
+"Vypněte tuto volbu, pokud nechcete, aby se při dlouhém stisku zobrazovalo menu nastavení."
+#: sui_menu.lua:785
+msgid "When enabled, long-pressing the top bar opens its settings menu.\n"
+"Disable this to prevent the settings menu from appearing on long tap."
+msgstr "Je-li zapnuto, dlouhý stisk horní lišty otevře její nabídku nastavení.\n"
+"Vypněte tuto volbu, pokud nechcete, aby se při dlouhém stisku zobrazovalo menu nastavení."
+#: sui_menu.lua:1846
+msgid "When enabled, opening the file browser after finishing or closing a book navigates to the folder the book is in, matching native KOReader behaviour.\n"
+"When disabled (default), SimpleUI always returns to the library root.\n"
+"This option works independently of \"Start with Home Screen\"."
+msgstr "Je-li zapnuto, otevření správce souborů po dočtení nebo zavření knihy přejde do složky, ve které se kniha nachází, stejně jako v nativním KOReaderu.\n"
+"Je-li vypnuto (výchozí), SimpleUI se vždy vrací do kořene knihovny.\n"
+"Tato volba funguje nezávisle na možnosti „Spustit s domovskou obrazovkou“."
+#: sui_config.lua:140
+msgid "Wi-Fi"
+msgstr "Wi-Fi"
+#: sui_bottombar.lua:1462
+msgid "Wi-Fi off"
+msgstr "Wi‑Fi vypnuta"
+#: sui_config.lua:166
+msgid "WiFi"
+msgstr "WiFi"
+#: sui_bottombar.lua:1449
+msgid "WiFi not available on this device."
+msgstr "WiFi není na tomto zařízení k dispozici."
+#: sui_quickactions.lua:625
+msgid "Wikipedia Lookup"
+msgstr "Vyhledat na Wikipedii"
+#: desktop_modules/module_currently.lua:936
+msgid "With percentage"
+msgstr "S procenty"
+#: desktop_modules/module_quote.lua:897
+msgid "Your highlights"
+msgstr "Vaše zvýraznění"
+#: sui_updater.lua:410
+msgid "\n"
+"\n"
+"Download and install now?"
+msgstr "\n"
+"\n"
+"Stáhnout a nainstalovat nyní?"
+#: desktop_modules/module_reading_stats.lua:66
+msgid "books finished"
+msgstr "dokončených knih"
+#: desktop_modules/module_reading_stats.lua:63
+msgid "daily avg (7 days)"
+msgstr "denní průměr (7 dní)"
+#: desktop_modules/module_reading_stats.lua:68
+msgid "day streak"
+msgstr "den v řadě"
+#: desktop_modules/module_reading_stats.lua:68
+msgid "days streak"
+msgstr "dny v řadě"
+#: sui_quickactions.lua:1010
+msgid "default"
+msgstr "výchozí"
+#: sui_menu.lua:745
+#: sui_menu.lua:814
+#: sui_menu.lua:1154
+#: sui_menu.lua:1923
+msgid "disabled"
+msgstr "vypnuto"
+#: sui_quickactions.lua:850
+msgid "e.g. Comics…"
+msgstr "např. Komiksy…"
+#: sui_quickactions.lua:896
+msgid "e.g. Rakuyomi…"
+msgstr "např. Rakuyomi…"
+#: sui_quickactions.lua:869
+msgid "e.g. Sci-Fi…"
+msgstr "např. Sci-Fi…"
+#: sui_quickactions.lua:924
+msgid "e.g. Sleep, Refresh…"
+msgstr "např. Uspat, Obnovit…"
+#: sui_menu.lua:745
+#: sui_menu.lua:814
+#: sui_menu.lua:1154
+#: sui_menu.lua:1923
+msgid "enabled"
+msgstr "zapnuto"
+#: sui_quickactions.lua:490
+msgid "hex code, e.g. E001"
+msgstr "hex kód, např. E001"
+#: desktop_modules/module_reading_stats.lua:68
+msgid "no streak"
+msgstr "žádná série"
+#: sui_quickactions.lua:1163
+#: sui_quickactions.lua:1179
+msgid "not configured"
+msgstr "nenastaveno"
+#: desktop_modules/module_reading_stats.lua:61
+msgid "of reading today"
+msgstr "čtení dnes"
+#: desktop_modules/module_reading_stats.lua:65
+msgid "of reading, all time"
+msgstr "čtení celkem"
+#: desktop_modules/module_reading_stats.lua:62
+msgid "pages read today"
+msgstr "dnes přečtených stránek"
+#: desktop_modules/module_reading_stats.lua:64
+msgid "pages/day (7 days)"
+msgstr "stran/den (7 dní)"
+#: sui_menu.lua:242
+#: sui_menu.lua:1340
+#: desktop_modules/module_reading_stats.lua:507
+#: desktop_modules/module_collections.lua:689
+#: desktop_modules/module_quick_actions.lua:324
+msgid "  (%d left)"
+msgid_plural "  (%d left)"
+msgstr[0] "  (zbývá %d)"
+msgstr[1] "  (zbývají %d)"
+msgstr[2] "  (zbývá %d)"
+#: desktop_modules/module_reading_goals.lua:619
+msgid "  Set Goal  (%d book in %s)"
+msgid_plural "  Set Goal  (%d books in %s)"
+msgstr[0] "  Nastavit cíl  (%d kniha v %s)"
+msgstr[1] "  Nastavit cíl  (%d knihy v %s)"
+msgstr[2] "  Nastavit cíl  (%d knih v %s)"
+#: desktop_modules/module_reading_goals.lua:418
+msgid "%d book"
+msgid_plural "%d books"
+msgstr[0] "%d kniha"
+msgstr[1] "%d knihy"
+msgstr[2] "%d knih"
+#: desktop_modules/module_currently.lua:540
+#: desktop_modules/module_currently.lua:607
+#: desktop_modules/module_coverdeck.lua:574
+msgid "%d day of reading"
+msgid_plural "%d days of reading"
+msgstr[0] "%d den čtení"
+msgstr[1] "%d dny čtení"
+msgstr[2] "%d dní čtení"
+#: desktop_modules/module_reading_goals.lua:417
+msgid "%d/%d book"
+msgid_plural "%d/%d books"
+msgstr[0] "%d/%d kniha"
+msgstr[1] "%d/%d knihy"
+msgstr[2] "%d/%d knih"
+#: sui_menu.lua:1234
+msgid "Digital: %d book in %s"
+msgid_plural "Digital: %d books in %s"
+msgstr[0] "Digitální: %d kniha v %s"
+msgstr[1] "Digitální: %d knihy v %s"
+msgstr[2] "Digitální: %d knih v %s"
+#: sui_menu.lua:1240
+msgid "Physical: %d book in %s"
+msgid_plural "Physical: %d books in %s"
+msgstr[0] "Fyzické: %d kniha v %s"
+msgstr[1] "Fyzické: %d knihy v %s"
+msgstr[2] "Fyzické: %d knih v %s"
+#: sui_menu.lua:560
+msgid "Text shown in the top bar.\n"
+"Maximum %d character."
+msgid_plural "Text shown in the top bar.\n"
+"Maximum %d characters."
+msgstr[0] "Text zobrazený v horní liště.\n"
+"Maximum %d znak."
+msgstr[1] "Text zobrazený v horní liště.\n"
+"Maximum %d znaky."
+msgstr[2] "Text zobrazený v horní liště.\n"
+"Maximum %d znaků."
+#: sui_menu.lua:1304
+#: desktop_modules/module_quick_actions.lua:267
+msgid "The maximum of %d action per module has been reached. Remove one first."
+msgid_plural "The maximum of %d actions per module has been reached. Remove one first."
+msgstr[0] "Bylo dosaženo maxima %d akce na modul. Nejprve jednu odeberte."
+msgstr[1] "Bylo dosaženo maxima %d akcí na modul. Nejprve jednu odeberte."
+msgstr[2] "Bylo dosaženo maxima %d akcí na modul. Nejprve jednu odeberte."
+#: sui_quickactions.lua:1124
+msgid "The maximum of %d quick action has been reached. Delete one first."
+msgid_plural "The maximum of %d quick actions has been reached. Delete one first."
+msgstr[0] "Bylo dosaženo maxima %d rychlé akce. Nejprve jednu smažte."
+msgstr[1] "Bylo dosaženo maxima %d rychlých akcí. Nejprve jednu smažte."
+msgstr[2] "Bylo dosaženo maxima %d rychlých akcí. Nejprve jednu smažte."
+#: desktop_modules/module_reading_stats.lua:419
+msgid "The maximum of %d stat per row has been reached. Remove one first."
+msgid_plural "The maximum of %d stats per row has been reached. Remove one first."
+msgstr[0] "Bylo dosaženo maxima %d statistiky na řádek. Nejprve jednu odeberte."
+msgstr[1] "Bylo dosaženo maxima %d statistik na řádek. Nejprve jednu odeberte."
+msgstr[2] "Bylo dosaženo maxima %d statistik na řádek. Nejprve jednu odeberte."
+#: sui_menu.lua:275
+msgid "The maximum of %d tab has been reached. Remove one first."
+msgid_plural "The maximum of %d tabs has been reached. Remove one first."
+msgstr[0] "Bylo dosaženo maxima %d karty. Nejprve jednu odeberte."
+msgstr[1] "Bylo dosaženo maxima %d karet. Nejprve jednu odeberte."
+msgstr[2] "Bylo dosaženo maxima %d karet. Nejprve jednu odeberte."
