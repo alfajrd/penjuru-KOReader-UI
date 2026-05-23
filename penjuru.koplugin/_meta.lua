@@ -1,9 +1,7 @@
-
-
 return {
-    name        = "simpleui",
-    fullname    = "Simple UI",
-    description = [[A simple UI for KOReader]],
-    version     = "1.5.0",
-    author      = "Doctor Hetfield",
+    name        = "penjuru",
+    fullname    = "penjuru",
+    description = [[a reader's almanac — newspaper-flavored home screen for kindle.]],
+    version     = "0.1.0",
+    author      = "alfajrd",
 }
