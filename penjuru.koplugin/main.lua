@@ -10,18 +10,18 @@ local Dispatcher      = require("dispatcher")
 -- Each simpleui module captures its own local translation proxy from sui_i18n.
 -- The native package.loaded["gettext"] is never wrapped or replaced, which
 -- prevents state-mutation conflicts with other plugins (e.g. zlibrary).
-local I18n = require("sui_i18n")
+local I18n = require("pen_i18n")
 local _    = I18n.translate
 
-local Config       = require("sui_config")
-local UI           = require("sui_core")
-local Bottombar    = require("sui_bottombar")
-local Topbar       = require("sui_topbar")
-local Patches      = require("sui_patches")
-local SUISettings  = require("sui_store")
+local Config       = require("pen_config")
+local UI           = require("pen_core")
+local Bottombar    = require("pen_bottombar")
+local Topbar       = require("pen_topbar")
+local Patches      = require("pen_patches")
+local PENSettings  = require("pen_store")
 
-local SimpleUIPlugin = WidgetContainer:new{
-    name = "simpleui",
+local penjuruPlugin = WidgetContainer:new{
+    name = "penjuru",
 
     active_action             = nil,
     _rebuild_scheduled        = false,
@@ -49,17 +49,17 @@ local SimpleUIPlugin = WidgetContainer:new{
 -- Lifecycle
 -- ---------------------------------------------------------------------------
 
-function SimpleUIPlugin:init()
+function penjuruPlugin:init()
     local ok, err = pcall(function()
         -- Ensure the simpleui settings directory tree exists before any
-        -- SUISettings call.  SUISettings is lazy — its LuaSettings store is
+        -- PENSettings call.  PENSettings is lazy — its LuaSettings store is
         -- opened on first use — but LuaSettings:open() cannot create the
         -- parent directory.  If the directory is missing (fresh install, or
         -- the dir was wiped) the open will succeed but flush() will silently
         -- fail, discarding all writes for the session.
         --
         -- We create all five user-data directories here unconditionally so
-        -- that (a) SUISettings can write safely and (b) a fresh install never
+        -- that (a) PENSettings can write safely and (b) a fresh install never
         -- needs to wait until the migration block to have a usable directory
         -- structure.  All five lfs.attributes calls are cheap (single stat
         -- syscall each) and lfs.mkdir is only called when the directory is
@@ -68,10 +68,10 @@ function SimpleUIPlugin:init()
             local ok_ds,  DataStorage = pcall(require, "datastorage")
             local ok_lfs, lfs_early  = pcall(require, "libs/libkoreader-lfs")
             if ok_ds and ok_lfs then
-                local base = DataStorage:getSettingsDir() .. "/simpleui"
+                local base = DataStorage:getSettingsDir() .. "/penjuru"
                 for _, sub in ipairs({
-                    "", "/sui_icons", "/sui_icons/packs", "/sui_quotes",
-                    "/sui_wallpapers"
+                    "", "/pen_icons", "/pen_icons/packs", "/pen_quotes",
+                    "/pen_wallpapers"
                     -- sui_presets removed: out of scope for penjuru v1
                 }) do
                     local path = base .. sub
@@ -90,27 +90,27 @@ function SimpleUIPlugin:init()
         local p_root = src:match("^@?(.+)/[^/]+$")
         if p_root then
             local ok, meta = pcall(dofile, p_root .. "/_meta.lua")
-            if ok and type(meta) == "table" and meta.name == "simpleui" then
+            if ok and type(meta) == "table" and meta.name == "penjuru" then
                 current_version = meta.version
             end
         end
         if not current_version then
             local meta_ok, meta = pcall(require, "_meta")
-            if meta_ok and type(meta) == "table" and meta.name == "simpleui" then
+            if meta_ok and type(meta) == "table" and meta.name == "penjuru" then
                 current_version = meta.version
             end
         end
-        -- Read version from SUISettings; fall back to G_reader_settings for the
+        -- Read version from PENSettings; fall back to G_reader_settings for the
         -- first boot after the Phase-4 migration (before v2 migration has run).
-        local prev_version = SUISettings:get("simpleui_loaded_version")
-            or G_reader_settings:readSetting("simpleui_loaded_version")
+        local prev_version = PENSettings:get("penjuru_loaded_version")
+            or G_reader_settings:readSetting("penjuru_loaded_version")
         if current_version then
             if prev_version and prev_version ~= current_version then
                 logger.info("simpleui: updated from", prev_version, "to", current_version,
                     "— restart recommended")
                 UIManager:scheduleIn(1, function()
                     local InfoMessage = require("ui/widget/infomessage")
-                    local _t = require("sui_i18n").translate
+                    local _t = require("pen_i18n").translate
                     UIManager:show(InfoMessage:new{
                         text = string.format(
                             _t("Simple UI was updated (%s → %s).\n\nA restart is recommended to apply all changes cleanly."),
@@ -120,7 +120,7 @@ function SimpleUIPlugin:init()
                     })
                 end)
             end
-            SUISettings:set("simpleui_loaded_version", current_version)
+            PENSettings:set("penjuru_loaded_version", current_version)
         end
 
         -- -------------------------------------------------------------------
@@ -130,14 +130,14 @@ function SimpleUIPlugin:init()
         --     they survive plugin updates, and normalise all settings keys to
         --     the simpleui_ / navbar_ namespace.
         -- -------------------------------------------------------------------
-        if not G_reader_settings:isTrue("simpleui_userdata_migrated_v1") then
+        if not G_reader_settings:isTrue("penjuru_userdata_migrated_v1") then
             pcall(function()
                 local ok_ds, DataStorage = pcall(require, "datastorage")
                 local ok_lfs, lfs        = pcall(require, "libs/libkoreader-lfs")
                 local ok_ffi, ffiutil    = pcall(require, "ffi/util")
                 if not (ok_ds and ok_lfs and ok_ffi) then return end
 
-                local data_dir = DataStorage:getSettingsDir() .. "/simpleui"
+                local data_dir = DataStorage:getSettingsDir() .. "/penjuru"
 
                 -- ── 1. Migrate user files (copy, never overwrite) ─────────
                 -- Directory structure is guaranteed by the startup block above.
@@ -182,33 +182,33 @@ function SimpleUIPlugin:init()
                         lfs.rmdir(dir)  -- only succeeds when empty
                     end
 
-                    -- icons/custom → DataStorage/simpleui/sui_icons/
+                    -- icons/custom → DataStorage/penjuru/pen_icons/
                     -- then remove the now-redundant in-plugin directory.
                     copyDirContents(plugin_root .. "/icons/custom",
-                                    data_dir    .. "/sui_icons")
+                                    data_dir    .. "/pen_icons")
                     removeDirIfEmpty(plugin_root .. "/icons/custom")
 
-                    -- desktop_modules/custom_quotes → DataStorage/simpleui/sui_quotes/
+                    -- desktop_modules/custom_quotes → DataStorage/penjuru/pen_quotes/
                     -- then remove the now-redundant in-plugin directory.
                     copyDirContents(plugin_root .. "/desktop_modules/custom_quotes",
-                                    data_dir    .. "/sui_quotes")
+                                    data_dir    .. "/pen_quotes")
                     removeDirIfEmpty(plugin_root .. "/desktop_modules/custom_quotes")
                 end
 
                 -- ── 2. Migrate renamed settings keys ──────────────────────
                 -- Each entry: { old_key, new_key }
                 local key_renames = {
-                    { "sui_tbr_list",             "simpleui_tbr_list"                    },
-                    { "quote_deck_order",          "simpleui_quote_deck_order"            },
-                    { "quote_deck_pos",            "simpleui_quote_deck_pos"              },
-                    { "quote_deck_count",          "simpleui_quote_deck_count"            },
-                    { "quote_hl_deck_order",       "simpleui_quote_hl_deck_order"         },
-                    { "quote_hl_deck_pos",         "simpleui_quote_hl_deck_pos"           },
-                    { "quote_hl_deck_count",       "simpleui_quote_hl_deck_count"         },
-                    { "quote_custom_deck_order",   "simpleui_quote_custom_deck_order"     },
-                    { "quote_custom_deck_pos",     "simpleui_quote_custom_deck_pos"       },
-                    { "quote_custom_deck_count",   "simpleui_quote_custom_deck_count"     },
-                    { "quote_custom_deck_file",    "simpleui_quote_custom_deck_file"      },
+                    { "pen_tbr_list",             "penjuru_tbr_list"                    },
+                    { "quote_deck_order",          "penjuru_quote_deck_order"            },
+                    { "quote_deck_pos",            "penjuru_quote_deck_pos"              },
+                    { "quote_deck_count",          "penjuru_quote_deck_count"            },
+                    { "quote_hl_deck_order",       "penjuru_quote_hl_deck_order"         },
+                    { "quote_hl_deck_pos",         "penjuru_quote_hl_deck_pos"           },
+                    { "quote_hl_deck_count",       "penjuru_quote_hl_deck_count"         },
+                    { "quote_custom_deck_order",   "penjuru_quote_custom_deck_order"     },
+                    { "quote_custom_deck_pos",     "penjuru_quote_custom_deck_pos"       },
+                    { "quote_custom_deck_count",   "penjuru_quote_custom_deck_count"     },
+                    { "quote_custom_deck_file",    "penjuru_quote_custom_deck_file"      },
                     -- quote_source and quote_custom_file are per-instance (prefixed
                     -- with navbar_homescreen_ at runtime); migrate all known slots.
                     { "navbar_homescreen_quote_source",      "navbar_homescreen_simpleui_quote_source"      },
@@ -225,18 +225,18 @@ function SimpleUIPlugin:init()
 
                 logger.info("simpleui: userdata migration v1 complete")
             end)
-            G_reader_settings:saveSetting("simpleui_userdata_migrated_v1", true)
+            G_reader_settings:saveSetting("penjuru_userdata_migrated_v1", true)
         end
         -- -------------------------------------------------------------------
         -- Settings migration v2: move all navbar_* and simpleui_* keys from
-        -- G_reader_settings into SUISettings (the dedicated per-plugin store).
+        -- G_reader_settings into PENSettings (the dedicated per-plugin store).
         --
         -- This runs once on first boot after the Phase-3 refactor.  It is safe
-        -- to re-run if interrupted: keys that already exist in SUISettings are
+        -- to re-run if interrupted: keys that already exist in PENSettings are
         -- not overwritten; keys successfully copied are removed from
         -- G_reader_settings.
         -- -------------------------------------------------------------------
-        if not SUISettings:isTrue("simpleui_settings_migrated_v2") then
+        if not PENSettings:isTrue("penjuru_settings_migrated_v2") then
             pcall(function()
                 -- Enumerate every key currently stored in G_reader_settings
                 -- and migrate the ones owned by SimpleUI.
@@ -249,10 +249,10 @@ function SimpleUIPlugin:init()
                 local to_migrate = {}
                 for k, v in pairs(raw) do
                     local owned = (type(k) == "string")
-                        and (k:sub(1, 7) == "navbar_" or k:sub(1, 9) == "simpleui_")
+                        and (k:sub(1, 7) == "navbar_" or k:sub(1, 9) == "penjuru_")
                         -- Keep the v1 and v2 migration flags in G_reader_settings
                         -- so they survive a factory reset of sui_settings.lua.
-                        and k ~= "simpleui_userdata_migrated_v1"
+                        and k ~= "penjuru_userdata_migrated_v1"
                     if owned then
                         to_migrate[#to_migrate + 1] = { k = k, v = v }
                     end
@@ -261,23 +261,23 @@ function SimpleUIPlugin:init()
                 local migrated = 0
                 for _, entry in ipairs(to_migrate) do
                     local k, v = entry.k, entry.v
-                    -- Only copy if SUISettings does not already have the key
+                    -- Only copy if PENSettings does not already have the key
                     -- (e.g. the user already made changes after the code update).
-                    if SUISettings:get(k) == nil then
-                        SUISettings:set(k, v)
+                    if PENSettings:get(k) == nil then
+                        PENSettings:set(k, v)
                     end
                     G_reader_settings:delSetting(k)
                     migrated = migrated + 1
                 end
 
-                SUISettings:flush()
-                logger.info("simpleui: settings migration v2 complete —", migrated, "keys moved to SUISettings")
+                PENSettings:flush()
+                logger.info("simpleui: settings migration v2 complete —", migrated, "keys moved to PENSettings")
             end)
-            SUISettings:set("simpleui_settings_migrated_v2", true)
-            SUISettings:flush()
+            PENSettings:set("penjuru_settings_migrated_v2", true)
+            PENSettings:flush()
         end
         -- -------------------------------------------------------------------
-        -- Settings migration v3: rename all navbar_* keys inside SUISettings
+        -- Settings migration v3: rename all navbar_* keys inside PENSettings
         -- to the canonical simpleui_* namespace.
         --
         -- Two passes:
@@ -292,74 +292,74 @@ function SimpleUIPlugin:init()
         --     the plugin from loading on a resource-constrained e-reader.
         --   • Guarded by simpleui_settings_migrated_v3 so it runs at most once.
         -- -------------------------------------------------------------------
-        if not SUISettings:isTrue("simpleui_settings_migrated_v3") then
+        if not PENSettings:isTrue("penjuru_settings_migrated_v3") then
             pcall(function()
                 -- ── 1. Fixed renames ─────────────────────────────────────────
                 local fixed_renames = {
                     -- Bottom bar — general
-                    { "navbar_enabled",                      "simpleui_bar_enabled"                   },
-                    { "navbar_mode",                         "simpleui_bar_mode"                      },
-                    { "navbar_bar_size",                     "simpleui_bar_size"                      },
-                    { "navbar_bar_size_pct",                 "simpleui_bar_size_pct"                  },
-                    { "navbar_hide_separator",               "simpleui_bar_hide_separator"            },
-                    { "navbar_bottom_margin_pct",            "simpleui_bar_bottom_margin_pct"         },
-                    { "navbar_icon_scale_pct",               "simpleui_bar_icon_scale_pct"            },
-                    { "navbar_label_scale_pct",              "simpleui_bar_label_scale_pct"           },
-                    { "navbar_rs_text_scale_pct",            "simpleui_bar_rs_text_scale_pct"         },
+                    { "navbar_enabled",                      "penjuru_bar_enabled"                   },
+                    { "navbar_mode",                         "penjuru_bar_mode"                      },
+                    { "navbar_bar_size",                     "penjuru_bar_size"                      },
+                    { "navbar_bar_size_pct",                 "penjuru_bar_size_pct"                  },
+                    { "navbar_hide_separator",               "penjuru_bar_hide_separator"            },
+                    { "navbar_bottom_margin_pct",            "penjuru_bar_bottom_margin_pct"         },
+                    { "navbar_icon_scale_pct",               "penjuru_bar_icon_scale_pct"            },
+                    { "navbar_label_scale_pct",              "penjuru_bar_label_scale_pct"           },
+                    { "navbar_rs_text_scale_pct",            "penjuru_bar_rs_text_scale_pct"         },
                     -- Bottom bar — pagination / pager
-                    { "navbar_pagination_visible",           "simpleui_bar_pagination_visible"        },
-                    { "navbar_pagination_size",              "simpleui_bar_pagination_size"           },
-                    { "navbar_pagination_show_subtitle",     "simpleui_bar_pagination_show_subtitle"  },
-                    { "navbar_navpager_enabled",             "simpleui_bar_navpager_enabled"          },
-                    { "navbar_dotpager_always",              "simpleui_bar_dotpager_always"           },
+                    { "navbar_pagination_visible",           "penjuru_bar_pagination_visible"        },
+                    { "navbar_pagination_size",              "penjuru_bar_pagination_size"           },
+                    { "navbar_pagination_show_subtitle",     "penjuru_bar_pagination_show_subtitle"  },
+                    { "navbar_navpager_enabled",             "penjuru_bar_navpager_enabled"          },
+                    { "navbar_dotpager_always",              "penjuru_bar_dotpager_always"           },
                     -- Bottom bar — tabs & settings
-                    { "navbar_tabs",                         "simpleui_bar_tabs"                      },
-                    { "navbar_bottombar_settings_on_hold",   "simpleui_bar_settings_on_hold"          },
+                    { "navbar_tabs",                         "penjuru_bar_tabs"                      },
+                    { "navbar_bottombar_settings_on_hold",   "penjuru_bar_settings_on_hold"          },
                     -- Top bar
-                    { "navbar_topbar_enabled",               "simpleui_topbar_enabled"                },
-                    { "navbar_topbar_config",                "simpleui_topbar_config"                 },
-                    { "navbar_topbar_custom_text",           "simpleui_topbar_custom_text"            },
-                    { "navbar_topbar_settings_on_hold",      "simpleui_topbar_settings_on_hold"       },
-                    { "navbar_topbar_swipe_indicator",       "simpleui_topbar_swipe_indicator"        },
-                    { "navbar_topbar_wifi_hide_when_off",    "simpleui_topbar_wifi_hide_when_off"     },
-                    { "navbar_topbar_size_pct",              "simpleui_topbar_size_pct"               },
+                    { "navbar_topbar_enabled",               "penjuru_topbar_enabled"                },
+                    { "navbar_topbar_config",                "penjuru_topbar_config"                 },
+                    { "navbar_topbar_custom_text",           "penjuru_topbar_custom_text"            },
+                    { "navbar_topbar_settings_on_hold",      "penjuru_topbar_settings_on_hold"       },
+                    { "navbar_topbar_swipe_indicator",       "penjuru_topbar_swipe_indicator"        },
+                    { "navbar_topbar_wifi_hide_when_off",    "penjuru_topbar_wifi_hide_when_off"     },
+                    { "navbar_topbar_size_pct",              "penjuru_topbar_size_pct"               },
                     -- Homescreen bar — fixed keys
-                    { "navbar_homescreen_pagination_hidden", "simpleui_hs_pagination_hidden"          },
-                    { "navbar_homescreen_settings_on_hold",  "simpleui_hs_settings_on_hold"           },
-                    { "navbar_homescreen_overflow_warn",     "simpleui_hs_overflow_warn"              },
-                    { "navbar_hs_return_to_book_folder",     "simpleui_hs_return_to_book_folder"      },
-                    { "navbar_homescreen_module_scale",      "simpleui_hs_module_scale"               },
-                    { "navbar_homescreen_label_scale",       "simpleui_hs_label_scale"                },
-                    { "navbar_homescreen_scale_linked",      "simpleui_hs_scale_linked"               },
+                    { "navbar_homescreen_pagination_hidden", "penjuru_hs_pagination_hidden"          },
+                    { "navbar_homescreen_settings_on_hold",  "penjuru_hs_settings_on_hold"           },
+                    { "navbar_homescreen_overflow_warn",     "penjuru_hs_overflow_warn"              },
+                    { "navbar_hs_return_to_book_folder",     "penjuru_hs_return_to_book_folder"      },
+                    { "navbar_homescreen_module_scale",      "penjuru_hs_module_scale"               },
+                    { "navbar_homescreen_label_scale",       "penjuru_hs_label_scale"                },
+                    { "navbar_homescreen_scale_linked",      "penjuru_hs_scale_linked"               },
                     -- Reading goal
-                    { "navbar_reading_goal",                 "simpleui_reading_goal"                  },
-                    { "navbar_reading_goal_physical",        "simpleui_reading_goal_physical"         },
-                    { "navbar_daily_reading_goal_secs",      "simpleui_daily_reading_goal_secs"       },
+                    { "navbar_reading_goal",                 "penjuru_reading_goal"                  },
+                    { "navbar_reading_goal_physical",        "penjuru_reading_goal_physical"         },
+                    { "navbar_daily_reading_goal_secs",      "penjuru_daily_reading_goal_secs"       },
                     -- Reading goals module display
-                    { "navbar_reading_goals_show_annual",    "simpleui_reading_goals_show_annual"     },
-                    { "navbar_reading_goals_show_daily",     "simpleui_reading_goals_show_daily"      },
-                    { "navbar_reading_goals_layout",         "simpleui_reading_goals_layout"          },
+                    { "navbar_reading_goals_show_annual",    "penjuru_reading_goals_show_annual"     },
+                    { "navbar_reading_goals_show_daily",     "penjuru_reading_goals_show_daily"      },
+                    { "navbar_reading_goals_layout",         "penjuru_reading_goals_layout"          },
                     -- Collections module
-                    { "navbar_collections_list",             "simpleui_collections_list"              },
-                    { "navbar_collections_covers",           "simpleui_collections_covers"            },
-                    { "navbar_collections_badge_position",   "simpleui_collections_badge_position"    },
-                    { "navbar_collections_badge_color",      "simpleui_collections_badge_color"       },
-                    { "navbar_collections_badge_hidden",     "simpleui_collections_badge_hidden"      },
+                    { "navbar_collections_list",             "penjuru_collections_list"              },
+                    { "navbar_collections_covers",           "penjuru_collections_covers"            },
+                    { "navbar_collections_badge_position",   "penjuru_collections_badge_position"    },
+                    { "navbar_collections_badge_color",      "penjuru_collections_badge_color"       },
+                    { "navbar_collections_badge_hidden",     "penjuru_collections_badge_hidden"      },
                     -- Custom quick actions — list & migration flag
-                    { "navbar_custom_qa_list",               "simpleui_cqa_list"                      },
-                    { "navbar_custom_qa_migrated_v1",        "simpleui_cqa_migrated_v1"               },
+                    { "navbar_custom_qa_list",               "penjuru_cqa_list"                      },
+                    { "navbar_custom_qa_migrated_v1",        "penjuru_cqa_migrated_v1"               },
                 }
 
                 local migrated = 0
 
                 for _, pair in ipairs(fixed_renames) do
                     local old_k, new_k = pair[1], pair[2]
-                    local val = SUISettings:get(old_k)
+                    local val = PENSettings:get(old_k)
                     if val ~= nil then
-                        if SUISettings:get(new_k) == nil then
-                            SUISettings:set(new_k, val)
+                        if PENSettings:get(new_k) == nil then
+                            PENSettings:set(new_k, val)
                         end
-                        SUISettings:del(old_k)
+                        PENSettings:del(old_k)
                         migrated = migrated + 1
                     end
                 end
@@ -374,14 +374,14 @@ function SimpleUIPlugin:init()
                 -- We collect all renames first, then apply — modifying a table
                 -- while iterating it is undefined behaviour in Lua 5.1/5.2.
                 local dynamic_prefixes = {
-                    { old = "navbar_homescreen_",  new = "simpleui_hs_"     },
-                    { old = "navbar_cqa_",         new = "simpleui_cqa_"    },
-                    { old = "navbar_action_",      new = "simpleui_action_" },
-                    { old = "navbar_custom_",      new = "simpleui_custom_" },
+                    { old = "navbar_homescreen_",  new = "penjuru_hs_"     },
+                    { old = "navbar_cqa_",         new = "penjuru_cqa_"    },
+                    { old = "navbar_action_",      new = "penjuru_action_" },
+                    { old = "navbar_custom_",      new = "penjuru_custom_" },
                 }
 
                 local pending = {}
-                for k, v in SUISettings:iterateKeys() do
+                for k, v in PENSettings:iterateKeys() do
                     for _, pfx in ipairs(dynamic_prefixes) do
                         local plen = #pfx.old
                         if k:sub(1, plen) == pfx.old then
@@ -393,48 +393,48 @@ function SimpleUIPlugin:init()
                 end
 
                 for _, entry in ipairs(pending) do
-                    if SUISettings:get(entry.new_k) == nil then
-                        SUISettings:set(entry.new_k, entry.val)
+                    if PENSettings:get(entry.new_k) == nil then
+                        PENSettings:set(entry.new_k, entry.val)
                     end
-                    SUISettings:del(entry.old_k)
+                    PENSettings:del(entry.old_k)
                     migrated = migrated + 1
                 end
 
-                SUISettings:flush()
+                PENSettings:flush()
                 logger.info("simpleui: settings migration v3 complete —", migrated, "navbar_* keys renamed to simpleui_*")
             end)
-            SUISettings:set("simpleui_settings_migrated_v3", true)
-            SUISettings:flush()
+            PENSettings:set("penjuru_settings_migrated_v3", true)
+            PENSettings:flush()
         end
         -- -------------------------------------------------------------------
         -- Settings migration v4: rename icon pack keys to integrated sui_ scheme.
         -- -------------------------------------------------------------------
-        if not SUISettings:isTrue("simpleui_settings_migrated_v4") then
+        if not PENSettings:isTrue("penjuru_settings_migrated_v4") then
             pcall(function()
                 local icon_renames = {
-                    { "simpleui_sysicon_bm_normal",     "simpleui_sysicon_sui_browse_normal" },
-                    { "simpleui_sysicon_bm_author",     "simpleui_sysicon_sui_browse_author" },
-                    { "simpleui_sysicon_bm_series",     "simpleui_sysicon_sui_browse_series" },
-                    { "simpleui_sysicon_bm_tags",       "simpleui_sysicon_sui_browse_tags" },
-                    { "simpleui_sysicon_pg_chev_left",  "simpleui_sysicon_sui_pager_prev" },
-                    { "simpleui_sysicon_pg_chev_right", "simpleui_sysicon_sui_pager_next" },
-                    { "simpleui_sysicon_pg_chev_first", "simpleui_sysicon_sui_pager_first" },
-                    { "simpleui_sysicon_pg_chev_last",  "simpleui_sysicon_sui_pager_last" },
-                    { "simpleui_sysicon_coll_back",     "simpleui_sysicon_sui_coll_back" },
+                    { "penjuru_sysicon_bm_normal",     "penjuru_sysicon_sui_browse_normal" },
+                    { "penjuru_sysicon_bm_author",     "penjuru_sysicon_sui_browse_author" },
+                    { "penjuru_sysicon_bm_series",     "penjuru_sysicon_sui_browse_series" },
+                    { "penjuru_sysicon_bm_tags",       "penjuru_sysicon_sui_browse_tags" },
+                    { "penjuru_sysicon_pg_chev_left",  "penjuru_sysicon_sui_pager_prev" },
+                    { "penjuru_sysicon_pg_chev_right", "penjuru_sysicon_sui_pager_next" },
+                    { "penjuru_sysicon_pg_chev_first", "penjuru_sysicon_sui_pager_first" },
+                    { "penjuru_sysicon_pg_chev_last",  "penjuru_sysicon_sui_pager_last" },
+                    { "penjuru_sysicon_coll_back",     "penjuru_sysicon_sui_coll_back" },
                 }
                 local migrated = 0
                 for _, pair in ipairs(icon_renames) do
                     local old_k, new_k = pair[1], pair[2]
-                    local val = SUISettings:get(old_k)
+                    local val = PENSettings:get(old_k)
                     if val ~= nil then
-                        if SUISettings:get(new_k) == nil then
-                            SUISettings:set(new_k, val)
+                        if PENSettings:get(new_k) == nil then
+                            PENSettings:set(new_k, val)
                         end
-                        SUISettings:del(old_k)
+                        PENSettings:del(old_k)
                         migrated = migrated + 1
                     end
                 end
-                local icon_presets = SUISettings:get("simpleui_icon_presets")
+                local icon_presets = PENSettings:get("penjuru_icon_presets")
                 if type(icon_presets) == "table" then
                     local changed = false
                     for _, preset in pairs(icon_presets) do
@@ -451,46 +451,46 @@ function SimpleUIPlugin:init()
                             end
                         end
                     end
-                    if changed then SUISettings:set("simpleui_icon_presets", icon_presets) end
+                    if changed then PENSettings:set("penjuru_icon_presets", icon_presets) end
                 end
-                SUISettings:flush()
+                PENSettings:flush()
                 logger.info("simpleui: settings migration v4 complete —", migrated, "icon keys renamed")
             end)
-            SUISettings:set("simpleui_settings_migrated_v4", true)
-            SUISettings:flush()
+            PENSettings:set("penjuru_settings_migrated_v4", true)
+            PENSettings:flush()
         end
         -- -------------------------------------------------------------------
         -- Settings migration v5: standardize titlebar button nomenclature
         -- -------------------------------------------------------------------
-        if not SUISettings:isTrue("simpleui_settings_migrated_v5") then
+        if not PENSettings:isTrue("penjuru_settings_migrated_v5") then
             pcall(function()
                 local renames = {
-                    { "simpleui_tb_item_menu_button",     "simpleui_tb_item_fm_menu" },
-                    { "simpleui_tb_item_up_button",       "simpleui_tb_item_fm_back" },
-                    { "simpleui_tb_item_search_button",   "simpleui_tb_item_fm_search" },
-                    { "simpleui_tb_item_browse_button",   "simpleui_tb_item_fm_browse" },
-                    { "simpleui_tb_item_title",           "simpleui_tb_item_fm_title" },
-                    { "simpleui_tb_item_inj_back",        "simpleui_tb_item_sub_menu" },
-                    { "simpleui_tb_item_inj_right",       "simpleui_tb_item_sub_close" },
-                    { "simpleui_tb_item_inj_menubutton",  "simpleui_tb_item_sub_menu" },
-                    { "simpleui_tb_item_inj_closebutton", "simpleui_tb_item_sub_close" },
-                    { "simpleui_tb_inj_cfg",              "simpleui_tb_sub_cfg" },
+                    { "penjuru_tb_item_menu_button",     "penjuru_tb_item_fm_menu" },
+                    { "penjuru_tb_item_up_button",       "penjuru_tb_item_fm_back" },
+                    { "penjuru_tb_item_search_button",   "penjuru_tb_item_fm_search" },
+                    { "penjuru_tb_item_browse_button",   "penjuru_tb_item_fm_browse" },
+                    { "penjuru_tb_item_title",           "penjuru_tb_item_fm_title" },
+                    { "penjuru_tb_item_inj_back",        "penjuru_tb_item_sub_menu" },
+                    { "penjuru_tb_item_inj_right",       "penjuru_tb_item_sub_close" },
+                    { "penjuru_tb_item_inj_menubutton",  "penjuru_tb_item_sub_menu" },
+                    { "penjuru_tb_item_inj_closebutton", "penjuru_tb_item_sub_close" },
+                    { "penjuru_tb_inj_cfg",              "penjuru_tb_sub_cfg" },
                 }
                 local migrated = 0
                 for _, pair in ipairs(renames) do
                     local old_k, new_k = pair[1], pair[2]
-                    local val = SUISettings:get(old_k)
+                    local val = PENSettings:get(old_k)
                     if val ~= nil then
-                        if SUISettings:get(new_k) == nil then
-                            SUISettings:set(new_k, val)
+                        if PENSettings:get(new_k) == nil then
+                            PENSettings:set(new_k, val)
                         end
-                        SUISettings:del(old_k)
+                        PENSettings:del(old_k)
                         migrated = migrated + 1
                     end
                 end
 
                 local function map_cfg(cfg_key, mapping)
-                    local cfg = SUISettings:get(cfg_key)
+                    local cfg = PENSettings:get(cfg_key)
                     if type(cfg) == "table" then
                         local changed = false
                         local function map_arr(arr)
@@ -510,7 +510,7 @@ function SimpleUIPlugin:init()
                         if type(cfg.order_left) == "table" then map_arr(cfg.order_left) end
                         if type(cfg.order_right) == "table" then map_arr(cfg.order_right) end
                         if changed then
-                            SUISettings:set(cfg_key, cfg)
+                            PENSettings:set(cfg_key, cfg)
                             migrated = migrated + 1
                         end
                     end
@@ -529,13 +529,13 @@ function SimpleUIPlugin:init()
                     inj_menubutton   = "sub_menu",
                     inj_closebutton  = "sub_close"
                 }
-                map_cfg("simpleui_tb_fm_cfg", fm_map)
-                map_cfg("simpleui_tb_sub_cfg", sub_map)
+                map_cfg("penjuru_tb_fm_cfg", fm_map)
+                map_cfg("penjuru_tb_sub_cfg", sub_map)
 
                 logger.info("simpleui: settings migration v5 complete —", migrated, "titlebar keys renamed")
             end)
-            SUISettings:set("simpleui_settings_migrated_v5", true)
-            SUISettings:flush()
+            PENSettings:set("penjuru_settings_migrated_v5", true)
+            PENSettings:flush()
         end
         -- -------------------------------------------------------------------
 
@@ -550,7 +550,7 @@ function SimpleUIPlugin:init()
         -- SUIStyle is lazy (module-level init runs only when the font menu opens)
         -- so this pcall is cheap on the common path where no custom font is set.
         do
-            local ok_ss, SUIStyle = pcall(require, "sui_style")
+            local ok_ss, SUIStyle = pcall(require, "pen_style")
             if ok_ss and SUIStyle and SUIStyle.applyUIFont then
                 pcall(SUIStyle.applyUIFont)
             end
@@ -561,19 +561,19 @@ function SimpleUIPlugin:init()
         -- After this, KOReader's gesture/keyboard settings will list these
         -- actions so the user can bind any gesture to them.
         Dispatcher:init()
-        Dispatcher:registerAction("simpleui_go_homescreen", {
+        Dispatcher:registerAction("penjuru_go_homescreen", {
             category = "none",
             event    = "SimpleUIGoHomescreen",
             title    = _("Simple UI: Go to Homescreen"),
             general  = true,
         })
-        Dispatcher:registerAction("simpleui_go_library", {
+        Dispatcher:registerAction("penjuru_go_library", {
             category = "none",
             event    = "SimpleUIGoLibrary",
             title    = _("Simple UI: Go to Library"),
             general  = true,
         })
-        Dispatcher:registerAction("simpleui_toggle_home_library", {
+        Dispatcher:registerAction("penjuru_toggle_home_library", {
             category = "none",
             event    = "SimpleUIToggleHomeLibrary",
             title    = _("Simple UI: Toggle Homescreen / Library"),
@@ -649,8 +649,8 @@ function SimpleUIPlugin:init()
                                 end
                                 if icons_path and icons_dirs then break end
                             end
-                            if icons_path and not icons_path["simpleui_settings"] then
-                                icons_path["simpleui_settings"] = icon_src
+                            if icons_path and not icons_path["penjuru_settings"] then
+                                icons_path["penjuru_settings"] = icon_src
                             end
                             if icons_dirs then
                                 local icons_subdir = plugin_root .. "/icons"
@@ -679,7 +679,7 @@ function SimpleUIPlugin:init()
         -- This mirrors the approach used by Zen UI.
         --
         -- sui_menu is loaded lazily: the pre-bootstrap buildTabItems below
-        -- triggers require("sui_menu") on the first menu open, which registers
+        -- triggers require("pen_menu") on the first menu open, which registers
         -- the icon and installs the real buildTabItems before the tab is built.
         -- This removes sui_menu (and its lfs + IconWidget introspection) from
         -- the critical startup path.
@@ -689,15 +689,15 @@ function SimpleUIPlugin:init()
             -- always finds a callable.  On first call it loads sui_menu (which
             -- replaces this function with the real cached version) and
             -- delegates immediately to the real implementation.
-            if not rawget(SimpleUIPlugin, "buildTabItems") then
-                SimpleUIPlugin.buildTabItems = function(plugin_self)
+            if not rawget(penjuruPlugin, "buildTabItems") then
+                penjuruPlugin.buildTabItems = function(plugin_self)
                     -- Trigger the full sui_menu load + installer.
                     -- addToMainMenu is the bootstrap stub; calling it with a
                     -- dummy table runs the installer, which replaces both
-                    -- addToMainMenu and buildTabItems on SimpleUIPlugin.
+                    -- addToMainMenu and buildTabItems on penjuruPlugin.
                     plugin_self:addToMainMenu({})
                     -- Delegate to the real buildTabItems now installed.
-                    local real = rawget(SimpleUIPlugin, "buildTabItems")
+                    local real = rawget(penjuruPlugin, "buildTabItems")
                     if type(real) == "function" then
                         return real(plugin_self)
                     end
@@ -727,16 +727,16 @@ function SimpleUIPlugin:init()
                 menu_class.setUpdateItemTable = function(m_self)
                     orig_sut(m_self)
                     -- Respect the user's choice: default on (nilOrTrue), skip if explicitly false.
-                    if not SUISettings:nilOrTrue("simpleui_settings_tab_enabled") then return end
+                    if not PENSettings:nilOrTrue("penjuru_settings_tab_enabled") then return end
                     if type(m_self.tab_item_table) ~= "table" then return end
-                    local build_fn = rawget(SimpleUIPlugin, "buildTabItems")
+                    local build_fn = rawget(penjuruPlugin, "buildTabItems")
                     if type(build_fn) ~= "function" then return end
                     local ok, tab_items = pcall(build_fn, plugin_self)
                     if not ok or type(tab_items) ~= "table" then return end
                     -- Mirror exactly how Zen UI does it: set icon as a field on
                     -- the items array itself (not a wrapper table), then insert
                     -- that array directly into tab_item_table.
-                    tab_items.icon = "simpleui_settings"
+                    tab_items.icon = "penjuru_settings"
                     local qs_pos     = find_quicksettings_pos(m_self.tab_item_table)
                     local insert_pos = qs_pos and (qs_pos + 1) or 1
                     table.insert(m_self.tab_item_table, insert_pos, tab_items)
@@ -750,14 +750,14 @@ function SimpleUIPlugin:init()
             if ok_fm and FileManagerMenu then inject_sui_tab(FileManagerMenu) end
         end
         -- -------------------------------------------------------------------
-        if SUISettings:nilOrTrue("simpleui_enabled") then
+        if PENSettings:nilOrTrue("penjuru_enabled") then
             Patches.installAll(self)
             -- TBR button registration removed: module_tbr out of scope for penjuru v1.
             -- (Plan B adds module_newly_catalogued as replacement.)
 
             -- "More by <Author>" button removed: sui_browsemeta out of scope for penjuru v1.
 
-            if SUISettings:nilOrTrue("simpleui_topbar_enabled") then
+            if PENSettings:nilOrTrue("penjuru_topbar_enabled") then
                 Topbar.scheduleRefresh(self, 0)
             end
             -- Pre-load ALL desktop modules during boot idle time so the first
@@ -828,11 +828,11 @@ end
 -- without restarting KOReader) always loads fresh code.
 -- ---------------------------------------------------------------------------
 local _PLUGIN_MODULES = {
-    "sui_i18n", "sui_config", "sui_core", "sui_bottombar", "sui_topbar",
-    "sui_patches", "sui_menu", "sui_titlebar", "sui_quickactions",
-    "sui_homescreen",
+    "pen_i18n", "pen_config", "pen_core", "pen_bottombar", "pen_topbar",
+    "pen_patches", "pen_menu", "pen_titlebar", "pen_quickactions",
+    "pen_homescreen",
     -- removed: sui_foldercovers, sui_browsemeta, sui_updater, sui_presets (out of scope)
-    "sui_store", "sui_style",
+    "pen_store", "pen_style",
     "desktop_modules/moduleregistry",
     "desktop_modules/module_books_shared",
     "desktop_modules/module_clock",
@@ -858,7 +858,7 @@ local _PLUGIN_MODULES = {
 -- (sui_patches._hs_pending_after_reader), regardless of whether that
 -- setting is actually enabled.
 -- When outside the Reader: equivalent to tapping the Homescreen tab.
-function SimpleUIPlugin:onSimpleUIGoHomescreen()
+function penjuruPlugin:onSimpleUIGoHomescreen()
     local RUI = package.loaded["apps/reader/readerui"]
     if RUI and RUI.instance then
         Patches.closeReaderToHomescreen(self)
@@ -874,7 +874,7 @@ end
 -- (home_dir) without showing the Homescreen, as if "return to book folder"
 -- were disabled — the FM file browser becomes the top widget.
 -- When outside the Reader: equivalent to tapping the Library tab.
-function SimpleUIPlugin:onSimpleUIGoLibrary()
+function penjuruPlugin:onSimpleUIGoLibrary()
     local RUI = package.loaded["apps/reader/readerui"]
     if RUI and RUI.instance then
         Patches.closeReaderToLibrary(self)
@@ -890,8 +890,8 @@ end
 -- If inside the Reader: closes the reader and opens the Homescreen (same
 -- path as GoHomescreen above).
 -- Otherwise (library or any other view): opens the Homescreen.
-function SimpleUIPlugin:onSimpleUIToggleHomeLibrary()
-    local HS = package.loaded["sui_homescreen"]
+function penjuruPlugin:onSimpleUIToggleHomeLibrary()
+    local HS = package.loaded["pen_homescreen"]
     if HS and HS._instance then
         self:_navigate("home", self.ui, Config.loadTabConfig(), false)
         return true
@@ -905,10 +905,10 @@ function SimpleUIPlugin:onSimpleUIToggleHomeLibrary()
     return true
 end
 
-function SimpleUIPlugin:onTeardown()
+function penjuruPlugin:onTeardown()
     -- Flush the plugin settings store so any in-memory writes are persisted
     -- before the plugin is unloaded or KOReader exits.
-    SUISettings:flush()
+    PENSettings:flush()
     if self._topbar_timer then
         UIManager:unschedule(self._topbar_timer)
         self._topbar_timer = nil
@@ -935,7 +935,7 @@ function SimpleUIPlugin:onTeardown()
     _menu_installer = nil
     -- Nil buildTabItems so its upvalue cache (_tab_items_cache) is released,
     -- and the patch can rebuild fresh on next plugin load.
-    SimpleUIPlugin.buildTabItems = nil
+    penjuruPlugin.buildTabItems = nil
     -- Clear the tab-injection flag so the patch can be re-applied if the
     -- plugin is reloaded within the same KOReader session.
     local fm_menu = package.loaded["apps/filemanager/filemanagermenu"]
@@ -958,11 +958,11 @@ end
 -- System events
 -- ---------------------------------------------------------------------------
 
-function SimpleUIPlugin:onScreenResize()
-    if self._simpleui_suspended then return end
+function penjuruPlugin:onScreenResize()
+    if self._penjuru_suspended then return end
     UI.invalidateDimCache()
     UIManager:scheduleIn(0.2, function()
-        if self._simpleui_suspended then return end
+        if self._penjuru_suspended then return end
         local RUI = package.loaded["apps/reader/readerui"]
         if RUI and RUI.instance then return end
 
@@ -971,7 +971,7 @@ function SimpleUIPlugin:onScreenResize()
         -- correctly because its layout is built entirely in init(), not via
         -- wrapWithNavbar — the same reason FM uses reinit() (= rotate()) instead
         -- of a simple rewrap.
-        local HS = package.loaded["sui_homescreen"]
+        local HS = package.loaded["pen_homescreen"]
         if HS and HS._instance then
             local hs_inst = HS._instance
             hs_inst._navbar_closing_intentionally = true
@@ -991,8 +991,8 @@ function SimpleUIPlugin:onScreenResize()
         self:_refreshCurrentView()
     end)
 end
-function SimpleUIPlugin:onNetworkConnected()
-    if self._simpleui_suspended then return end
+function penjuruPlugin:onNetworkConnected()
+    if self._penjuru_suspended then return end
     local RUI = package.loaded["apps/reader/readerui"]
     -- If this event was fired by doWifiToggle itself, wifi_optimistic is already
     -- set correctly and the bars are already rebuilt. Skip the reset so the
@@ -1008,8 +1008,8 @@ function SimpleUIPlugin:onNetworkConnected()
     end
 end
 
-function SimpleUIPlugin:onNetworkDisconnected()
-    if self._simpleui_suspended then return end
+function penjuruPlugin:onNetworkDisconnected()
+    if self._penjuru_suspended then return end
     local RUI = package.loaded["apps/reader/readerui"]
     -- Same rationale as onNetworkConnected above.
     if not Config.wifi_broadcast_self then
@@ -1022,8 +1022,8 @@ function SimpleUIPlugin:onNetworkDisconnected()
     end
 end
 
-function SimpleUIPlugin:onSuspend()
-    self._simpleui_suspended = true
+function penjuruPlugin:onSuspend()
+    self._penjuru_suspended = true
     -- Snapshot whether the reader was open at the moment of suspend.
     -- We cannot rely on RUI.instance being intact by the time onResume fires
     -- (e.g. autosuspend can race with a reader teardown on some Kobo builds),
@@ -1036,9 +1036,9 @@ function SimpleUIPlugin:onSuspend()
     end
 end
 
-function SimpleUIPlugin:onResume()
-    self._simpleui_suspended = false
-    if SUISettings:nilOrTrue("simpleui_topbar_enabled") then
+function penjuruPlugin:onResume()
+    self._penjuru_suspended = false
+    if PENSettings:nilOrTrue("penjuru_topbar_enabled") then
         -- Small delay to let the wakeup transition finish before refreshing
         -- the topbar. Avoids a race with HomescreenWidget:onResume() and
         -- prevents the timer firing while the device is still mid-wakeup.
@@ -1057,7 +1057,7 @@ function SimpleUIPlugin:onResume()
     -- even when nothing changed. Data changes from reading are handled by
     -- onCloseDocument, which invalidates those caches before the next render.
     if not reader_active then
-        local HS = package.loaded["sui_homescreen"]
+        local HS = package.loaded["pen_homescreen"]
         if HS and HS._instance then
             -- Refresh the QA tap callback on the live homescreen instance.
             -- If the device suspended while the homescreen (or the touch menu
@@ -1073,21 +1073,21 @@ function SimpleUIPlugin:onResume()
             HS.refresh(true)
         end
         -- Re-open the Homescreen on wakeup when \"Start with Homescreen\" is set.
-        if SUISettings:nilOrTrue("simpleui_enabled") then
+        if PENSettings:nilOrTrue("penjuru_enabled") then
             Patches.showHSAfterResume(self)
         end
     end
 end
 
-function SimpleUIPlugin:onCloseDocument()
+function penjuruPlugin:onCloseDocument()
     -- Consume _closing_via_gesture unconditionally before any early return,
     -- so the flag never leaks to a subsequent close if this handler bails out
     -- (e.g. while the plugin is suspended).
     local via_gesture = self._closing_via_gesture
     self._closing_via_gesture = nil
 
-    if self._simpleui_suspended then return end
-    local HS = package.loaded["sui_homescreen"]
+    if self._penjuru_suspended then return end
+    local HS = package.loaded["pen_homescreen"]
     if not HS then return end
 
     -- Show a brief "closing book" notice whenever a book is closed.
@@ -1115,9 +1115,9 @@ function SimpleUIPlugin:onCloseDocument()
     -- Migration: if simpleui_hs_closing_notice_mode is absent, fall back to the
     -- old boolean simpleui_hs_closing_notice (nil/true → "always", false → "never").
     do
-        local notice_mode = SUISettings:readSetting("simpleui_hs_closing_notice_mode")
+        local notice_mode = PENSettings:readSetting("penjuru_hs_closing_notice_mode")
         if not notice_mode then
-            notice_mode = SUISettings:nilOrTrue("simpleui_hs_closing_notice") and "always" or "never"
+            notice_mode = PENSettings:nilOrTrue("penjuru_hs_closing_notice") and "always" or "never"
         end
 
         if notice_mode == "always"
@@ -1145,7 +1145,7 @@ function SimpleUIPlugin:onCloseDocument()
     -- there is nothing further to do — the next Homescreen.show() will rebuild
     -- from scratch. Avoids loading the Registry and all module pcalls.
     if not HS._instance and HS._stats_need_refresh then
-        if SUISettings:nilOrTrue("simpleui_topbar_enabled") then
+        if PENSettings:nilOrTrue("penjuru_topbar_enabled") then
             Topbar.scheduleRefresh(self, 0)
         end
         return
@@ -1161,7 +1161,7 @@ function SimpleUIPlugin:onCloseDocument()
         Registry = reg
     end
 
-    local PFX = "simpleui_hs_"
+    local PFX = "penjuru_hs_"
     local needs_refresh    = false
     local currently_active = false
 
@@ -1347,7 +1347,7 @@ function SimpleUIPlugin:onCloseDocument()
     -- charge) — wifi state changes that happened during reading would not be
     -- reflected for up to 60 s. scheduleRefresh guards against suspend internally
     -- via shouldRunTimer, so this is safe to call unconditionally here.
-    if SUISettings:nilOrTrue("simpleui_topbar_enabled") then
+    if PENSettings:nilOrTrue("penjuru_topbar_enabled") then
         Topbar.scheduleRefresh(self, 0)
     end
 end
@@ -1372,10 +1372,10 @@ end
 -- _cached_books_state to force a full prefetchBooks() pass, and schedule a
 -- homescreen refresh so the corrected metadata appears immediately.
 -- ---------------------------------------------------------------------------
-function SimpleUIPlugin:onBookMetadataChanged(_prop_updated)
-    if self._simpleui_suspended then return end
+function penjuruPlugin:onBookMetadataChanged(_prop_updated)
+    if self._penjuru_suspended then return end
 
-    local HS = package.loaded["sui_homescreen"]
+    local HS = package.loaded["pen_homescreen"]
     if not HS then return end
 
     -- Flush the entire sidecar mtime-cache.  The next prefetchBooks() will
@@ -1398,21 +1398,21 @@ function SimpleUIPlugin:onBookMetadataChanged(_prop_updated)
     end
 end
 
-function SimpleUIPlugin:onFrontlightStateChanged()
-    if self._simpleui_suspended then return end
-    if not SUISettings:nilOrTrue("simpleui_topbar_enabled") then return end
+function penjuruPlugin:onFrontlightStateChanged()
+    if self._penjuru_suspended then return end
+    if not PENSettings:nilOrTrue("penjuru_topbar_enabled") then return end
     Topbar.scheduleRefresh(self, 0)
 end
 
-function SimpleUIPlugin:onCharging()
-    if self._simpleui_suspended then return end
-    if not SUISettings:nilOrTrue("simpleui_topbar_enabled") then return end
+function penjuruPlugin:onCharging()
+    if self._penjuru_suspended then return end
+    if not PENSettings:nilOrTrue("penjuru_topbar_enabled") then return end
     Topbar.scheduleRefresh(self, 0)
 end
 
-function SimpleUIPlugin:onNotCharging()
-    if self._simpleui_suspended then return end
-    if not SUISettings:nilOrTrue("simpleui_topbar_enabled") then return end
+function penjuruPlugin:onNotCharging()
+    if self._penjuru_suspended then return end
+    if not PENSettings:nilOrTrue("penjuru_topbar_enabled") then return end
     Topbar.scheduleRefresh(self, 0)
 end
 
@@ -1420,16 +1420,16 @@ end
 -- Topbar delegation
 -- ---------------------------------------------------------------------------
 
-function SimpleUIPlugin:_registerTouchZones(fm_self)
+function penjuruPlugin:_registerTouchZones(fm_self)
     Bottombar.registerTouchZones(self, fm_self)
     Topbar.registerTouchZones(self, fm_self)
 end
 
-function SimpleUIPlugin:_scheduleTopbarRefresh(delay)
+function penjuruPlugin:_scheduleTopbarRefresh(delay)
     Topbar.scheduleRefresh(self, delay)
 end
 
-function SimpleUIPlugin:_refreshTopbar()
+function penjuruPlugin:_refreshTopbar()
     Topbar.refresh(self)
 end
 
@@ -1437,53 +1437,53 @@ end
 -- Bottombar delegation
 -- ---------------------------------------------------------------------------
 
-function SimpleUIPlugin:_onTabTap(action_id, fm_self)
+function penjuruPlugin:_onTabTap(action_id, fm_self)
     Bottombar.onTabTap(self, action_id, fm_self)
 end
 
-function SimpleUIPlugin:_navigate(action_id, fm_self, tabs, force)
+function penjuruPlugin:_navigate(action_id, fm_self, tabs, force)
     Bottombar.navigate(self, action_id, fm_self, tabs, force)
 end
 
-function SimpleUIPlugin:_refreshCurrentView()
+function penjuruPlugin:_refreshCurrentView()
     local tabs      = Config.loadTabConfig()
     local action_id = self.active_action or tabs[1] or "home"
     self:_navigate(action_id, self.ui, tabs)
 end
 
-function SimpleUIPlugin:_rebuildAllNavbars()
+function penjuruPlugin:_rebuildAllNavbars()
     Bottombar.rebuildAllNavbars(self)
 end
 
-function SimpleUIPlugin:_rewrapAllWidgets()
+function penjuruPlugin:_rewrapAllWidgets()
     Bottombar.rewrapAllWidgets(self)
 end
 
-function SimpleUIPlugin:_restoreTabInFM(tabs, prev_action)
+function penjuruPlugin:_restoreTabInFM(tabs, prev_action)
     Bottombar.restoreTabInFM(self, tabs, prev_action)
 end
 
-function SimpleUIPlugin:_setPowerTabActive(active, prev_action)
+function penjuruPlugin:_setPowerTabActive(active, prev_action)
     Bottombar.setPowerTabActive(self, active, prev_action)
 end
 
-function SimpleUIPlugin:_showPowerDialog(fm_self)
+function penjuruPlugin:_showPowerDialog(fm_self)
     Bottombar.showPowerDialog(self, fm_self)
 end
 
-function SimpleUIPlugin:_doWifiToggle()
+function penjuruPlugin:_doWifiToggle()
     Bottombar.doWifiToggle(self)
 end
 
-function SimpleUIPlugin:_doRotateScreen()
+function penjuruPlugin:_doRotateScreen()
     Bottombar.doRotateScreen()
 end
 
-function SimpleUIPlugin:_showFrontlightDialog()
+function penjuruPlugin:_showFrontlightDialog()
     Bottombar.showFrontlightDialog()
 end
 
-function SimpleUIPlugin:_scheduleRebuild()
+function penjuruPlugin:_scheduleRebuild()
     if self._rebuild_scheduled then return end
     self._rebuild_scheduled = true
     UIManager:scheduleIn(0.1, function()
@@ -1492,7 +1492,7 @@ function SimpleUIPlugin:_scheduleRebuild()
     end)
 end
 
-function SimpleUIPlugin:_updateFMHomeIcon() end
+function penjuruPlugin:_updateFMHomeIcon() end
 
 -- ---------------------------------------------------------------------------
 -- Main menu entry (sui_menu is lazy-loaded on first access)
@@ -1500,29 +1500,29 @@ function SimpleUIPlugin:_updateFMHomeIcon() end
 
 local _menu_installer = nil
 
-function SimpleUIPlugin:addToMainMenu(menu_items)
-    local _ = require("sui_i18n").translate
+function penjuruPlugin:addToMainMenu(menu_items)
+    local _ = require("pen_i18n").translate
     if not _menu_installer then
-        local ok, result = pcall(require, "sui_menu")
+        local ok, result = pcall(require, "pen_menu")
         if not ok then
-            logger.err("simpleui: sui_menu failed to load: " .. tostring(result))
-            menu_items.simpleui = { sorting_hint = "tools", text = _("Simple UI"), sub_item_table = {} }
+            logger.err("penjuru: pen_menu failed to load: " .. tostring(result))
+            menu_items.penjuru = { sorting_hint = "tools", text = _("penjuru"), sub_item_table = {} }
             return
         end
         _menu_installer = result
         -- Capture the bootstrap stub before installing so we can detect replacement.
-        local bootstrap_fn = rawget(SimpleUIPlugin, "addToMainMenu")
-        _menu_installer(SimpleUIPlugin)
+        local bootstrap_fn = rawget(penjuruPlugin, "addToMainMenu")
+        _menu_installer(penjuruPlugin)
         -- The installer replaces addToMainMenu on the class; call the real one now.
-        local real_fn = rawget(SimpleUIPlugin, "addToMainMenu")
+        local real_fn = rawget(penjuruPlugin, "addToMainMenu")
         if type(real_fn) == "function" and real_fn ~= bootstrap_fn then
             real_fn(self, menu_items)
         else
-            logger.err("simpleui: sui_menu installer did not replace addToMainMenu")
-            menu_items.simpleui = { sorting_hint = "tools", text = _("Simple UI"), sub_item_table = {} }
+            logger.err("penjuru: pen_menu installer did not replace addToMainMenu")
+            menu_items.penjuru = { sorting_hint = "tools", text = _("penjuru"), sub_item_table = {} }
         end
         return
     end
 end
 
-return SimpleUIPlugin
+return penjuruPlugin

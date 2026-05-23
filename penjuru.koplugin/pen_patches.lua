@@ -6,12 +6,12 @@ local UIManager = require("ui/uimanager")
 local Device    = require("device")
 local Screen    = Device.screen
 local logger    = require("logger")
-local _         = require("sui_i18n").translate
+local _         = require("pen_i18n").translate
 
-local Config    = require("sui_config")
-local UI        = require("sui_core")
-local Bottombar = require("sui_bottombar")
-local SUISettings = require("sui_store")
+local Config    = require("pen_config")
+local UI        = require("pen_core")
+local Bottombar = require("pen_bottombar")
+local PENSettings = require("pen_store")
 
 -- Lazy: only needed on D-pad devices, inside gesture event handlers.
 local _FocusManager
@@ -23,7 +23,7 @@ end
 -- Lazy: only needed inside patchFileManagerClass callbacks, not at load time.
 local _Titlebar
 local function Titlebar()
-    _Titlebar = _Titlebar or require("sui_titlebar")
+    _Titlebar = _Titlebar or require("pen_titlebar")
     return _Titlebar
 end
 
@@ -100,7 +100,7 @@ end
 
 -- Returns the live homescreen module from package.loaded, or nil.
 local function liveHS()
-    return package.loaded["sui_homescreen"]
+    return package.loaded["pen_homescreen"]
 end
 
 -- ---------------------------------------------------------------------------
@@ -168,9 +168,9 @@ function M.patchFileManagerClass(plugin)
     if not setup_already_patched then
     FileManager.setupLayout = function(fm_self)
         -- Calculate total navbar height (bottom bar + optional top bar).
-        local topbar_on = SUISettings:nilOrTrue("simpleui_topbar_enabled")
+        local topbar_on = PENSettings:nilOrTrue("penjuru_topbar_enabled")
         fm_self._navbar_height = Bottombar.TOTAL_H()
-            + (topbar_on and require("sui_topbar").TOTAL_TOP_H() or 0)
+            + (topbar_on and require("pen_topbar").TOTAL_TOP_H() or 0)
 
         -- Reset the "first show" guard so onShow reinitialises on the next open.
         fm_self._navbar_already_shown = nil
@@ -328,7 +328,7 @@ function M.patchFileManagerClass(plugin)
                 end
 
                 -- 4. Rebuild the navbar with the Library ("home") tab active.
-                local sui = fm_self._simpleui_plugin
+                local sui = fm_self._penjuru_plugin
                 if sui then sui.active_action = "home" end
                 local tabs = Config.loadTabConfig()
                 if fm_self._navbar_container then
@@ -375,7 +375,7 @@ function M.patchFileManagerClass(plugin)
             UI.wrapWithNavbar(inner_widget, plugin.active_action, tabs)
         UI.applyNavbarState(fm_self, navbar_container, bar, topbar, bar_idx, topbar_on2, topbar_idx, tabs)
         fm_self[1] = wrapped
-        fm_self._simpleui_plugin = plugin
+        fm_self._penjuru_plugin = plugin
 
         -- Resize pagination buttons (chevrons) on every setupLayout call so that
         -- they use the correct Simple UI size after rotation rebuilds the FM.
@@ -412,7 +412,7 @@ function M.patchFileManagerClass(plugin)
                 this._hs_rotation_on_goal_tap = nil
                 UIManager:scheduleIn(0, function()
                     local HS = liveHS() or (function()
-                        local ok, m = pcall(require, "sui_homescreen"); return ok and m
+                        local ok, m = pcall(require, "pen_homescreen"); return ok and m
                     end)()
                     if HS then
                         if not plugin._goalTapCallback then plugin:addToMainMenu({}) end
@@ -431,7 +431,7 @@ function M.patchFileManagerClass(plugin)
 
             if this._navbar_container then
                 local t = Config.loadTabConfig()
-                local return_to_folder = SUISettings:isTrue("simpleui_hs_return_to_book_folder")
+                local return_to_folder = PENSettings:isTrue("penjuru_hs_return_to_book_folder")
                 if not return_to_folder then
                     plugin.active_action = "home"
                     local home = G_reader_settings:readSetting("home_dir")
@@ -518,7 +518,7 @@ function M.patchFileManagerClass(plugin)
         -- while the user navigates tabs, then pops itself on Press or Back.
         local function _enterNavbarKbFocus(return_fn)
             if not Device:hasDPad() then return end
-            if not SUISettings:nilOrTrue("simpleui_bar_enabled") then return end
+            if not PENSettings:nilOrTrue("penjuru_bar_enabled") then return end
             if _navbar_kb_capture then return end  -- already active
 
             _navbar_kb_return_fn = return_fn or false
@@ -1033,7 +1033,7 @@ function M.patchUIManagerShow(plugin)
                 return
             end
             local HS = liveHS() or (function()
-                local ok2, m = pcall(require, "sui_homescreen"); return ok2 and m
+                local ok2, m = pcall(require, "pen_homescreen"); return ok2 and m
             end)()
             if HS and not HS._instance then
                 if not plugin._goalTapCallback then plugin:addToMainMenu({}) end
@@ -1196,8 +1196,8 @@ function M.patchUIManagerShow(plugin)
             if DTAP_ZONE_MENU and DTAP_ZONE_MENU_EXT then
                 local screen_h    = Screen:getHeight()
                 local zone_ratio_h
-                if SUISettings:nilOrTrue("simpleui_topbar_enabled") then
-                    local Topbar = require("sui_topbar")
+                if PENSettings:nilOrTrue("penjuru_topbar_enabled") then
+                    local Topbar = require("pen_topbar")
                     zone_ratio_h = Topbar.TOTAL_TOP_H() / screen_h
                 else
                     zone_ratio_h = DTAP_ZONE_MENU.h
@@ -1249,21 +1249,21 @@ function M.patchUIManagerShow(plugin)
 
                 widget:registerTouchZones({
                     {
-                        id          = "simpleui_menu_tap",
+                        id          = "penjuru_menu_tap",
                         ges         = "tap",
                         screen_zone = { ratio_x = 0, ratio_y = 0, ratio_w = 1, ratio_h = zone_ratio_h },
                         handler     = function(ges)
                             local logger = require("logger")
-                            logger.dbg("simpleui_menu_tap FIRED pos=", ges.pos and ges.pos.x, ges.pos and ges.pos.y)
+                            logger.dbg("penjuru_menu_tap FIRED pos=", ges.pos and ges.pos.x, ges.pos and ges.pos.y)
                             if _tapOnSubBtn(ges) then
-                                logger.dbg("simpleui_menu_tap: sub btn hit, passing through")
+                                logger.dbg("penjuru_menu_tap: sub btn hit, passing through")
                                 return false
                             end
                             local m = _fmMenu(); if m then return m:onTapShowMenu(ges) end
                         end,
                     },
                     {
-                        id          = "simpleui_menu_swipe",
+                        id          = "penjuru_menu_swipe",
                         ges         = "swipe",
                         screen_zone = { ratio_x = 0, ratio_y = 0, ratio_w = 1, ratio_h = zone_ratio_h },
                         handler     = function(ges)
@@ -1343,12 +1343,12 @@ function M.patchUIManagerShow(plugin)
         -- Schedule a navpager arrow update for the next event-loop tick.
         -- Snapshot has_prev/has_next now to avoid races with a second
         -- updatePageInfo call that may fire during the same tick.
-        if SUISettings:isTrue("simpleui_bar_navpager_enabled") and not _navpager_rebuild_pending then
+        if PENSettings:isTrue("penjuru_bar_navpager_enabled") and not _navpager_rebuild_pending then
             local has_prev_snap, has_next_snap = Config.getNavpagerState()
             _navpager_rebuild_pending = true
             UIManager:scheduleIn(0, function()
                 _navpager_rebuild_pending = false
-                if not SUISettings:isTrue("simpleui_bar_navpager_enabled") then return end
+                if not PENSettings:isTrue("penjuru_bar_navpager_enabled") then return end
                 local fm2 = plugin.ui
                 if not (fm2 and fm2._navbar_container) then return end
                 local target2 = (widget._navbar_container and widget) or fm2
@@ -1588,7 +1588,7 @@ function M.patchUIManagerClose(plugin)
                 if widget.name == "ReaderUI" then
                     -- Reader closed back to the FM (not opening another book).
                     if not widget.tearing_down then
-                        local return_to_folder = SUISettings:isTrue("simpleui_hs_return_to_book_folder")
+                        local return_to_folder = PENSettings:isTrue("penjuru_hs_return_to_book_folder")
                         if not return_to_folder then
                             _hs_pending_after_reader = true
                             -- Stash the real previous tab so the _hs_pending handler can
@@ -1672,7 +1672,7 @@ function M.patchMenuInitForPagination(plugin)
 
         -- Apply icon overrides for collections/history/FM menus.
         pcall(function()
-            local ok_ss, SS = pcall(require, "sui_style")
+            local ok_ss, SS = pcall(require, "pen_style")
             if not (ok_ss and SS) then return end
             -- Pagination chevrons: present in all fullscreen menus after init().
             if SS.applyPaginationIcons then
@@ -1702,7 +1702,7 @@ function M.patchMenuInitForPagination(plugin)
             end
         end
 
-        if SUISettings:nilOrTrue("simpleui_bar_pagination_visible") then return end
+        if PENSettings:nilOrTrue("penjuru_bar_pagination_visible") then return end
         if not TARGET_NAMES[menu_self.name]
            and not (menu_self.covers_fullscreen and menu_self.is_borderless and menu_self.title_bar_fm_style) then
             return
@@ -1783,8 +1783,8 @@ function M.patchMenuForNavpager(plugin)
 
     -- True when any subtitle (page indicator or pagination subtitle) should show.
     local function _subtitleEnabled()
-        return SUISettings:isTrue("simpleui_bar_navpager_enabled")
-            or SUISettings:isTrue("simpleui_bar_pagination_show_subtitle")
+        return PENSettings:isTrue("penjuru_bar_navpager_enabled")
+            or PENSettings:isTrue("penjuru_bar_pagination_show_subtitle")
     end
     M._subtitleEnabled = _subtitleEnabled
 
@@ -1872,7 +1872,7 @@ function M.patchMenuForNavpager(plugin)
 
         UIManager:scheduleIn(0, function()
             _navpager_rebuild_pending = false
-            if not SUISettings:isTrue("simpleui_bar_navpager_enabled") then return end
+            if not PENSettings:isTrue("penjuru_bar_navpager_enabled") then return end
             local fm = plugin.ui
             if not (fm and fm._navbar_container) then return end
             -- Re-read page state from the live widget at execution time.
@@ -1924,7 +1924,7 @@ function M.patchMenuForNavpager(plugin)
         -- Delegate to sui_titlebar's isAtRoot which owns the single authoritative
         -- criterion (virtual paths, series-view, lock_home_folder all handled there).
         local fc_cur  = fm_self.file_chooser
-        local ok_ti, TI = pcall(require, "sui_titlebar")
+        local ok_ti, TI = pcall(require, "pen_titlebar")
         local at_root
         if ok_ti and TI and TI.isAtRoot then
             at_root = TI.isAtRoot(fc_cur)
@@ -2030,7 +2030,7 @@ function M.showHSAfterResume(plugin)
         if not fm then return end
 
         if not HS2 then
-            local ok, m = pcall(require, "sui_homescreen")
+            local ok, m = pcall(require, "pen_homescreen")
             HS2 = ok and m
         end
         if not HS2 then return end
@@ -2123,7 +2123,7 @@ end
 
 -- ---------------------------------------------------------------------------
 -- Debug: button bounds overlay
--- When "simpleui_debug_button_bounds" is enabled, wraps Button:paintTo so
+-- When "penjuru_debug_button_bounds" is enabled, wraps Button:paintTo so
 -- every button draws a 2px border over itself, making it easy to verify
 -- the actual tap target real estate on device.
 -- ---------------------------------------------------------------------------
@@ -2157,7 +2157,7 @@ function M._wrapButtonPaintTo(plugin, Button)
 
     Button.paintTo = function(btn_self, bb, x, y)
         orig_paintTo(btn_self, bb, x, y)
-        if not SUISettings:isTrue("simpleui_debug_button_bounds") then return end
+        if not PENSettings:isTrue("penjuru_debug_button_bounds") then return end
         local dimen = btn_self:getSize()
         if not dimen then return end
         bb:paintBorder(x, y, dimen.w, dimen.h, 2, Blitbuffer.COLOR_RED)
@@ -2230,7 +2230,7 @@ function M.closeReaderToHomescreen(plugin)
         local RUI2 = package.loaded["apps/reader/readerui"]
         if RUI2 and RUI2.instance then return end
         local HS = liveHS() or (function()
-            local ok, m = pcall(require, "sui_homescreen"); return ok and m
+            local ok, m = pcall(require, "pen_homescreen"); return ok and m
         end)()
         if not HS or HS._instance then return end
         local fm_ref = liveFM()
@@ -2340,7 +2340,7 @@ end
 -- Paint the wallpaper onto bb, anchored at y=0 (top of screen), with opacity.
 local function _paintWallpaper(bg_widget, bb, x, y)
     if not bg_widget then return end
-    local ok_hs, HS = pcall(require, "sui_homescreen")
+    local ok_hs, HS = pcall(require, "pen_homescreen")
     local opacity = ok_hs and HS and HS.styleGetWallpaperOpacityValue() or 0
     bg_widget:paintTo(bb, x, 0)
     if opacity and opacity > 0 then
@@ -2349,13 +2349,13 @@ local function _paintWallpaper(bg_widget, bb, x, y)
 end
 
 local function _getWallpaperBg()
-    local ok, HS = pcall(require, "sui_homescreen")
+    local ok, HS = pcall(require, "pen_homescreen")
     if not (ok and HS and HS.styleGetBgWidget) then return nil end
     return HS.styleGetBgWidget()
 end
 
 local function _wallpaperEnabledFM()
-    local ok, HS = pcall(require, "sui_homescreen")
+    local ok, HS = pcall(require, "pen_homescreen")
     return ok and HS and HS.styleGetWallpaperShowInFM()
 end
 
@@ -2853,12 +2853,12 @@ function M.installAll(plugin)
     M.patchMenuForNavpager(plugin)
     M.patchBookInfoNavigation(plugin)
     -- Install the FM tab icon patch so system icon overrides survive menu rebuilds.
-    local ok_ss, SUIStyle = pcall(require, "sui_style")
+    local ok_ss, SUIStyle = pcall(require, "pen_style")
     if ok_ss and SUIStyle then
         pcall(SUIStyle.installTabIconPatch, plugin)
     end
     -- Install button-bounds overlay when the debug setting is on at startup.
-    if SUISettings:isTrue("simpleui_debug_button_bounds") then
+    if PENSettings:isTrue("penjuru_debug_button_bounds") then
         M.installButtonBoundsDebug(plugin)
     end
     -- sui_foldercovers removed: out of scope for penjuru v1
@@ -3021,7 +3021,7 @@ function M.teardownAll(plugin)
     end
     -- Remove the FM tab icon patch installed by SUIStyle.
     if plugin._sysicon_fmmenu_patched then
-        local ok_ss, SUIStyle = pcall(require, "sui_style")
+        local ok_ss, SUIStyle = pcall(require, "pen_style")
         if ok_ss and SUIStyle then pcall(SUIStyle.removeTabIconPatch) end
         plugin._sysicon_fmmenu_patched = nil
     end

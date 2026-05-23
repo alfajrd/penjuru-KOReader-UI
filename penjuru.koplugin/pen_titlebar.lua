@@ -6,15 +6,15 @@
 -- Sub-pages:    applyToSub(w)  /  restoreSub(w)
 -- Both:         reapplyAll(fm, stack)
 
-local _ = require("sui_i18n").translate
-local Config = require("sui_config")
-local SUISettings = require("sui_store")
+local _ = require("pen_i18n").translate
+local Config = require("pen_config")
+local PENSettings = require("pen_store")
 
 -- Lazy reference to the style module — avoids a circular-require at load time.
 local _SUIStyle
 local function SUIStyle()
     _SUIStyle = _SUIStyle or (function()
-        local ok, m = pcall(require, "sui_style")
+        local ok, m = pcall(require, "pen_style")
         return ok and m or nil
     end)()
     return _SUIStyle
@@ -36,10 +36,10 @@ local _BROWSE_ICONS_DEFAULT = {
 
 -- Maps browse mode → SUIStyle slot id for user overrides.
 local _BM_SLOT = {
-    normal = "sui_browse_normal",
-    author = "sui_browse_author",
-    series = "sui_browse_series",
-    tags   = "sui_browse_tags",
+    normal = "pen_browse_normal",
+    author = "pen_browse_author",
+    series = "pen_browse_series",
+    tags   = "pen_browse_tags",
 }
 
 -- Returns the effective icon path for a browse mode, respecting SUIStyle overrides.
@@ -72,10 +72,10 @@ end
 -- Settings keys and defaults
 -- ---------------------------------------------------------------------------
 
-local SETTING_KEY = "simpleui_titlebar_custom"
-local FM_CFG_KEY  = "simpleui_tb_fm_cfg"
-local SUB_CFG_KEY = "simpleui_tb_sub_cfg"
-local SIZE_KEY    = "simpleui_tb_size"
+local SETTING_KEY = "penjuru_titlebar_custom"
+local FM_CFG_KEY  = "penjuru_tb_fm_cfg"
+local SUB_CFG_KEY = "penjuru_tb_sub_cfg"
+local SIZE_KEY    = "penjuru_tb_size"
 
 local _SIZE_SCALE = { compact = 0.75, default = 1.0, large = 1.3 }
 
@@ -121,20 +121,20 @@ M.ITEMS = {
 -- Public settings accessors
 -- ---------------------------------------------------------------------------
 
-function M.isEnabled()   return SUISettings:nilOrTrue(SETTING_KEY) end
-function M.setEnabled(v) SUISettings:saveSetting(SETTING_KEY, v)   end
+function M.isEnabled()   return PENSettings:nilOrTrue(SETTING_KEY) end
+function M.setEnabled(v) PENSettings:saveSetting(SETTING_KEY, v)   end
 
-local function _visKey(id) return "simpleui_tb_item_" .. id end
+local function _visKey(id) return "penjuru_tb_item_" .. id end
 
 function M.isItemVisible(id)
-    local v = SUISettings:readSetting(_visKey(id))
+    local v = PENSettings:readSetting(_visKey(id))
     if v == nil then return _VIS_DEFAULTS[id] ~= false end
     return v == true
 end
-function M.setItemVisible(id, v) SUISettings:saveSetting(_visKey(id), v) end
+function M.setItemVisible(id, v) PENSettings:saveSetting(_visKey(id), v) end
 
-function M.getSizeKey()   return SUISettings:readSetting(SIZE_KEY) or "default" end
-function M.setSizeKey(v)  SUISettings:saveSetting(SIZE_KEY, v) end
+function M.getSizeKey()   return PENSettings:readSetting(SIZE_KEY) or "default" end
+function M.setSizeKey(v)  PENSettings:saveSetting(SIZE_KEY, v) end
 function M.getSizeScale() return _SIZE_SCALE[M.getSizeKey()] or 1.0 end
 
 -- ---------------------------------------------------------------------------
@@ -144,7 +144,7 @@ function M.getSizeScale() return _SIZE_SCALE[M.getSizeKey()] or 1.0 end
 -- Merges saved config onto defaults. Any default items absent from the saved
 -- order lists are appended, so newly-added buttons always appear in Arrange.
 local function _loadCfg(key, defaults)
-    local raw = SUISettings:readSetting(key)
+    local raw = PENSettings:readSetting(key)
     if type(raw) ~= "table" then
         local side = {}
         for k, v in pairs(defaults.side) do side[k] = v end
@@ -182,8 +182,8 @@ end
 
 function M.getFMConfig()       return _loadCfg(FM_CFG_KEY,  _FM_DEFAULTS)  end
 function M.getSubConfig()      return _loadCfg(SUB_CFG_KEY, _SUB_DEFAULTS) end
-function M.saveFMConfig(cfg)   SUISettings:saveSetting(FM_CFG_KEY,  cfg) end
-function M.saveSubConfig(cfg)  SUISettings:saveSetting(SUB_CFG_KEY, cfg) end
+function M.saveFMConfig(cfg)   PENSettings:saveSetting(FM_CFG_KEY,  cfg) end
+function M.saveSubConfig(cfg)  PENSettings:saveSetting(SUB_CFG_KEY, cfg) end
 
 -- ---------------------------------------------------------------------------
 -- Internal layout helpers
@@ -537,7 +537,7 @@ function M.apply(fm_self)
             if icon == "plus" and _icon_enabled then
                 if tb_self.right_button and tb_self.right_button.image then
                     local _ss = SUIStyle()
-                    local _custom = _ss and _ss.getIcon("sui_menu")
+                    local _custom = _ss and _ss.getIcon("pen_menu")
                     tb_self.right_button.image.file = _custom or Config.ICON.ko_menu
                     _reloadImage(tb_self.right_button.image)
                 end
@@ -549,7 +549,7 @@ function M.apply(fm_self)
         if show_menu then
             if rb.image then
                 local _ss = SUIStyle()
-                rb.image.file = (_ss and _ss.getIcon("sui_menu")) or Config.ICON.ko_menu
+                rb.image.file = (_ss and _ss.getIcon("pen_menu")) or Config.ICON.ko_menu
                 _reloadImage(rb.image)
             end
         placeBtn("fm_menu", rb)
@@ -606,7 +606,7 @@ function M.apply(fm_self)
                 -- Apply sui_back icon override (same logic as before).
                 do
                     local _ss = SUIStyle()
-                    if _ss then _ss.applyIconToBtn("sui_back", up_btn) end
+                    if _ss then _ss.applyIconToBtn("pen_back", up_btn) end
                 end
 
                 up_btn.overlap_align  = nil
@@ -676,7 +676,7 @@ function M.apply(fm_self)
                             -- KOReader's ImageWidget:init() gives precedence to .icon over
                             -- .file, so whichever field we do NOT want must be nil-ed.
                             local _ss        = SUIStyle()
-                            local custom_back = _ss and _ss.getIcon("sui_back")
+                            local custom_back = _ss and _ss.getIcon("pen_back")
                             if custom_back then
                                 btn.image.icon = nil
                                 btn.image.file = custom_back
@@ -891,7 +891,7 @@ function M.apply(fm_self)
                 -- Apply sui_search icon override.
                 do
                     local _ss = SUIStyle()
-                    if _ss then _ss.applyIconToBtn("sui_search", search_btn) end
+                    if _ss then _ss.applyIconToBtn("pen_search", search_btn) end
                 end
                 search_btn.overlap_align  = nil
                 search_btn.overlap_offset = { _buttonX(s.side, s.slot, iw, pad, gap, sw), 0 }
@@ -1171,7 +1171,7 @@ function M.applyToSub(widget)
             if _is_menu_state then
                 local _ss = SUIStyle()
                 if _ss then
-                    _ss.applyIconToBtn("sui_menu", lb)
+                    _ss.applyIconToBtn("pen_menu", lb)
                 end
             end
 
@@ -1197,7 +1197,7 @@ function M.applyToSub(widget)
                     widget._titlebar_sub_lb_is_menu = true
                     if tb_self.left_button and tb_self.left_button.image then
                         local _ss2 = SUIStyle()
-                        local _custom = _ss2 and _ss2.getIcon("sui_menu")
+                        local _custom = _ss2 and _ss2.getIcon("pen_menu")
                         if _custom then
                             tb_self.left_button.image.icon = nil
                             tb_self.left_button.image.file = _custom
@@ -1260,7 +1260,7 @@ function M.applyToSub(widget)
                 _resizeAndStrip(sub_back_btn, iw)
                 do
                     local _ss = SUIStyle()
-                    if _ss then _ss.applyIconToBtn("sui_back", sub_back_btn) end
+                    if _ss then _ss.applyIconToBtn("pen_back", sub_back_btn) end
                 end
                 sub_back_btn.overlap_align  = nil
                 sub_back_btn.overlap_offset = { _buttonX(s.side, s.slot, iw, pad, gap, sw), 0 }
@@ -1295,7 +1295,7 @@ function M.applyToSub(widget)
                         -- init() gives precedence to .icon, so whichever we do NOT want
                         -- must be nilled explicitly.
                         local _ss = SUIStyle()
-                        local custom_back = _ss and _ss.getIcon("sui_back")
+                        local custom_back = _ss and _ss.getIcon("pen_back")
                         if custom_back then
                             btn.image.icon = nil
                             btn.image.file = custom_back

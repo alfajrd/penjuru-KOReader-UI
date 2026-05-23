@@ -1,7 +1,7 @@
 -- bottombar.lua — Simple UI
 -- Bottom tab bar: dimensions, widget construction, touch zones, navigation, rebuild helpers.
 
--- Widget classes — required lazily on first use so that require("sui_bottombar")
+-- Widget classes — required lazily on first use so that require("pen_bottombar")
 -- at plugin load time does not force all these modules off disk.
 -- Each accessor caches its result in a module-local upvalue; subsequent calls
 -- are a single nil-check + table field read, with zero I/O.
@@ -26,16 +26,16 @@ local function InfoMessage() _InfoMessage = _InfoMessage or require("ui/widget/i
 local Device          = require("device")
 local Screen          = Device.screen
 local logger          = require("logger")
-local _ = require("sui_i18n").translate
+local _ = require("pen_i18n").translate
 
-local Config = require("sui_config")
-local SUISettings = require("sui_store")
+local Config = require("pen_config")
+local PENSettings = require("pen_store")
 
 -- Lazy reference to sui_style — used by _safeIconFile() to validate icon paths
 -- before passing them to ImageWidget. Loaded on first use to avoid a circular
 -- require at startup (sui_style requires sui_store, not sui_bottombar).
 local function _SUIStyle()
-    return package.loaded["sui_style"] or require("sui_style")
+    return package.loaded["pen_style"] or require("pen_style")
 end
 
 -- Guard helper: validates an icon file path before it reaches ImageWidget.
@@ -61,7 +61,7 @@ end
 -- Lazy reference to sui_quickactions — single source of truth for QA resolution
 -- and execution.  Loaded on first use to avoid a circular require at startup.
 local function _QA()
-    return package.loaded["sui_quickactions"] or require("sui_quickactions")
+    return package.loaded["pen_quickactions"] or require("pen_quickactions")
 end
 
 -- sui_browsemeta removed: out of scope for penjuru v1.
@@ -115,10 +115,10 @@ M.COLOR_SEPARATOR     = Blitbuffer.gray(0.7)
 -- Returns the separator colour: respects the theme "separator" role, then
 -- transparent when the user has hidden it, then the default grey.
 local function _sepColor()
-    if SUISettings:isTrue("simpleui_bar_hide_separator") then
+    if PENSettings:isTrue("penjuru_bar_hide_separator") then
         return Blitbuffer.COLOR_WHITE
     end
-    local ok, SUIStyle = pcall(require, "sui_style")
+    local ok, SUIStyle = pcall(require, "pen_style")
     if ok and SUIStyle then
         local c = SUIStyle.getThemeColor("separator")
         if c then return c end
@@ -135,8 +135,8 @@ function M.sepColor() return _sepColor() end
 -- SUIStyle.getThemeColor() via the _FALLBACKS chain.
 -- ---------------------------------------------------------------------------
 local function _getBarBg()
-    if SUISettings:isTrue("simpleui_navbar_transparent") then return nil end
-    local ok, SUIStyle = pcall(require, "sui_style")
+    if PENSettings:isTrue("penjuru_navbar_transparent") then return nil end
+    local ok, SUIStyle = pcall(require, "pen_style")
     if ok and SUIStyle then
         local c = SUIStyle.getThemeColor("bottombar_bg")
         if c then return c end
@@ -145,7 +145,7 @@ local function _getBarBg()
 end
 
 local function _getBarFg()
-    local ok, SUIStyle = pcall(require, "sui_style")
+    local ok, SUIStyle = pcall(require, "pen_style")
     if ok and SUIStyle then
         local c = SUIStyle.getThemeColor("bottombar_fg")
         if c then return c end
@@ -156,7 +156,7 @@ end
 -- Returns the color for inactive/dim nav items, respecting the theme
 -- "text_secondary" role and falling back to the static default.
 local function _getInactiveColor()
-    local ok, SUIStyle = pcall(require, "sui_style")
+    local ok, SUIStyle = pcall(require, "pen_style")
     if ok and SUIStyle then
         local c = SUIStyle.getThemeColor("text_secondary")
         if c then return c end
@@ -225,7 +225,7 @@ function M.SIDE_M()      return _cached("side_m",  function() return Screen:scal
 function M.SEP_H()
     return _cached("sep_h", function()
         -- Se as barras forem transparentes E o separador estiver oculto, a altura passa a 0 píxeis!
-        if SUISettings:isTrue("simpleui_navbar_transparent") and SUISettings:isTrue("simpleui_bar_hide_separator") then
+        if PENSettings:isTrue("penjuru_navbar_transparent") and PENSettings:isTrue("penjuru_bar_hide_separator") then
             return 0
         end
         return Screen:scaleBySize(1)
@@ -233,7 +233,7 @@ function M.SEP_H()
 end
 
 function M.TOTAL_H()
-    if not SUISettings:nilOrTrue("simpleui_bar_enabled") then return 0 end
+    if not PENSettings:nilOrTrue("penjuru_bar_enabled") then return 0 end
     return M.BAR_H() + M.TOP_SP() + M.BOT_SP()
 end
 
@@ -247,7 +247,7 @@ end
 -- getPaginationFontSize when both are called in the same render pass.
 local function _getPaginationKey()
     return _cached("pag_key", function()
-        return SUISettings:readSetting("simpleui_bar_pagination_size") or "s"
+        return PENSettings:readSetting("penjuru_bar_pagination_size") or "s"
     end)
 end
 
@@ -278,7 +278,7 @@ function M.patchDimmedIcon(btn)
     lw._sui_dim_patched = true
     local orig_lw_pt = lw.paintTo
     local Blitbuffer = require("ffi/blitbuffer")
-    local UI_core    = require("sui_core")
+    local UI_core    = require("pen_core")
     lw.paintTo = function(self_lw, bb, x, y)
         if not btn.enabled then
             local sz = self_lw:getSize()
@@ -330,7 +330,7 @@ function M.resizePaginationButtons(widget, icon_size)
     -- Apply any user-defined icon overrides for the pagination chevrons.
     -- This is called at every layout/rotation so overrides survive rebuilds.
     pcall(function()
-        local ok_ss, SS = pcall(require, "sui_style")
+        local ok_ss, SS = pcall(require, "pen_style")
         if ok_ss and SS and SS.applyPaginationIcons then
             SS.applyPaginationIcons(widget)
         end
@@ -430,7 +430,7 @@ function M.buildTabCell(action_id, active, tab_w, mode)
             background     = fg,   -- active underline tracks fg
             overlap_offset = { 0, 0 },
         }
-    elseif not SUISettings:isTrue("simpleui_navbar_transparent") then
+    elseif not PENSettings:isTrue("penjuru_navbar_transparent") then
         og[#og + 1] = LineWidget():new{
             dimen          = Geom():new{ w = tab_w, h = M.INDIC_H() },
             background     = _getBarBg() or Blitbuffer.COLOR_WHITE,
@@ -447,7 +447,7 @@ end
 -- Active navpager arrow color: reads theme "accent" (or bottombar_fg fallback)
 -- at call-time so live updates work.
 local function _navpagerColorActive()
-    local ok, SUIStyle = pcall(require, "sui_style")
+    local ok, SUIStyle = pcall(require, "pen_style")
     if ok and SUIStyle then
         local c = SUIStyle.getThemeColor("accent")
         if c then return c end
@@ -485,7 +485,7 @@ local function _makeColoredIcon(file, size, fgcolor)
     widget._inner = inner
     widget._fg = fgcolor
 
-    local UI_core = require("sui_core")
+    local UI_core = require("pen_core")
     function widget:getSize() return self.dimen end
     function widget:paintTo(bb, x, y)
         self.dimen.x, self.dimen.y = x, y
@@ -514,9 +514,9 @@ function M.buildNavpagerArrowCell(is_prev, enabled, tab_w, mode)
     local label     = is_prev and _("Prev") or _("Next")
     local color     = enabled and _navpagerColorActive() or _navpagerColor()
 
-    local ok_ss, SUIStyle = pcall(require, "sui_style")
+    local ok_ss, SUIStyle = pcall(require, "pen_style")
     if ok_ss and SUIStyle then
-        local override = SUIStyle.getIcon(is_prev and "sui_navpager_prev" or "sui_navpager_next")
+        local override = SUIStyle.getIcon(is_prev and "pen_navpager_prev" or "pen_navpager_next")
         if override then icon_file = override end
     end
 
@@ -565,7 +565,7 @@ function M.buildNavpagerArrowCell(is_prev, enabled, tab_w, mode)
         content,
     }
 
-    if not SUISettings:isTrue("simpleui_navbar_transparent") then
+    if not PENSettings:isTrue("penjuru_navbar_transparent") then
         og[#og + 1] = LineWidget():new{
             dimen          = Geom():new{ w = tab_w, h = M.INDIC_H() },
             background     = _getBarBg() or Blitbuffer.COLOR_WHITE,
@@ -747,7 +747,7 @@ end
 
 -- Swaps the bar widget inside an already-wrapped widget, preserving overlap_offset.
 function M.replaceBar(widget, new_bar, tabs)
-    if not SUISettings:nilOrTrue("simpleui_bar_enabled") then
+    if not PENSettings:nilOrTrue("penjuru_bar_enabled") then
         if widget and tabs then widget._navbar_tabs = tabs end
         return
     end
@@ -758,7 +758,7 @@ function M.replaceBar(widget, new_bar, tabs)
         logger.err("simpleui: replaceBar called without _navbar_bar_idx — widget not initialised.")
         return
     end
-    local topbar_on = SUISettings:nilOrTrue("simpleui_topbar_enabled")
+    local topbar_on = PENSettings:nilOrTrue("penjuru_topbar_enabled")
     if widget._navbar_bar_idx_topbar_on ~= nil and widget._navbar_bar_idx_topbar_on ~= topbar_on then
         logger.warn("simpleui: replaceBar — bar_idx out of sync, skipping.")
         return
@@ -786,7 +786,7 @@ function M.registerTouchZones(plugin, fm_self)
     local tabs_snap = Config.loadTabConfig()
     local screen_w  = Screen:getWidth()
     local screen_h  = Screen:getHeight()
-    local navbar_on = SUISettings:nilOrTrue("simpleui_bar_enabled")
+    local navbar_on = PENSettings:nilOrTrue("penjuru_bar_enabled")
     -- Full navbar strip height (separator + bar + bottom padding) — must match
     -- wrapWithNavbar / TOTAL_H so touch targets cover the entire bottom region.
     -- Using BAR_H() alone leaves the top separator and bottom safe-area bands
@@ -824,11 +824,11 @@ function M.registerTouchZones(plugin, fm_self)
         "tap_left_bottom_corner", "tap_right_bottom_corner",
         "TapBook", "TapColl", "TapQA", "TapGoal", "TapSelect", "TapStatCard",
         -- Homescreen footer zone covers the same strip; navbar tabs must win.
-        "simpleui_hs_footer_tap",
+        "penjuru_hs_footer_tap",
     }
 
     -- Helper: find and call a page-navigation method on the topmost pageable widget.
-    local UI_mod = require("sui_core")
+    local UI_mod = require("pen_core")
     local function _callPageFn(fn_name)
         local stack  = UI_mod.getWindowStack()
         for i = #stack, 1, -1 do
@@ -1051,13 +1051,13 @@ function M.registerTouchZones(plugin, fm_self)
                 end
             end
             -- Held anywhere else on the bar → open settings menu.
-			if not SUISettings:nilOrTrue("simpleui_bar_settings_on_hold") then
+			if not PENSettings:nilOrTrue("penjuru_bar_settings_on_hold") then
 				return true
 			end
 			if not plugin._makeNavbarMenu then plugin:addToMainMenu({}) end
-            local UI_mod     = require("sui_core")
-            local topbar_on  = SUISettings:nilOrTrue("simpleui_topbar_enabled")
-            local top_offset = topbar_on and require("sui_topbar").TOTAL_TOP_H() or 0
+            local UI_mod     = require("pen_core")
+            local topbar_on  = PENSettings:nilOrTrue("penjuru_topbar_enabled")
+            local top_offset = topbar_on and require("pen_topbar").TOTAL_TOP_H() or 0
             UI_mod.showSettingsMenu(_("Bottom Bar"), plugin._makeNavbarMenu,
                 top_offset, screen_h, M.TOTAL_H())
             return true
@@ -1115,7 +1115,7 @@ function M.onTabTap(plugin, action_id, fm_self)
     -- navigate() will close it and then call replaceBar on the real FM, so
     -- painting the bar on the about-to-close widget is wasted work.
     local hs_open = (function()
-        local HS = package.loaded["sui_homescreen"]
+        local HS = package.loaded["pen_homescreen"]
         return HS and HS._instance ~= nil
     end)()
     local injected_open = fm_self ~= plugin.ui and fm_self._navbar_injected
@@ -1184,7 +1184,7 @@ function M.showBookmarkBrowserSourceDialog(bb_ui)
     --
     -- The InfoMessage “Fetching bookmarks…” is marked _navbar_closing_intentionally
     -- so its close does not trigger patchUIManagerClose's "Start with HS" logic.
-    local HS = package.loaded["sui_homescreen"]
+    local HS = package.loaded["pen_homescreen"]
     local hs_was_open = HS and HS._instance ~= nil
     local home_dir = G_reader_settings:readSetting("home_dir")
     local source_dialog
@@ -1216,7 +1216,7 @@ function M.showBookmarkBrowserSourceDialog(bb_ui)
             -- user dismisses the BB, the HS is closed intentionally (no
             -- _doShowHS loop) and the user returns to the bare FM.
             if hs_was_open then
-                local UI_mod = require("sui_core")
+                local UI_mod = require("pen_core")
                 local stack  = UI_mod.getWindowStack()
                 for i = #stack, 1, -1 do
                     local w = stack[i] and stack[i].widget
@@ -1287,9 +1287,9 @@ end
 -- After execution the HS is restored to the top and repainted.
 -- ---------------------------------------------------------------------------
 local function _executeInPlace(action_id, plugin, fm)
-    local HS      = package.loaded["sui_homescreen"]
+    local HS      = package.loaded["pen_homescreen"]
     local hs_inst = HS and HS._instance
-    local UI_mod  = require("sui_core")
+    local UI_mod  = require("pen_core")
     local stack   = UI_mod.getWindowStack()
     local hs_idx  = nil
 
@@ -1356,7 +1356,7 @@ function M.navigate(plugin, action_id, fm_self, tabs, force)
             fm = live
             -- Also sync active_action to the live plugin so the indicator is
             -- updated on the correct plugin instance.
-            local live_plugin = live._simpleui_plugin
+            local live_plugin = live._penjuru_plugin
             if live_plugin and live_plugin ~= plugin then
                 live_plugin.active_action = plugin.active_action
                 plugin = live_plugin
@@ -1366,7 +1366,7 @@ function M.navigate(plugin, action_id, fm_self, tabs, force)
 
     -- Detect if the homescreen is currently open (fm_self is the FM but the
     -- HS is on top — the tap came through the HS's injected bottombar).
-    local HS = package.loaded["sui_homescreen"]
+    local HS = package.loaded["pen_homescreen"]
     local hs_open = HS and HS._instance ~= nil
 
     logger.dbg("simpleui navigate: action=", action_id, "hs_open=", hs_open)
@@ -1549,7 +1549,7 @@ function M.doWifiToggle(plugin)
         -- 2. Topbar wifi icon — call refresh() directly (synchronous) instead
         --    of scheduleRefresh(0) which defers to the next event-loop tick,
         --    by which time wifi_optimistic will already be nil.
-        local Topbar = require("sui_topbar")
+        local Topbar = require("pen_topbar")
         local cfg    = Config.getTopbarConfig()
         if (cfg.side["wifi"] or "hidden") ~= "hidden" then
             pcall(function() Topbar.refresh(plugin) end)
@@ -1558,7 +1558,7 @@ function M.doWifiToggle(plugin)
         -- 3. Quick Actions icons and any other homescreen modules — these are
         --    baked into ImageWidgets at build time, so a setDirty alone is not
         --    enough. refreshImmediate rebuilds the full page synchronously.
-        local HS = package.loaded["sui_homescreen"]
+        local HS = package.loaded["pen_homescreen"]
         if HS and HS._instance then
             pcall(function() HS.refreshImmediate(false) end)
         end
@@ -1606,15 +1606,15 @@ end
 -- ---------------------------------------------------------------------------
 
 function M.rebuildAllNavbars(plugin)
-    if plugin and plugin._simpleui_suspended then return end
-    local UI        = require("sui_core")
-    local Topbar    = require("sui_topbar")
+    if plugin and plugin._penjuru_suspended then return end
+    local UI        = require("pen_core")
+    local Topbar    = require("pen_topbar")
     M.invalidateDimCache()
     -- Read config once; these values are shared across every widget in the loop.
     local tabs      = Config.loadTabConfig()
     local num_tabs  = Config.getNumTabs()
     local mode      = Config.getNavbarMode()
-    local topbar_on = SUISettings:nilOrTrue("simpleui_topbar_enabled")
+    local topbar_on = PENSettings:nilOrTrue("penjuru_topbar_enabled")
     local stack     = UI.getWindowStack()  -- read once for the entire operation
 
     -- Build topbar once and reuse across all widgets — it is identical for all.
@@ -1656,7 +1656,7 @@ function M.setPowerTabActive(plugin, active, prev_action)
         UIManager:setDirty(w._navbar_container, "partial")
     end
 
-    local UI    = require("sui_core")
+    local UI    = require("pen_core")
     local stack = UI.getWindowStack()
     updateWidget(plugin.ui)
     for _i, entry in ipairs(stack) do
@@ -1666,7 +1666,7 @@ function M.setPowerTabActive(plugin, active, prev_action)
 end
 
 function M.rewrapAllWidgets(plugin)
-    local UI        = require("sui_core")
+    local UI        = require("pen_core")
     local tabs      = Config.loadTabConfig()
     local stack     = UI.getWindowStack()  -- read once for the entire operation
     local seen      = {}
@@ -1731,7 +1731,7 @@ function M.rewrapAllWidgets(plugin)
             end
         end
 
-            local ok_p, Patches = pcall(require, "sui_patches")
+            local ok_p, Patches = pcall(require, "pen_patches")
             if ok_p and Patches and Patches.injectWallpaperIntoFullscreenWidget then
                 pcall(Patches.injectWallpaperIntoFullscreenWidget, w)
             end
@@ -1754,7 +1754,7 @@ function M.restoreTabInFM(plugin, tabs, prev_action)
     local fm = plugin.ui
     if not (fm and fm._navbar_container) then return end
     local should_skip = false
-    local UI = require("sui_core")
+    local UI = require("pen_core")
     pcall(function()
         for _i, entry in ipairs(UI.getWindowStack()) do
             if entry.widget and entry.widget._navbar_injected and entry.widget ~= fm then
@@ -1766,7 +1766,7 @@ function M.restoreTabInFM(plugin, tabs, prev_action)
     -- Always load tabs fresh: the `tabs` argument was captured at widget-open time
     -- and may be stale if the user changed tab config while the widget was open.
     local t = Config.loadTabConfig()
-    local Patches = require("sui_patches")
+    local Patches = require("pen_patches")
     local restored = (fm.file_chooser and Patches._resolveTabForPath(fm.file_chooser.path, t))
                   or prev_action or (t[1])
     plugin.active_action = restored

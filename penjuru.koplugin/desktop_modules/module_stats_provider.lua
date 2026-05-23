@@ -28,7 +28,7 @@
 
 local logger = require("logger")
 local lfs    = require("libs/libkoreader-lfs")
-local Config = require("sui_config")
+local Config = require("pen_config")
 
 local SP = {}
 

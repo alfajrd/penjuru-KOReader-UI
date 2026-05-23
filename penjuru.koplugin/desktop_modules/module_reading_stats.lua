@@ -17,11 +17,11 @@ local TextWidget      = require("ui/widget/textwidget")
 local UIManager       = require("ui/uimanager")
 local VerticalGroup   = require("ui/widget/verticalgroup")
 local Screen          = Device.screen
-local _ = require("sui_i18n").translate
-local Config          = require("sui_config")
+local _ = require("pen_i18n").translate
+local Config          = require("pen_config")
 
-local UI      = require("sui_core")
-local SUISettings = require("sui_store")
+local UI      = require("pen_core")
+local PENSettings = require("pen_store")
 local CLR_TEXT_SUB = UI.CLR_TEXT_SUB
 local PAD     = UI.PAD
 local MOD_GAP = UI.MOD_GAP
@@ -44,11 +44,11 @@ local SETTING_TYPE  = "reading_stats_type"   -- suffix: pfx .. "reading_stats_ty
 local SETTING_ALIGN = "reading_stats_align"  -- suffix: pfx .. "reading_stats_align"
 
 local function getType(pfx)
-    return SUISettings:readSetting(pfx .. SETTING_TYPE) or "cards"
+    return PENSettings:readSetting(pfx .. SETTING_TYPE) or "cards"
 end
 
 local function getAlign(pfx)
-    local v = SUISettings:readSetting(pfx .. SETTING_ALIGN)
+    local v = PENSettings:readSetting(pfx .. SETTING_ALIGN)
     if v == "left" or v == "right" or v == "center" then return v end
     return "center"
 end
@@ -240,15 +240,15 @@ M.default_on = false
 M.MAX_ITEMS  = RS_N_COLS   -- public field instead of getMaxItems() function
 
 function M.isEnabled(pfx)
-    return SUISettings:readSetting(pfx .. "reading_stats_enabled") == true
+    return PENSettings:readSetting(pfx .. "reading_stats_enabled") == true
 end
 
 function M.setEnabled(pfx, on)
-    SUISettings:saveSetting(pfx .. "reading_stats_enabled", on)
+    PENSettings:saveSetting(pfx .. "reading_stats_enabled", on)
 end
 
 function M.getCountLabel(pfx)
-    local n      = #(SUISettings:readSetting(pfx .. "reading_stats_items") or {})
+    local n      = #(PENSettings:readSetting(pfx .. "reading_stats_items") or {})
     local max_rs = M.MAX_ITEMS
     local rem    = max_rs - n
     if n == 0   then return nil end
@@ -274,7 +274,7 @@ end
 
 function M.build(w, ctx)
     if not M.isEnabled(ctx.pfx) then return nil end
-    local stat_ids = SUISettings:readSetting(ctx.pfx .. "reading_stats_items") or {}
+    local stat_ids = PENSettings:readSetting(ctx.pfx .. "reading_stats_items") or {}
 
     -- Compute all scaled dims once for this render pass.
     local scale     = Config.getModuleScale("reading_stats", ctx and ctx.pfx)
@@ -298,7 +298,7 @@ function M.build(w, ctx)
     }
 
     -- Theme: when fg is set use it for all text; otherwise fall back to module defaults.
-    local ok_ss, SUIStyle  = pcall(require, "sui_style")
+    local ok_ss, SUIStyle  = pcall(require, "pen_style")
     local _theme_fg        = ok_ss and SUIStyle and SUIStyle.getThemeColor("fg")
     local _theme_secondary = ok_ss and SUIStyle and SUIStyle.getThemeColor("text_secondary")
     local _CLR_TEXT_BLK_EFF = _theme_fg or _CLR_TEXT_BLK
@@ -437,7 +437,7 @@ function M.getMenuItems(ctx_menu)
     local items_key   = pfx .. "reading_stats_items"
     local MAX_RS      = M.MAX_ITEMS
 
-    local function getItems() return SUISettings:readSetting(items_key) or {} end
+    local function getItems() return PENSettings:readSetting(items_key) or {} end
     local function isSelected(id)
         for _, v in ipairs(getItems()) do if v == id then return true end end; return false
     end
@@ -453,7 +453,7 @@ function M.getMenuItems(ctx_menu)
             end
             new_items[#new_items+1] = id
         end
-        SUISettings:saveSetting(items_key, new_items); refresh()
+        PENSettings:saveSetting(items_key, new_items); refresh()
     end
 
     local items = {
@@ -466,7 +466,7 @@ function M.getMenuItems(ctx_menu)
                     keep_menu_open = true,
                     checked_func   = function() return getType(pfx) == "cards" end,
                     callback       = function()
-                        SUISettings:saveSetting(pfx .. SETTING_TYPE, "cards")
+                        PENSettings:saveSetting(pfx .. SETTING_TYPE, "cards")
                         refresh()
                     end,
                 },
@@ -476,7 +476,7 @@ function M.getMenuItems(ctx_menu)
                     keep_menu_open = true,
                     checked_func   = function() return getType(pfx) == "cards_transparent" end,
                     callback       = function()
-                        SUISettings:saveSetting(pfx .. SETTING_TYPE, "cards_transparent")
+                        PENSettings:saveSetting(pfx .. SETTING_TYPE, "cards_transparent")
                         refresh()
                     end,
                 },
@@ -486,7 +486,7 @@ function M.getMenuItems(ctx_menu)
                     keep_menu_open = true,
                     checked_func   = function() return getType(pfx) == "flat" end,
                     callback       = function()
-                        SUISettings:saveSetting(pfx .. SETTING_TYPE, "flat")
+                        PENSettings:saveSetting(pfx .. SETTING_TYPE, "flat")
                         refresh()
                     end,
                 },
@@ -496,7 +496,7 @@ function M.getMenuItems(ctx_menu)
                     keep_menu_open = true,
                     checked_func   = function() return getType(pfx) == "list" end,
                     callback       = function()
-                        SUISettings:saveSetting(pfx .. SETTING_TYPE, "list")
+                        PENSettings:saveSetting(pfx .. SETTING_TYPE, "list")
                         refresh()
                     end,
                 },
@@ -531,7 +531,7 @@ function M.getMenuItems(ctx_menu)
                     keep_menu_open = true,
                     checked_func   = function() return getAlign(pfx) == "left"   end,
                     callback       = function()
-                        SUISettings:saveSetting(pfx .. SETTING_ALIGN, "left")
+                        PENSettings:saveSetting(pfx .. SETTING_ALIGN, "left")
                         refresh()
                     end,
                 },
@@ -541,7 +541,7 @@ function M.getMenuItems(ctx_menu)
                     keep_menu_open = true,
                     checked_func   = function() return getAlign(pfx) == "center" end,
                     callback       = function()
-                        SUISettings:saveSetting(pfx .. SETTING_ALIGN, "center")
+                        PENSettings:saveSetting(pfx .. SETTING_ALIGN, "center")
                         refresh()
                     end,
                 },
@@ -551,7 +551,7 @@ function M.getMenuItems(ctx_menu)
                     keep_menu_open = true,
                     checked_func   = function() return getAlign(pfx) == "right"  end,
                     callback       = function()
-                        SUISettings:saveSetting(pfx .. SETTING_ALIGN, "right")
+                        PENSettings:saveSetting(pfx .. SETTING_ALIGN, "right")
                         refresh()
                     end,
                 },
@@ -570,7 +570,7 @@ function M.getMenuItems(ctx_menu)
                 item_table = sort_items, callback = function()
                     local new_order = {}
                     for _, item in ipairs(sort_items) do new_order[#new_order+1] = item.orig_item end
-                    SUISettings:saveSetting(items_key, new_order); refresh()
+                    PENSettings:saveSetting(items_key, new_order); refresh()
                 end })
         end },
     }

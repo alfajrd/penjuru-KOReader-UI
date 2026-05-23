@@ -17,7 +17,7 @@ local VerticalGroup   = require("ui/widget/verticalgroup")
 local Screen          = Device.screen
 local lfs             = require("libs/libkoreader-lfs")
 local Size            = require("ui/size")
-local _ = require("sui_i18n").translate
+local _ = require("pen_i18n").translate
 
 local logger = require("logger")
 local _SH = nil
@@ -30,8 +30,8 @@ local function getSH()
     return _SH
 end
 
-local Config       = require("sui_config")
-local UI           = require("sui_core")
+local Config       = require("pen_config")
+local UI           = require("pen_core")
 local PAD          = UI.PAD
 local CLR_TEXT_SUB = UI.CLR_TEXT_SUB
 
@@ -162,7 +162,7 @@ function M.build(w, ctx)
     local D           = SH.getDims(scale, thumb_scale)
     local label_fs    = math.max(8, math.floor(_BASE_NB_LABEL_FS * scale * lbl_scale))
 
-    local ok_ss, SUIStyle  = pcall(require, "sui_style")
+    local ok_ss, SUIStyle  = pcall(require, "pen_style")
     local _theme_fg        = ok_ss and SUIStyle and SUIStyle.getThemeColor("fg")
     local _theme_secondary = ok_ss and SUIStyle and SUIStyle.getThemeColor("text_secondary")
     local CLR_TEXT_SUB_EFF = _theme_secondary or _theme_fg or CLR_TEXT_SUB
@@ -233,8 +233,8 @@ function M.build(w, ctx)
         row[#row + 1] = tappable
     end
 
-    local show_frame = SUISettings:isTrue(ctx.pfx .. "new_books_show_frame")
-    local solid_bg   = SUISettings:isTrue(ctx.pfx .. "new_books_solid_bg")
+    local show_frame = PENSettings:isTrue(ctx.pfx .. "new_books_show_frame")
+    local solid_bg   = PENSettings:isTrue(ctx.pfx .. "new_books_solid_bg")
     local has_box    = show_frame or solid_bg
     local border_sz  = show_frame and 1 or 0
     local radius     = has_box and math.floor(Screen:scaleBySize(12) * scale) or 0
@@ -280,10 +280,10 @@ function M.getHeight(_ctx)
     local D  = SH.getDims(Config.getModuleScale("new_books", _ctx and _ctx.pfx),
                            Config.getThumbScale("new_books", _ctx and _ctx.pfx))
     local h = D.RECENT_CELL_H
-    if SUISettings:isTrue(_ctx and _ctx.pfx .. "new_books_show_frame") or SUISettings:isTrue(_ctx and _ctx.pfx .. "new_books_solid_bg") then
+    if PENSettings:isTrue(_ctx and _ctx.pfx .. "new_books_show_frame") or PENSettings:isTrue(_ctx and _ctx.pfx .. "new_books_solid_bg") then
         h = h + PAD * 2
     end
-    return require("sui_config").getScaledLabelH() + h
+    return require("pen_config").getScaledLabelH() + h
 end
 
 -- ---------------------------------------------------------------------------
@@ -298,8 +298,8 @@ local function _makeScaleItem(ctx_menu)
         enabled_func = function() return not Config.isScaleLinked() end,
         title        = _lc("Scale"),
         info         = _lc("Scale for this module.\n100% is the default size."),
-        get          = function() return require("sui_config").getModuleScalePct("new_books", pfx) end,
-        set          = function(v) require("sui_config").setModuleScale(v, "new_books", pfx) end,
+        get          = function() return require("pen_config").getModuleScalePct("new_books", pfx) end,
+        set          = function(v) require("pen_config").setModuleScale(v, "new_books", pfx) end,
         refresh      = ctx_menu.refresh,
     })
 end
@@ -312,8 +312,8 @@ local function _makeThumbScaleItem(ctx_menu)
         separator = true,
         title     = _lc("Cover size"),
         info      = _lc("Scale for the cover thumbnails only.\nText and progress bar follow the module scale.\n100% is the default size."),
-        get       = function() return require("sui_config").getThumbScalePct("new_books", pfx) end,
-        set       = function(v) require("sui_config").setThumbScale(v, "new_books", pfx) end,
+        get       = function() return require("pen_config").getThumbScalePct("new_books", pfx) end,
+        set       = function(v) require("pen_config").setThumbScale(v, "new_books", pfx) end,
         refresh   = ctx_menu.refresh,
     })
 end
@@ -330,19 +330,19 @@ function M.getMenuItems(ctx_menu)
     })
     local frame_item = {
         text           = _lc("Frame"),
-        checked_func   = function() return SUISettings:isTrue(ctx_menu.pfx .. "new_books_show_frame") end,
+        checked_func   = function() return PENSettings:isTrue(ctx_menu.pfx .. "new_books_show_frame") end,
         keep_menu_open = true,
         callback       = function()
-            SUISettings:saveSetting(ctx_menu.pfx .. "new_books_show_frame", not SUISettings:isTrue(ctx_menu.pfx .. "new_books_show_frame"))
+            PENSettings:saveSetting(ctx_menu.pfx .. "new_books_show_frame", not PENSettings:isTrue(ctx_menu.pfx .. "new_books_show_frame"))
             ctx_menu.refresh()
         end,
     }
     local solid_bg_item = {
         text           = _lc("Solid Background"),
-        checked_func   = function() return SUISettings:isTrue(ctx_menu.pfx .. "new_books_solid_bg") end,
+        checked_func   = function() return PENSettings:isTrue(ctx_menu.pfx .. "new_books_solid_bg") end,
         keep_menu_open = true,
         callback       = function()
-            SUISettings:saveSetting(ctx_menu.pfx .. "new_books_solid_bg", not SUISettings:isTrue(ctx_menu.pfx .. "new_books_solid_bg"))
+            PENSettings:saveSetting(ctx_menu.pfx .. "new_books_solid_bg", not PENSettings:isTrue(ctx_menu.pfx .. "new_books_solid_bg"))
             ctx_menu.refresh()
         end,
     }

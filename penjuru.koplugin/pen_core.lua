@@ -15,15 +15,15 @@ local Blitbuffer     = require("ffi/blitbuffer")
 local Device         = require("device")
 local Screen         = Device.screen
 local logger         = require("logger")
-local SUISettings = require("sui_store")
+local PENSettings = require("pen_store")
 
 -- Lazy references to sibling modules — resolved on first use to avoid
 -- circular-require issues at load time, but stored as upvalues so that
 -- the hot paths (getContentHeight, getContentTop, wrapWithNavbar,
 -- applyNavbarState) never pay a require() lookup after the first call.
 local _Bottombar, _Topbar
-local function _BB() _Bottombar = _Bottombar or require("sui_bottombar"); return _Bottombar end
-local function _TB() _Topbar    = _Topbar    or require("sui_topbar");    return _Topbar    end
+local function _BB() _Bottombar = _Bottombar or require("pen_bottombar"); return _Bottombar end
+local function _TB() _Topbar    = _Topbar    or require("pen_topbar");    return _Topbar    end
 
 local M   = {}
 local _dim = {}
@@ -119,13 +119,13 @@ end
 
 function M.invalidateDimCache()
     _dim = {}
-    local bb = package.loaded["sui_bottombar"]
+    local bb = package.loaded["pen_bottombar"]
     if bb and bb.invalidateDimCache then bb.invalidateDimCache() end
-    local tb = package.loaded["sui_topbar"]
+    local tb = package.loaded["pen_topbar"]
     if tb and tb.invalidateDimCache then tb.invalidateDimCache() end
     -- Clear VerticalSpan pools so stale px values (computed before resize)
     -- are not reused after scaleBySize produces different numbers.
-    local hs = package.loaded["sui_homescreen"]
+    local hs = package.loaded["pen_homescreen"]
     if hs and hs._instance and hs._instance._vspan_pool then
         hs._instance._vspan_pool = {}
     end
@@ -139,12 +139,12 @@ end
 -- ---------------------------------------------------------------------------
 
 function M.getContentHeight()
-    local topbar_on = SUISettings:nilOrTrue("simpleui_topbar_enabled")
+    local topbar_on = PENSettings:nilOrTrue("penjuru_topbar_enabled")
     return Screen:getHeight() - _BB().TOTAL_H() - (topbar_on and _TB().TOTAL_TOP_H() or 0)
 end
 
 function M.getContentTop()
-    local topbar_on = SUISettings:nilOrTrue("simpleui_topbar_enabled")
+    local topbar_on = PENSettings:nilOrTrue("penjuru_topbar_enabled")
     return topbar_on and _TB().TOTAL_TOP_H() or 0
 end
 
@@ -185,8 +185,8 @@ function M.wrapWithNavbar(inner_widget, active_action_id, tabs, force_no_arrows)
     local screen_w  = Screen:getWidth()
     local screen_h  = Screen:getHeight()
     -- Read both settings once — used multiple times below.
-    local topbar_on = SUISettings:nilOrTrue("simpleui_topbar_enabled")
-    local navbar_on = SUISettings:nilOrTrue("simpleui_bar_enabled")
+    local topbar_on = PENSettings:nilOrTrue("penjuru_topbar_enabled")
+    local navbar_on = PENSettings:nilOrTrue("penjuru_bar_enabled")
     local topbar_top = topbar_on and Topbar.TOTAL_TOP_H() or 0
     local navbar_h   = Bottombar.TOTAL_H()
     local content_h  = screen_h - topbar_top - navbar_h
@@ -220,7 +220,7 @@ function M.wrapWithNavbar(inner_widget, active_action_id, tabs, force_no_arrows)
         local sep_h     = Bottombar.SEP_H()
         local top_sp    = Bottombar.TOP_SP()
         local side_m    = Bottombar.SIDE_M()
-        local bars_transparent = SUISettings:isTrue("simpleui_navbar_transparent")
+        local bars_transparent = PENSettings:isTrue("penjuru_navbar_transparent")
         -- Separator line with the same lateral padding as the bar itself,
         -- matching the original per-tab separator visual exactly.
         local sep_line = LineWidget():new{
@@ -245,7 +245,7 @@ function M.wrapWithNavbar(inner_widget, active_action_id, tabs, force_no_arrows)
 
     local topbar_idx       = topbar_on and #overlap_items or nil
     local navbar_container = OverlapGroup():new(overlap_items)
-    local wrapper_bg = (SUISettings:isTrue("simpleui_navbar_transparent") or SUISettings:isTrue("simpleui_statusbar_transparent")) and nil or Blitbuffer.COLOR_WHITE
+    local wrapper_bg = (PENSettings:isTrue("penjuru_navbar_transparent") or PENSettings:isTrue("penjuru_statusbar_transparent")) and nil or Blitbuffer.COLOR_WHITE
 
     return navbar_container,
            FrameContainer():new{
@@ -407,7 +407,7 @@ function M.showSettingsMenu(title, item_table_fn, top_offset, screen_h, bottomba
             -- before executing scheduled callbacks — so the HS was painted with
             -- the stale tree before the rebuild ran. The synchronous call ensures
             -- the widget tree is replaced before any paint is flushed.
-            local ok, HS = pcall(require, "sui_homescreen")
+            local ok, HS = pcall(require, "pen_homescreen")
             if not (ok and HS and HS._instance) then return end
             HS._instance:_refreshImmediate(false)
         end,
@@ -654,15 +654,15 @@ end
 function M.BarInjection.register(desc)
     local err = _validateBI(desc)
     if err then
-        logger.warn("sui_core: BarInjection.register() rejected:", err, "(id=", tostring(desc and desc.id), ")")
+        logger.warn("pen_core: BarInjection.register() rejected:", err, "(id=", tostring(desc and desc.id), ")")
         return
     end
     local id = desc.id
     if not _bi_registry[id] then
         _bi_registry_order[#_bi_registry_order + 1] = id
-        logger.dbg("sui_core: BarInjection registered descriptor id=", id)
+        logger.dbg("pen_core: BarInjection registered descriptor id=", id)
     else
-        logger.dbg("sui_core: BarInjection replaced descriptor id=", id)
+        logger.dbg("pen_core: BarInjection replaced descriptor id=", id)
     end
     _bi_registry[id] = desc
 end
@@ -676,7 +676,7 @@ function M.BarInjection.unregister(id)
             break
         end
     end
-    logger.dbg("sui_core: BarInjection unregistered id=", id)
+    logger.dbg("pen_core: BarInjection unregistered id=", id)
 end
 
 function M.BarInjection.matchWidget(widget)

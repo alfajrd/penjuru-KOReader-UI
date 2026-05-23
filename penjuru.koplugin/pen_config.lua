@@ -8,9 +8,9 @@ local math_min          = math.min
 local math_floor        = math.floor
 local Blitbuffer        = require("ffi/blitbuffer")
 local DataStorage       = require("datastorage")
-local SUISettings       = require("sui_store")
+local PENSettings       = require("pen_store")
 local logger            = require("logger")
-local _ = require("sui_i18n").translate
+local _ = require("pen_i18n").translate
 
 local M = {}
 
@@ -131,7 +131,7 @@ M.ACTION_BY_ID = {}
 for _i, a in ipairs(M.ALL_ACTIONS) do M.ACTION_BY_ID[a.id] = a end
 
 -- Custom Quick Actions wrappers (delegates to sui_quickactions to avoid circular require).
-local function _QA_lazy() return package.loaded["sui_quickactions"] or require("sui_quickactions") end
+local function _QA_lazy() return package.loaded["pen_quickactions"] or require("pen_quickactions") end
 function M.getCustomQAList()         return _QA_lazy().getCustomQAList()                                                              end
 function M.saveCustomQAList(list)    return _QA_lazy().saveCustomQAList(list)                                                         end
 function M.getCustomQAConfig(id)     return _QA_lazy().getCustomQAConfig(id)                                                          end
@@ -171,7 +171,7 @@ local TOPBAR_CUSTOM_TEXT_MAX = 32
 M.TOPBAR_CUSTOM_TEXT_MAX = TOPBAR_CUSTOM_TEXT_MAX
 
 function M.getTopbarCustomText()
-    return SUISettings:get("simpleui_topbar_custom_text") or ""
+    return PENSettings:get("penjuru_topbar_custom_text") or ""
 end
 
 function M.setTopbarCustomText(s)
@@ -189,11 +189,11 @@ function M.setTopbarCustomText(s)
     else
         s = ""
     end
-    SUISettings:set("simpleui_topbar_custom_text", s)
+    PENSettings:set("penjuru_topbar_custom_text", s)
 end
 
 function M.getTopbarConfig()
-    local raw = SUISettings:get("simpleui_topbar_config")
+    local raw = PENSettings:get("penjuru_topbar_config")
     local cfg = { side = {}, order_left = {}, order_right = {}, order_center = {}, show = {}, order = {} }
     if type(raw) == "table" then
         if type(raw.side) == "table" then
@@ -248,9 +248,9 @@ function M.getTopbarConfig()
 end
 
 function M.saveTopbarConfig(cfg)
-    SUISettings:set("simpleui_topbar_config", cfg)
+    PENSettings:set("penjuru_topbar_config", cfg)
     M.invalidateTopbarConfigCache()
-    local tb = package.loaded["sui_topbar"]
+    local tb = package.loaded["pen_topbar"]
     if tb and tb.invalidateConfigCache then tb.invalidateConfigCache() end
 end
 
@@ -262,7 +262,7 @@ end
 
 function M.loadTabConfig()
     if _tabs_cache then return _tabs_cache end
-    local cfg = SUISettings:get("simpleui_bar_tabs")
+    local cfg = PENSettings:get("penjuru_bar_tabs")
     local result = {}
     local min_tabs = M.isNavpagerEnabled() and 1 or 2
     if type(cfg) == "table" and #cfg >= min_tabs and #cfg <= M.effectiveMaxTabs() then
@@ -286,7 +286,7 @@ end
 
 function M.saveTabConfig(tabs)
     _tabs_cache = nil
-    SUISettings:set("simpleui_bar_tabs", tabs)
+    PENSettings:set("penjuru_bar_tabs", tabs)
 end
 
 function M.getNumTabs()
@@ -298,14 +298,14 @@ local _navbar_mode_cache = nil
 
 function M.getNavbarMode()
     if not _navbar_mode_cache then
-        _navbar_mode_cache = SUISettings:get("simpleui_bar_mode") or "both"
+        _navbar_mode_cache = PENSettings:get("penjuru_bar_mode") or "both"
     end
     return _navbar_mode_cache
 end
 
 function M.saveNavbarMode(mode)
     _navbar_mode_cache = nil
-    SUISettings:set("simpleui_bar_mode", mode)
+    PENSettings:set("penjuru_bar_mode", mode)
 end
 
 function M._ensureHomePresent(tabs)
@@ -347,10 +347,10 @@ M.wifi_optimistic    = nil
 M.wifi_broadcast_self = nil
 
 function M.getWifiHideWhenOff()
-    return SUISettings:isTrue("simpleui_topbar_wifi_hide_when_off")
+    return PENSettings:isTrue("penjuru_topbar_wifi_hide_when_off")
 end
 function M.setWifiHideWhenOff(v)
-    SUISettings:set("simpleui_topbar_wifi_hide_when_off", v)
+    PENSettings:set("penjuru_topbar_wifi_hide_when_off", v)
 end
 
 function M.homeLabel()
@@ -386,7 +386,7 @@ local function deviceHasWifi()
 end
 
 function M.wifiIcon()
-    local QA = package.loaded["sui_quickactions"] or require("sui_quickactions")
+    local QA = package.loaded["pen_quickactions"] or require("pen_quickactions")
     local icon_on  = QA.getDefaultActionIcon("wifi_toggle") or M.ICON.ko_wifi_on
     local icon_off = QA.getDefaultActionIcon("wifi_toggle_off") or M.ICON.ko_wifi_off
 
@@ -404,8 +404,8 @@ end
 local _wifi_action_live = { id = "wifi_toggle", label = "", icon = "" }
 
 function M.getActionById(id)
-    local QA = package.loaded["sui_quickactions"]
-        or require("sui_quickactions")
+    local QA = package.loaded["pen_quickactions"]
+        or require("pen_quickactions")
     local entry = QA.getEntry(id)
     if entry and not entry.id then
         return { id = id, label = entry.label, icon = entry.icon }
@@ -414,19 +414,19 @@ function M.getActionById(id)
 end
 
 function M.getDefaultActionLabel(id)
-    local QA = package.loaded["sui_quickactions"] or require("sui_quickactions")
+    local QA = package.loaded["pen_quickactions"] or require("pen_quickactions")
     return QA.getDefaultActionLabel(id)
 end
 function M.getDefaultActionIcon(id)
-    local QA = package.loaded["sui_quickactions"] or require("sui_quickactions")
+    local QA = package.loaded["pen_quickactions"] or require("pen_quickactions")
     return QA.getDefaultActionIcon(id)
 end
 function M.setDefaultActionLabel(id, label)
-    local QA = package.loaded["sui_quickactions"] or require("sui_quickactions")
+    local QA = package.loaded["pen_quickactions"] or require("pen_quickactions")
     QA.setDefaultActionLabel(id, label)
 end
 function M.setDefaultActionIcon(id, icon)
-    local QA = package.loaded["sui_quickactions"] or require("sui_quickactions")
+    local QA = package.loaded["pen_quickactions"] or require("pen_quickactions")
     QA.setDefaultActionIcon(id, icon)
 end
 
@@ -475,30 +475,30 @@ end
 -- ===========================================================================
 
 local SCALE_MIN, SCALE_MAX, SCALE_STEP, SCALE_DEF = 50, 200, 10, 100
-local MODULE_SCALE_KEY = "simpleui_hs_module_scale"
-local LABEL_SCALE_KEY  = "simpleui_hs_label_scale"
-local SCALE_LINKED_KEY = "simpleui_hs_scale_linked"
+local MODULE_SCALE_KEY = "penjuru_hs_module_scale"
+local LABEL_SCALE_KEY  = "penjuru_hs_label_scale"
+local SCALE_LINKED_KEY = "penjuru_hs_scale_linked"
 local ITEM_LABEL_SCALE_SUFFIX = "_item_label_scale"
 
 local function _clamp(n) return math_max(SCALE_MIN, math_min(SCALE_MAX, math_floor(n))) end
-local function _modKey(mod_id, pfx) return (pfx or "simpleui_hs_") .. (mod_id or "") .. "_scale" end
-local function _itemLabelKey(mod_id, pfx) return (pfx or "simpleui_hs_") .. (mod_id or "") .. ITEM_LABEL_SCALE_SUFFIX end
+local function _modKey(mod_id, pfx) return (pfx or "penjuru_hs_") .. (mod_id or "") .. "_scale" end
+local function _itemLabelKey(mod_id, pfx) return (pfx or "penjuru_hs_") .. (mod_id or "") .. ITEM_LABEL_SCALE_SUFFIX end
 
 -- Bottom Bar Size
-local BAR_SIZE_KEY     = "simpleui_bar_size_pct"
+local BAR_SIZE_KEY     = "penjuru_bar_size_pct"
 local BAR_SIZE_DEF     = 100
 local BAR_SIZE_MIN     = 50
 local BAR_SIZE_MAX     = 150
 
 function M.getBarSizePct()
-    local v = SUISettings:get(BAR_SIZE_KEY)
+    local v = PENSettings:get(BAR_SIZE_KEY)
     local n = tonumber(v)
     if not n then return BAR_SIZE_DEF end
     return math_max(BAR_SIZE_MIN, math_min(BAR_SIZE_MAX, math_floor(n)))
 end
 
 function M.setBarSizePct(pct)
-    SUISettings:set(BAR_SIZE_KEY,
+    PENSettings:set(BAR_SIZE_KEY,
         math_max(BAR_SIZE_MIN, math_min(BAR_SIZE_MAX, math_floor(pct))))
 end
 
@@ -508,20 +508,20 @@ M.BAR_SIZE_MAX  = BAR_SIZE_MAX
 M.BAR_SIZE_STEP = SCALE_STEP
 
 -- Topbar Size
-local TOPBAR_SIZE_KEY = "simpleui_topbar_size_pct"
+local TOPBAR_SIZE_KEY = "penjuru_topbar_size_pct"
 local TOPBAR_SIZE_DEF = 100
 local TOPBAR_SIZE_MIN = 50
 local TOPBAR_SIZE_MAX = 150
 
 function M.getTopbarSizePct()
-    local v = SUISettings:get(TOPBAR_SIZE_KEY)
+    local v = PENSettings:get(TOPBAR_SIZE_KEY)
     local n = tonumber(v)
     if not n then return TOPBAR_SIZE_DEF end
     return math_max(TOPBAR_SIZE_MIN, math_min(TOPBAR_SIZE_MAX, math_floor(n)))
 end
 
 function M.setTopbarSizePct(pct)
-    SUISettings:set(TOPBAR_SIZE_KEY,
+    PENSettings:set(TOPBAR_SIZE_KEY,
         math_max(TOPBAR_SIZE_MIN, math_min(TOPBAR_SIZE_MAX, math_floor(pct))))
 end
 
@@ -531,21 +531,21 @@ M.TOPBAR_SIZE_MAX  = TOPBAR_SIZE_MAX
 M.TOPBAR_SIZE_STEP = SCALE_STEP
 
 -- Bottom Margin
-local BOT_MARGIN_KEY  = "simpleui_bar_bottom_margin_pct"
+local BOT_MARGIN_KEY  = "penjuru_bar_bottom_margin_pct"
 local BOT_MARGIN_DEF  = 100
 local BOT_MARGIN_MIN  = 0
 local BOT_MARGIN_MAX  = 300
 local BOT_MARGIN_STEP = 10
 
 function M.getBottomMarginPct()
-    local v = SUISettings:get(BOT_MARGIN_KEY)
+    local v = PENSettings:get(BOT_MARGIN_KEY)
     local n = tonumber(v)
     if not n then return BOT_MARGIN_DEF end
     return math_max(BOT_MARGIN_MIN, math_min(BOT_MARGIN_MAX, math_floor(n)))
 end
 
 function M.setBottomMarginPct(pct)
-    SUISettings:set(BOT_MARGIN_KEY,
+    PENSettings:set(BOT_MARGIN_KEY,
         math_max(BOT_MARGIN_MIN, math_min(BOT_MARGIN_MAX, math_floor(pct))))
 end
 
@@ -555,20 +555,20 @@ M.BOT_MARGIN_MAX  = BOT_MARGIN_MAX
 M.BOT_MARGIN_STEP = BOT_MARGIN_STEP
 
 -- Reading Stats Text Scale
-local RS_TEXT_SCALE_KEY  = "simpleui_bar_rs_text_scale_pct"
+local RS_TEXT_SCALE_KEY  = "penjuru_bar_rs_text_scale_pct"
 local RS_TEXT_SCALE_DEF  = 100
 local RS_TEXT_SCALE_MIN  = 50
 local RS_TEXT_SCALE_MAX  = 200
 
 function M.getRSTextScalePct()
-    local v = SUISettings:get(RS_TEXT_SCALE_KEY)
+    local v = PENSettings:get(RS_TEXT_SCALE_KEY)
     local n = tonumber(v)
     if not n then return RS_TEXT_SCALE_DEF end
     return math_max(RS_TEXT_SCALE_MIN, math_min(RS_TEXT_SCALE_MAX, math_floor(n)))
 end
 
 function M.setRSTextScalePct(pct)
-    SUISettings:set(RS_TEXT_SCALE_KEY,
+    PENSettings:set(RS_TEXT_SCALE_KEY,
         math_max(RS_TEXT_SCALE_MIN, math_min(RS_TEXT_SCALE_MAX, math_floor(pct))))
 end
 
@@ -578,20 +578,20 @@ M.RS_TEXT_SCALE_MAX  = RS_TEXT_SCALE_MAX
 M.RS_TEXT_SCALE_STEP = SCALE_STEP
 
 -- Navbar Icon Scale
-local ICON_SCALE_KEY  = "simpleui_bar_icon_scale_pct"
+local ICON_SCALE_KEY  = "penjuru_bar_icon_scale_pct"
 local ICON_SCALE_DEF  = 100
 local ICON_SCALE_MIN  = 50
 local ICON_SCALE_MAX  = 200
 
 function M.getIconScalePct()
-    local v = SUISettings:get(ICON_SCALE_KEY)
+    local v = PENSettings:get(ICON_SCALE_KEY)
     local n = tonumber(v)
     if not n then return ICON_SCALE_DEF end
     return math_max(ICON_SCALE_MIN, math_min(ICON_SCALE_MAX, math_floor(n)))
 end
 
 function M.setIconScalePct(pct)
-    SUISettings:set(ICON_SCALE_KEY,
+    PENSettings:set(ICON_SCALE_KEY,
         math_max(ICON_SCALE_MIN, math_min(ICON_SCALE_MAX, math_floor(pct))))
 end
 
@@ -601,20 +601,20 @@ M.ICON_SCALE_MAX  = ICON_SCALE_MAX
 M.ICON_SCALE_STEP = SCALE_STEP
 
 -- Navbar Label Scale
-local NAVBAR_LABEL_SCALE_KEY  = "simpleui_bar_label_scale_pct"
+local NAVBAR_LABEL_SCALE_KEY  = "penjuru_bar_label_scale_pct"
 local NAVBAR_LABEL_SCALE_DEF  = 100
 local NAVBAR_LABEL_SCALE_MIN  = 50
 local NAVBAR_LABEL_SCALE_MAX  = 200
 
 function M.getNavbarLabelScalePct()
-    local v = SUISettings:get(NAVBAR_LABEL_SCALE_KEY)
+    local v = PENSettings:get(NAVBAR_LABEL_SCALE_KEY)
     local n = tonumber(v)
     if not n then return NAVBAR_LABEL_SCALE_DEF end
     return math_max(NAVBAR_LABEL_SCALE_MIN, math_min(NAVBAR_LABEL_SCALE_MAX, math_floor(n)))
 end
 
 function M.setNavbarLabelScalePct(pct)
-    SUISettings:set(NAVBAR_LABEL_SCALE_KEY,
+    PENSettings:set(NAVBAR_LABEL_SCALE_KEY,
         math_max(NAVBAR_LABEL_SCALE_MIN, math_min(NAVBAR_LABEL_SCALE_MAX, math_floor(pct))))
 end
 
@@ -625,22 +625,22 @@ M.NAVBAR_LABEL_SCALE_STEP = SCALE_STEP
 
 -- Link Scale
 function M.isScaleLinked()
-    local v = SUISettings:get(SCALE_LINKED_KEY)
+    local v = PENSettings:get(SCALE_LINKED_KEY)
     return v == true  -- default false
 end
 
 function M.setScaleLinked(on)
-    SUISettings:set(SCALE_LINKED_KEY, on)
+    PENSettings:set(SCALE_LINKED_KEY, on)
 end
 
 -- Module Scale
 function M.getModuleScale(mod_id, pfx)
     if mod_id and pfx and not M.isScaleLinked() then
-        local v = SUISettings:get(_modKey(mod_id, pfx))
+        local v = PENSettings:get(_modKey(mod_id, pfx))
         local n = tonumber(v)
         if n then return _clamp(n) / 100 end
     end
-    local v = SUISettings:get(MODULE_SCALE_KEY)
+    local v = PENSettings:get(MODULE_SCALE_KEY)
     local n = tonumber(v)
     if not n then return 1.0 end
     return _clamp(n) / 100
@@ -648,11 +648,11 @@ end
 
 function M.getModuleScalePct(mod_id, pfx)
     if mod_id and pfx and not M.isScaleLinked() then
-        local v = SUISettings:get(_modKey(mod_id, pfx))
+        local v = PENSettings:get(_modKey(mod_id, pfx))
         local n = tonumber(v)
         if n then return _clamp(n) end
     end
-    local v = SUISettings:get(MODULE_SCALE_KEY)
+    local v = PENSettings:get(MODULE_SCALE_KEY)
     local n = tonumber(v)
     if not n then return SCALE_DEF end
     return _clamp(n)
@@ -661,11 +661,11 @@ end
 function M.setModuleScale(pct, mod_id, pfx)
     pct = _clamp(pct)
     if mod_id and pfx then
-        SUISettings:set(_modKey(mod_id, pfx), pct)
+        PENSettings:set(_modKey(mod_id, pfx), pct)
     else
-        SUISettings:set(MODULE_SCALE_KEY, pct)
+        PENSettings:set(MODULE_SCALE_KEY, pct)
         if M.isScaleLinked() then
-            SUISettings:set(LABEL_SCALE_KEY, pct)
+            PENSettings:set(LABEL_SCALE_KEY, pct)
         end
     end
 end
@@ -674,44 +674,44 @@ end
 local THUMB_SCALE_KEY_SUFFIX = "_thumb_scale"
 
 local function _thumbKey(mod_id, pfx)
-    return (pfx or "simpleui_hs_") .. (mod_id or "") .. THUMB_SCALE_KEY_SUFFIX
+    return (pfx or "penjuru_hs_") .. (mod_id or "") .. THUMB_SCALE_KEY_SUFFIX
 end
 
 function M.getThumbScale(mod_id, pfx)
-    local v = SUISettings:get(_thumbKey(mod_id, pfx))
+    local v = PENSettings:get(_thumbKey(mod_id, pfx))
     local n = tonumber(v)
     if not n then return 1.0 end
     return _clamp(n) / 100
 end
 
 function M.getThumbScalePct(mod_id, pfx)
-    local v = SUISettings:get(_thumbKey(mod_id, pfx))
+    local v = PENSettings:get(_thumbKey(mod_id, pfx))
     local n = tonumber(v)
     if not n then return SCALE_DEF end
     return _clamp(n)
 end
 
 function M.setThumbScale(pct, mod_id, pfx)
-    SUISettings:set(_thumbKey(mod_id, pfx), _clamp(pct))
+    PENSettings:set(_thumbKey(mod_id, pfx), _clamp(pct))
 end
 
 -- Label Scale
 function M.getLabelScale()
-    local v = SUISettings:get(LABEL_SCALE_KEY)
+    local v = PENSettings:get(LABEL_SCALE_KEY)
     local n = tonumber(v)
     if not n then return 1.0 end
     return _clamp(n) / 100
 end
 
 function M.getLabelScalePct()
-    local v = SUISettings:get(LABEL_SCALE_KEY)
+    local v = PENSettings:get(LABEL_SCALE_KEY)
     local n = tonumber(v)
     if not n then return SCALE_DEF end
     return _clamp(n)
 end
 
 function M.setLabelScale(pct)
-    SUISettings:set(LABEL_SCALE_KEY, _clamp(pct))
+    PENSettings:set(LABEL_SCALE_KEY, _clamp(pct))
 end
 
 local _BASE_LABEL_TEXT_H = nil
@@ -719,52 +719,52 @@ function M.getScaledLabelH()
     if not _BASE_LABEL_TEXT_H then
         _BASE_LABEL_TEXT_H = require("device").screen:scaleBySize(16)
     end
-    local PAD2  = require("sui_core").PAD2
+    local PAD2  = require("pen_core").PAD2
     local scale = M.getLabelScale()
     return PAD2 + math_max(8, math_floor(_BASE_LABEL_TEXT_H * scale))
 end
 
 -- Item Label Scale
 function M.getItemLabelScale(mod_id, pfx)
-    local v = SUISettings:get(_itemLabelKey(mod_id, pfx))
+    local v = PENSettings:get(_itemLabelKey(mod_id, pfx))
     local n = tonumber(v)
     if not n then return 1.0 end
     return _clamp(n) / 100
 end
 
 function M.getItemLabelScalePct(mod_id, pfx)
-    local v = SUISettings:get(_itemLabelKey(mod_id, pfx))
+    local v = PENSettings:get(_itemLabelKey(mod_id, pfx))
     local n = tonumber(v)
     if not n then return SCALE_DEF end
     return _clamp(n)
 end
 
 function M.setItemLabelScale(pct, mod_id, pfx)
-    SUISettings:set(_itemLabelKey(mod_id, pfx), _clamp(pct))
+    PENSettings:set(_itemLabelKey(mod_id, pfx), _clamp(pct))
 end
 
 -- Reset Scales
 function M.resetAllScales(pfx, pfx_qa)
-    SUISettings:del(MODULE_SCALE_KEY)
-    SUISettings:del(LABEL_SCALE_KEY)
-    SUISettings:del(SCALE_LINKED_KEY)
-    SUISettings:del(BAR_SIZE_KEY)
-    SUISettings:del(TOPBAR_SIZE_KEY)
-    SUISettings:del(NAVBAR_LABEL_SCALE_KEY)
-    SUISettings:del("simpleui_bar_icon_scale_pct")
-    SUISettings:del("simpleui_bar_rs_text_scale_pct")
+    PENSettings:del(MODULE_SCALE_KEY)
+    PENSettings:del(LABEL_SCALE_KEY)
+    PENSettings:del(SCALE_LINKED_KEY)
+    PENSettings:del(BAR_SIZE_KEY)
+    PENSettings:del(TOPBAR_SIZE_KEY)
+    PENSettings:del(NAVBAR_LABEL_SCALE_KEY)
+    PENSettings:del("penjuru_bar_icon_scale_pct")
+    PENSettings:del("penjuru_bar_rs_text_scale_pct")
     local Registry = require("desktop_modules/moduleregistry")
     for _, mod in ipairs(Registry.list()) do
         if mod.id then
-            SUISettings:del((pfx or "simpleui_hs_") .. mod.id .. "_scale")
-            SUISettings:del((pfx or "simpleui_hs_") .. mod.id .. THUMB_SCALE_KEY_SUFFIX)
-            SUISettings:del(_itemLabelKey(mod.id, pfx))
+            PENSettings:del((pfx or "penjuru_hs_") .. mod.id .. "_scale")
+            PENSettings:del((pfx or "penjuru_hs_") .. mod.id .. THUMB_SCALE_KEY_SUFFIX)
+            PENSettings:del(_itemLabelKey(mod.id, pfx))
         end
     end
     if pfx_qa then
         for slot = 1, 3 do
-            SUISettings:del(pfx_qa .. slot .. "_scale")
-            SUISettings:del(pfx_qa .. slot .. ITEM_LABEL_SCALE_SUFFIX)
+            PENSettings:del(pfx_qa .. slot .. "_scale")
+            PENSettings:del(pfx_qa .. slot .. ITEM_LABEL_SCALE_SUFFIX)
         end
     end
 end
@@ -833,7 +833,7 @@ M.GAP_STEP = GAP_STEP
 M.GAP_DEF  = GAP_DEF
 
 local function _gapKey(mod_id, pfx)
-    return (pfx or "simpleui_hs_") .. (mod_id or "") .. "_gap_pct"
+    return (pfx or "penjuru_hs_") .. (mod_id or "") .. "_gap_pct"
 end
 
 local function _clampGap(n)
@@ -842,7 +842,7 @@ end
 
 function M.getModuleGapPx(mod_id, pfx, mod_gap_px)
     if mod_id and pfx then
-        local v = SUISettings:get(_gapKey(mod_id, pfx))
+        local v = PENSettings:get(_gapKey(mod_id, pfx))
         local n = tonumber(v)
         if n then return math_floor(mod_gap_px * _clampGap(n) / 100) end
     end
@@ -851,7 +851,7 @@ end
 
 function M.getModuleGapPct(mod_id, pfx)
     if mod_id and pfx then
-        local v = SUISettings:get(_gapKey(mod_id, pfx))
+        local v = PENSettings:get(_gapKey(mod_id, pfx))
         local n = tonumber(v)
         if n then return _clampGap(n) end
     end
@@ -860,7 +860,7 @@ end
 
 function M.setModuleGap(pct, mod_id, pfx)
     if mod_id and pfx then
-        SUISettings:set(_gapKey(mod_id, pfx), _clampGap(pct))
+        PENSettings:set(_gapKey(mod_id, pfx), _clampGap(pct))
     end
 end
 
@@ -894,11 +894,11 @@ end
 
 -- Module Labels (Section Title) Toggle
 local function _labelHideKey(mod_id)
-    return "simpleui_hide_label_" .. (mod_id or "")
+    return "penjuru_hide_label_" .. (mod_id or "")
 end
 
 function M.isLabelHidden(mod_id)
-    return SUISettings:get(_labelHideKey(mod_id)) == true
+    return PENSettings:get(_labelHideKey(mod_id)) == true
 end
 
 function M.applyLabelToggle(mod, default_label)
@@ -915,7 +915,7 @@ function M.makeLabelToggleItem(mod_id, default_label, refresh, _lc)
         checked_func   = function() return not M.isLabelHidden(mod_id) end,
         keep_menu_open = true,
         callback       = function()
-            SUISettings:set(_labelHideKey(mod_id),
+            PENSettings:set(_labelHideKey(mod_id),
                 not M.isLabelHidden(mod_id) and true or nil)
             refresh()
         end,
@@ -1178,8 +1178,8 @@ function M.isFavoritesWidget(w)
 end
 
 -- Navpager
-function M.isNavpagerEnabled() return SUISettings:isTrue("simpleui_bar_navpager_enabled") end
-function M.isDotPagerEnabled() return SUISettings:nilOrTrue("simpleui_bar_dotpager_always") end
+function M.isNavpagerEnabled() return PENSettings:isTrue("penjuru_bar_navpager_enabled") end
+function M.isDotPagerEnabled() return PENSettings:nilOrTrue("penjuru_bar_dotpager_always") end
 function M.effectiveMaxTabs() return M.isNavpagerEnabled() and M.MAX_TABS_NAVPAGER or M.MAX_TABS end
 
 local function _stateFromMenu(menu)
@@ -1189,7 +1189,7 @@ local function _stateFromMenu(menu)
     return page > 1, page < page_num
 end
 function M.getNavpagerState()
-    local UI = package.loaded["sui_core"]
+    local UI = package.loaded["pen_core"]
     if not UI then return false, false end
     local stack = UI.getWindowStack()
     for i = #stack, 1, -1 do
@@ -1201,7 +1201,7 @@ function M.getNavpagerState()
                 local prev2, nxt2 = _stateFromMenu(w.file_chooser)
                 if prev2 ~= nil then return prev2, nxt2 end
             end
-            local HS = package.loaded["sui_homescreen"]
+            local HS = package.loaded["pen_homescreen"]
             if HS and HS._instance == w then
                 local cur, total = HS._instance._current_page or 1, HS._instance._total_pages or 1
                 return cur > 1, cur < total
@@ -1217,11 +1217,11 @@ end
 -- ===========================================================================
 
 function M.migrateOldCustomSlots()
-    if SUISettings:get("simpleui_cqa_migrated_v1") then return end
+    if PENSettings:get("penjuru_cqa_migrated_v1") then return end
     local id_map, qa_list, qa_set = {}, M.getCustomQAList(), {}
     for _, id in ipairs(qa_list) do qa_set[id] = true end
     for slot = 1, 4 do
-        local old_id, cfg = "custom_" .. slot, SUISettings:get("simpleui_custom_" .. slot)
+        local old_id, cfg = "custom_" .. slot, PENSettings:get("penjuru_custom_" .. slot)
         if type(cfg) == "table" and (cfg.path or cfg.collection) then
             local new_id = M.nextCustomQAId()
             M.saveCustomQAConfig(new_id, cfg.label or (_("Custom") .. " " .. slot), cfg.path, cfg.collection)
@@ -1230,7 +1230,7 @@ function M.migrateOldCustomSlots()
         end
     end
     M.saveCustomQAList(qa_list)
-    local tabs = SUISettings:get("simpleui_bar_tabs")
+    local tabs = PENSettings:get("penjuru_bar_tabs")
     if type(tabs) == "table" then
         local new_tabs, changed = {}, false
         for _, id in ipairs(tabs) do
@@ -1238,11 +1238,11 @@ function M.migrateOldCustomSlots()
             elseif id:match("^custom_%d+$") and not id:match("^custom_qa_") then changed = true
             else new_tabs[#new_tabs + 1] = id end
         end
-        if changed then SUISettings:set("simpleui_bar_tabs", new_tabs) end
+        if changed then PENSettings:set("penjuru_bar_tabs", new_tabs) end
     end
-    for _, pfx in ipairs({"simpleui_hs_qa_"}) do
+    for _, pfx in ipairs({"penjuru_hs_qa_"}) do
         for slot = 1, 3 do
-            local key, dqa = pfx .. slot .. "_items", SUISettings:get(pfx .. slot .. "_items")
+            local key, dqa = pfx .. slot .. "_items", PENSettings:get(pfx .. slot .. "_items")
             if type(dqa) == "table" then
                 local changed, new_dqa = false, {}
                 for _, id in ipairs(dqa) do
@@ -1250,69 +1250,69 @@ function M.migrateOldCustomSlots()
                     elseif not id:match("^custom_%d+$") or id:match("^custom_qa_") then new_dqa[#new_dqa + 1] = id
                     else changed = true end
                 end
-                if changed then SUISettings:set(key, new_dqa) end
+                if changed then PENSettings:set(key, new_dqa) end
             end
         end
     end
-    SUISettings:set("simpleui_cqa_migrated_v1", true)
-    local legacy_enabled = SUISettings:get("simpleui_bar_enabled")
-    if legacy_enabled ~= nil and SUISettings:get("simpleui_enabled") == nil then
-        SUISettings:set("simpleui_enabled", legacy_enabled)
+    PENSettings:set("penjuru_cqa_migrated_v1", true)
+    local legacy_enabled = PENSettings:get("penjuru_bar_enabled")
+    if legacy_enabled ~= nil and PENSettings:get("penjuru_enabled") == nil then
+        PENSettings:set("penjuru_enabled", legacy_enabled)
     end
 end
 
 -- First-run defaults. Idempotent: safe to call on every init.
 function M.applyFirstRunDefaults()
-    if not SUISettings:get("simpleui_defaults_v1") then
-        SUISettings:set("simpleui_bar_enabled", true)
-        SUISettings:set("simpleui_topbar_enabled", true)
-        SUISettings:set("simpleui_bar_mode", "both")
-        SUISettings:set("simpleui_bar_size", "default")
-        SUISettings:set("simpleui_bar_tabs", { "home", "wifi_toggle", "homescreen", "history", "power" })
+    if not PENSettings:get("penjuru_defaults_v1") then
+        PENSettings:set("penjuru_bar_enabled", true)
+        PENSettings:set("penjuru_topbar_enabled", true)
+        PENSettings:set("penjuru_bar_mode", "both")
+        PENSettings:set("penjuru_bar_size", "default")
+        PENSettings:set("penjuru_bar_tabs", { "home", "wifi_toggle", "homescreen", "history", "power" })
         M.saveTopbarConfig({ side = { clock = "left", battery = "right", wifi = "right" }, order_left = { "clock" }, order_right = { "wifi", "battery" } })
-        local PFX = "simpleui_hs_"
-        SUISettings:set(PFX .. "quote_enabled", true)
-        SUISettings:set(PFX .. "currently", true)
-        SUISettings:set(PFX .. "recent", true)
-        SUISettings:set(PFX .. "clock_enabled", false)
-        SUISettings:set(PFX .. "clock_date", false)
-        SUISettings:set(PFX .. "clock_battery", false)
-        SUISettings:set(PFX .. "coverdeck", false)
-        SUISettings:set(PFX .. "new_books", false)
-        SUISettings:set(PFX .. "tbr", false)
-        SUISettings:set(PFX .. "collections", false)
-        SUISettings:set(PFX .. "reading_goals", false)
-        SUISettings:set(PFX .. "reading_stats_enabled", false)
-        SUISettings:set(PFX .. "quick_actions_1_enabled", false)
-        SUISettings:set(PFX .. "quick_actions_2_enabled", false)
-        SUISettings:set(PFX .. "quick_actions_3_enabled", false)
-        SUISettings:set(PFX .. "action_list_enabled", false)
-        SUISettings:set(PFX .. "module_order", { "quote", "currently", "recent", "clock", "coverdeck", "new_books", "tbr", "collections", "reading_goals", "reading_stats", "quick_actions_1", "quick_actions_2", "quick_actions_3", "action_list" })
-        SUISettings:set(PFX .. "currently_show_title", true)
-        SUISettings:set(PFX .. "currently_show_author", true)
-        SUISettings:set(PFX .. "currently_show_progress", true)
-        SUISettings:set(PFX .. "currently_show_percent", true)
-        SUISettings:set(PFX .. "currently_show_book_days", false)
-        SUISettings:set(PFX .. "currently_show_book_time", false)
-        SUISettings:set(PFX .. "currently_show_book_remaining", false)
-        SUISettings:set("simpleui_fc_enabled", true)
-        SUISettings:set("simpleui_fc_folder_style", "auto")
-        SUISettings:set("simpleui_fc_cover_mode", "2_3")
-        SUISettings:set("simpleui_fc_subfolder_cover", true)
-        SUISettings:set("simpleui_browsemeta_enabled", true)
+        local PFX = "penjuru_hs_"
+        PENSettings:set(PFX .. "quote_enabled", true)
+        PENSettings:set(PFX .. "currently", true)
+        PENSettings:set(PFX .. "recent", true)
+        PENSettings:set(PFX .. "clock_enabled", false)
+        PENSettings:set(PFX .. "clock_date", false)
+        PENSettings:set(PFX .. "clock_battery", false)
+        PENSettings:set(PFX .. "coverdeck", false)
+        PENSettings:set(PFX .. "new_books", false)
+        PENSettings:set(PFX .. "tbr", false)
+        PENSettings:set(PFX .. "collections", false)
+        PENSettings:set(PFX .. "reading_goals", false)
+        PENSettings:set(PFX .. "reading_stats_enabled", false)
+        PENSettings:set(PFX .. "quick_actions_1_enabled", false)
+        PENSettings:set(PFX .. "quick_actions_2_enabled", false)
+        PENSettings:set(PFX .. "quick_actions_3_enabled", false)
+        PENSettings:set(PFX .. "action_list_enabled", false)
+        PENSettings:set(PFX .. "module_order", { "quote", "currently", "recent", "clock", "coverdeck", "new_books", "tbr", "collections", "reading_goals", "reading_stats", "quick_actions_1", "quick_actions_2", "quick_actions_3", "action_list" })
+        PENSettings:set(PFX .. "currently_show_title", true)
+        PENSettings:set(PFX .. "currently_show_author", true)
+        PENSettings:set(PFX .. "currently_show_progress", true)
+        PENSettings:set(PFX .. "currently_show_percent", true)
+        PENSettings:set(PFX .. "currently_show_book_days", false)
+        PENSettings:set(PFX .. "currently_show_book_time", false)
+        PENSettings:set(PFX .. "currently_show_book_remaining", false)
+        PENSettings:set("penjuru_fc_enabled", true)
+        PENSettings:set("penjuru_fc_folder_style", "auto")
+        PENSettings:set("penjuru_fc_cover_mode", "2_3")
+        PENSettings:set("penjuru_fc_subfolder_cover", true)
+        PENSettings:set("penjuru_browsemeta_enabled", true)
         G_reader_settings:saveSetting("start_with", "homescreen_simpleui")
-        SUISettings:set("simpleui_defaults_v1", true)
+        PENSettings:set("penjuru_defaults_v1", true)
     end
-    if not SUISettings:get("simpleui_defaults_v2") then
-        SUISettings:set("simpleui_tb_item_fm_search", true)
-        SUISettings:set("simpleui_tb_fm_cfg", { side = { fm_menu = "right", fm_back = "left", fm_search = "left" }, order_left = { "fm_back", "fm_search" }, order_right = { "fm_menu" } })
-        SUISettings:set("simpleui_defaults_v2", true)
+    if not PENSettings:get("penjuru_defaults_v2") then
+        PENSettings:set("penjuru_tb_item_fm_search", true)
+        PENSettings:set("penjuru_tb_fm_cfg", { side = { fm_menu = "right", fm_back = "left", fm_search = "left" }, order_left = { "fm_back", "fm_search" }, order_right = { "fm_menu" } })
+        PENSettings:set("penjuru_defaults_v2", true)
     end
-    if not SUISettings:get("simpleui_defaults_v3") then
-        SUISettings:set("simpleui_browsemeta_enabled", true)
-        SUISettings:set("simpleui_tb_item_fm_browse", true)
-        SUISettings:set("simpleui_tb_fm_cfg", { side = { fm_menu = "right", fm_back = "left", fm_search = "left", fm_browse = "right" }, order_left = { "fm_back", "fm_search" }, order_right = { "fm_browse", "fm_menu" } })
-        SUISettings:set("simpleui_defaults_v3", true)
+    if not PENSettings:get("penjuru_defaults_v3") then
+        PENSettings:set("penjuru_browsemeta_enabled", true)
+        PENSettings:set("penjuru_tb_item_fm_browse", true)
+        PENSettings:set("penjuru_tb_fm_cfg", { side = { fm_menu = "right", fm_back = "left", fm_search = "left", fm_browse = "right" }, order_left = { "fm_back", "fm_search" }, order_right = { "fm_browse", "fm_menu" } })
+        PENSettings:set("penjuru_defaults_v3", true)
     end
 end
 

@@ -19,13 +19,13 @@ local TextWidget      = require("ui/widget/textwidget")
 local VerticalGroup   = require("ui/widget/verticalgroup")
 local VerticalSpan    = require("ui/widget/verticalspan")
 local Screen          = Device.screen
-local _ = require("sui_i18n").translate
-local N_ = require("sui_i18n").ngettext
-local Config          = require("sui_config")
-local QA              = require("sui_quickactions")
+local _ = require("pen_i18n").translate
+local N_ = require("pen_i18n").ngettext
+local Config          = require("pen_config")
+local QA              = require("pen_quickactions")
 
-local UI  = require("sui_core")
-local SUISettings = require("sui_store")
+local UI  = require("pen_core")
+local PENSettings = require("pen_store")
 local PAD = UI.PAD
 local LABEL_H = UI.LABEL_H
 local CLR_TEXT_SUB = UI.CLR_TEXT_SUB
@@ -220,7 +220,7 @@ local function makeSlot(slot)
 
     -- Returns the current type string; defaults to "default" when unset.
     local function getType(pfx)
-        return SUISettings:readSetting(pfx .. TYPE_KEY) or "default"
+        return PENSettings:readSetting(pfx .. TYPE_KEY) or "default"
     end
 
     local S = {}
@@ -230,11 +230,11 @@ local function makeSlot(slot)
     S.default_on = false
 
     function S.isEnabled(pfx)
-        return SUISettings:readSetting(pfx .. slot_suffix .. "_enabled") == true
+        return PENSettings:readSetting(pfx .. slot_suffix .. "_enabled") == true
     end
 
     function S.setEnabled(pfx, on)
-        SUISettings:saveSetting(pfx .. slot_suffix .. "_enabled", on)
+        PENSettings:saveSetting(pfx .. slot_suffix .. "_enabled", on)
     end
 
     local MAX_QA = 6
@@ -275,7 +275,7 @@ local function makeSlot(slot)
         local items_key  = ctx_menu.pfx_qa .. slot_n .. "_items"
         local labels_key = ctx_menu.pfx_qa .. slot_n .. "_labels"
         local slot_label = string.format(_("Quick Actions %d"), slot_n)
-        local function getItems() return SUISettings:readSetting(items_key) or {} end
+        local function getItems() return PENSettings:readSetting(items_key) or {} end
         local function isSelected(id)
             for _i, v in ipairs(getItems()) do if v == id then return true end end
             return false
@@ -300,7 +300,7 @@ local function makeSlot(slot)
                 end
                 new_items[#new_items + 1] = id
             end
-            SUISettings:saveSetting(items_key, new_items)
+            PENSettings:saveSetting(items_key, new_items)
             ctx_menu.refresh()
         end
 
@@ -336,7 +336,7 @@ local function makeSlot(slot)
                     callback          = function()
                         local new_order = {}
                         for _i, item in ipairs(sort_items) do new_order[#new_order + 1] = item.orig_item end
-                        SUISettings:saveSetting(items_key, new_order)
+                        PENSettings:saveSetting(items_key, new_order)
                         ctx_menu.refresh()
                     end,
                 })
@@ -360,11 +360,11 @@ local function makeSlot(slot)
         return {
             {
                 text           = _("Hide Text"),
-                checked_func   = function() return not SUISettings:nilOrTrue(labels_key) end,
+                checked_func   = function() return not PENSettings:nilOrTrue(labels_key) end,
                 keep_menu_open = true,
                 separator      = true,
                 callback       = function()
-                    SUISettings:saveSetting(labels_key, not SUISettings:nilOrTrue(labels_key))
+                    PENSettings:saveSetting(labels_key, not PENSettings:nilOrTrue(labels_key))
                     ctx_menu.refresh()
                 end,
             },
@@ -376,7 +376,7 @@ local function makeSlot(slot)
     end
 
     function S.getCountLabel(pfx)
-        local n   = #(SUISettings:readSetting(pfx .. slot_suffix .. "_items") or {})
+        local n   = #(PENSettings:readSetting(pfx .. slot_suffix .. "_items") or {})
         local rem = MAX_QA - n
         if n == 0   then return nil end
         if rem <= 0 then return string.format("(%d/%d — at limit)", n, MAX_QA) end
@@ -391,13 +391,13 @@ local function makeSlot(slot)
         local qa_pfx      = ctx.pfx_qa or ctx.pfx
         local items_key   = qa_pfx .. slot .. "_items"
         local labels_key  = qa_pfx .. slot .. "_labels"
-        local qa_ids      = SUISettings:readSetting(items_key) or {}
-        local show_labels = SUISettings:nilOrTrue(labels_key)
+        local qa_ids      = PENSettings:readSetting(items_key) or {}
+        local show_labels = PENSettings:nilOrTrue(labels_key)
         local d           = _getQADims(Config.getModuleScale(S.id, ctx.pfx))
         -- Apply independent label text scale.
         local lbl_scale = Config.getItemLabelScale(S.id, ctx.pfx)
         d.lbl_fs = math.max(6, math.floor(d.lbl_fs * lbl_scale))
-        local ok_ss, SUIStyle  = pcall(require, "sui_style")
+        local ok_ss, SUIStyle  = pcall(require, "pen_style")
         local _theme_fg        = ok_ss and SUIStyle and SUIStyle.getThemeColor("fg")
         local _theme_secondary = ok_ss and SUIStyle and SUIStyle.getThemeColor("text_secondary")
         local colors = (_theme_fg or _theme_secondary) and {
@@ -410,7 +410,7 @@ local function makeSlot(slot)
     function S.getHeight(ctx)
         local qa_pfx      = ctx.pfx_qa or ctx.pfx
         local labels_key  = qa_pfx .. slot .. "_labels"
-        local show_labels = SUISettings:nilOrTrue(labels_key)
+        local show_labels = PENSettings:nilOrTrue(labels_key)
         local d           = _getQADims(Config.getModuleScale(S.id, ctx.pfx))
         return (show_labels and (d.frame_sz + d.lbl_sp + d.lbl_h) or d.frame_sz)
     end
@@ -433,7 +433,7 @@ local function makeSlot(slot)
         local labels_key_local = pfx .. slot_suffix .. "_labels"
         items[#items + 1] = Config.makeScaleItem({
             text_func    = function() return _lc("Text Size") end,
-            enabled_func = function() return SUISettings:nilOrTrue(labels_key_local) end,
+            enabled_func = function() return PENSettings:nilOrTrue(labels_key_local) end,
             separator    = true,
             title        = _lc("Text Size"),
             info         = _lc("Scale for the button label text.\n100% is the default size."),
@@ -456,7 +456,7 @@ local function makeSlot(slot)
                     checked_func   = function() return getType(pfx) == "default" end,
                     keep_menu_open = true,
                     callback       = function()
-                        SUISettings:saveSetting(pfx .. TYPE_KEY, "default")
+                        PENSettings:saveSetting(pfx .. TYPE_KEY, "default")
                         refresh()
                     end,
                 },
@@ -465,7 +465,7 @@ local function makeSlot(slot)
                     checked_func   = function() return getType(pfx) == "default_transparent" end,
                     keep_menu_open = true,
                     callback       = function()
-                        SUISettings:saveSetting(pfx .. TYPE_KEY, "default_transparent")
+                        PENSettings:saveSetting(pfx .. TYPE_KEY, "default_transparent")
                         refresh()
                     end,
                 },
@@ -474,7 +474,7 @@ local function makeSlot(slot)
                     checked_func   = function() return getType(pfx) == "flat" end,
                     keep_menu_open = true,
                     callback       = function()
-                        SUISettings:saveSetting(pfx .. TYPE_KEY, "flat")
+                        PENSettings:saveSetting(pfx .. TYPE_KEY, "flat")
                         refresh()
                     end,
                 },
@@ -483,7 +483,7 @@ local function makeSlot(slot)
                     checked_func   = function() return getType(pfx) == "bare" end,
                     keep_menu_open = true,
                     callback       = function()
-                        SUISettings:saveSetting(pfx .. TYPE_KEY, "bare")
+                        PENSettings:saveSetting(pfx .. TYPE_KEY, "bare")
                         refresh()
                     end,
                 },

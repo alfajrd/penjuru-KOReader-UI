@@ -4,8 +4,8 @@
 -- External dependencies
 local Device  = require("device")
 local Screen  = Device.screen
-local _ = require("sui_i18n").translate
-local N_ = require("sui_i18n").ngettext
+local _ = require("pen_i18n").translate
+local N_ = require("pen_i18n").ngettext
 local logger  = require("logger")
 
 local Blitbuffer      = require("ffi/blitbuffer")
@@ -27,9 +27,9 @@ local VerticalSpan    = require("ui/widget/verticalspan")
 local Size            = require("ui/size")
 
 -- Internal dependencies
-local Config       = require("sui_config")
-local UI           = require("sui_core")
-local SUISettings = require("sui_store")
+local Config       = require("pen_config")
+local UI           = require("pen_core")
+local PENSettings = require("pen_store")
 local PAD          = UI.PAD
 local LABEL_H      = UI.LABEL_H
 local CLR_TEXT_SUB = UI.CLR_TEXT_SUB
@@ -83,20 +83,20 @@ local _BASE_INLINEPCT_FS = Screen:scaleBySize(11)  -- pct label inside the bar (
 local BAR_STYLE_KEY = "currently_bar_style"
 
 local function getBarStyle(pfx)
-    return SUISettings:readSetting(pfx .. BAR_STYLE_KEY) or "with_pct"
+    return PENSettings:readSetting(pfx .. BAR_STYLE_KEY) or "with_pct"
 end
 
 -- Setting key for stats layout: "default" (one line per stat) or "compact" (single row with · separator + ETA)
 local STATS_STYLE_KEY = "currently_stats_style"
 
 local function getStatsStyle(pfx)
-    return SUISettings:readSetting(pfx .. STATS_STYLE_KEY) or "default"
+    return PENSettings:readSetting(pfx .. STATS_STYLE_KEY) or "default"
 end
 
 local COVER_GAP_KEY = "currently_cover_gap"
 
 local function getCoverGapPct(pfx)
-    local v = SUISettings:readSetting(pfx .. COVER_GAP_KEY)
+    local v = PENSettings:readSetting(pfx .. COVER_GAP_KEY)
     local n = tonumber(v)
     return n and math.max(0, math.min(300, math.floor(n))) or 100
 end
@@ -254,13 +254,13 @@ end
 
 -- Returns true if the element with the given key is visible (default on).
 local function _showElem(pfx, key)
-    return SUISettings:nilOrTrue(pfx .. "currently_show_" .. key)
+    return PENSettings:nilOrTrue(pfx .. "currently_show_" .. key)
 end
 
 -- Toggles the visibility of an element.
 local function _toggleElem(pfx, key)
-    local cur = SUISettings:nilOrTrue(pfx .. "currently_show_" .. key)
-    SUISettings:saveSetting(pfx .. "currently_show_" .. key, not cur)
+    local cur = PENSettings:nilOrTrue(pfx .. "currently_show_" .. key)
+    PENSettings:saveSetting(pfx .. "currently_show_" .. key, not cur)
 end
 
 
@@ -301,7 +301,7 @@ local function _resolveElemOrder(saved)
 end
 
 local function _getElemOrder(pfx)
-    return _resolveElemOrder(SUISettings:readSetting(pfx .. ELEM_ORDER_KEY))
+    return _resolveElemOrder(PENSettings:readSetting(pfx .. ELEM_ORDER_KEY))
 end
 
 
@@ -408,7 +408,7 @@ local function _computeContentH(params)
     end
 
     local content_h = math.max(D.COVER_H, h)
-    if SUISettings:isTrue(params.pfx .. "currently_show_frame") or SUISettings:isTrue(params.pfx .. "currently_solid_bg") then
+    if PENSettings:isTrue(params.pfx .. "currently_show_frame") or PENSettings:isTrue(params.pfx .. "currently_solid_bg") then
         content_h = content_h + PAD * 2
     end
     return content_h
@@ -456,7 +456,7 @@ function M.build(w, ctx)
         remain   = _showElem(pfx, "book_remaining"),
     }
     -- elem_order: use cached raw value from bundle; resolve lazily.
-    local elem_order  = _resolveElemOrder(c and c.elem_order or SUISettings:readSetting(pfx .. ELEM_ORDER_KEY))
+    local elem_order  = _resolveElemOrder(c and c.elem_order or PENSettings:readSetting(pfx .. ELEM_ORDER_KEY))
 
     local D           = SH.getDims(scale, thumb_scale)
 
@@ -518,7 +518,7 @@ function M.build(w, ctx)
     local CLR_PLACEHOLDER = Blitbuffer.gray(0.55)
 
     -- Theme: when fg is set use it for all text; otherwise fall back to module defaults.
-    local ok_ss, SUIStyle  = pcall(require, "sui_style")
+    local ok_ss, SUIStyle  = pcall(require, "pen_style")
     local _theme_fg        = ok_ss and SUIStyle and SUIStyle.getThemeColor("fg")
     local _theme_secondary = ok_ss and SUIStyle and SUIStyle.getThemeColor("text_secondary")
     local _CLR_DARK_EFF    = _theme_fg or _CLR_DARK
@@ -742,8 +742,8 @@ function M.build(w, ctx)
     local meta_h = meta:getSize().h
     local content_h = math.max(D.COVER_H, meta_h)
 
-    local show_frame = SUISettings:isTrue(pfx .. "currently_show_frame")
-    local solid_bg   = SUISettings:isTrue(pfx .. "currently_solid_bg")
+    local show_frame = PENSettings:isTrue(pfx .. "currently_show_frame")
+    local solid_bg   = PENSettings:isTrue(pfx .. "currently_solid_bg")
     local has_box    = show_frame or solid_bg
     local border_sz  = show_frame and 1 or 0
     local radius     = has_box and math.floor(Screen:scaleBySize(12) * scale) or 0
@@ -943,7 +943,7 @@ function M.getHeight(_ctx)
     end
 
     local content_h = math.max(D.COVER_H, text_h)
-    if SUISettings:isTrue(pfx .. "currently_show_frame") or SUISettings:isTrue(pfx .. "currently_solid_bg") then
+    if PENSettings:isTrue(pfx .. "currently_show_frame") or PENSettings:isTrue(pfx .. "currently_solid_bg") then
         content_h = content_h + PAD * 2
     end
     return Config.getScaledLabelH() + content_h
@@ -1006,7 +1006,7 @@ local function _makeCoverGapItem(ctx_menu)
         title     = _lc("Cover Spacing"),
         info      = _lc("Horizontal space between the cover and the text.\n100% is the default spacing."),
         get       = function() return getCoverGapPct(pfx) end,
-        set       = function(v) SUISettings:saveSetting(pfx .. COVER_GAP_KEY, v) end,
+        set       = function(v) PENSettings:saveSetting(pfx .. COVER_GAP_KEY, v) end,
         refresh   = ctx_menu.refresh,
         value_min = 0,
         value_max = 300,
@@ -1082,7 +1082,7 @@ function M.getMenuItems(ctx_menu)
                         for _, k in ipairs(_getElemOrder(pfx)) do
                             if not active_set[k] then new_order[#new_order+1] = k end
                         end
-                        SUISettings:saveSetting(pfx .. ELEM_ORDER_KEY, new_order)
+                        PENSettings:saveSetting(pfx .. ELEM_ORDER_KEY, new_order)
                         refresh()
                     end,
                 })
@@ -1112,7 +1112,7 @@ function M.getMenuItems(ctx_menu)
                     keep_menu_open = true,
                     checked_func   = function() return getBarStyle(pfx) == "simple" end,
                     callback       = function()
-                        SUISettings:saveSetting(pfx .. BAR_STYLE_KEY, "simple")
+                        PENSettings:saveSetting(pfx .. BAR_STYLE_KEY, "simple")
                         refresh()
                     end,
                 },
@@ -1122,7 +1122,7 @@ function M.getMenuItems(ctx_menu)
                     keep_menu_open = true,
                     checked_func   = function() return getBarStyle(pfx) == "with_pct" end,
                     callback       = function()
-                        SUISettings:saveSetting(pfx .. BAR_STYLE_KEY, "with_pct")
+                        PENSettings:saveSetting(pfx .. BAR_STYLE_KEY, "with_pct")
                         refresh()
                     end,
                 },
@@ -1140,7 +1140,7 @@ function M.getMenuItems(ctx_menu)
                     keep_menu_open = true,
                     checked_func   = function() return getStatsStyle(pfx) == "default" end,
                     callback       = function()
-                        SUISettings:saveSetting(pfx .. STATS_STYLE_KEY, "default")
+                        PENSettings:saveSetting(pfx .. STATS_STYLE_KEY, "default")
                         refresh()
                     end,
                 },
@@ -1150,7 +1150,7 @@ function M.getMenuItems(ctx_menu)
                     keep_menu_open = true,
                     checked_func   = function() return getStatsStyle(pfx) == "compact" end,
                     callback       = function()
-                        SUISettings:saveSetting(pfx .. STATS_STYLE_KEY, "compact")
+                        PENSettings:saveSetting(pfx .. STATS_STYLE_KEY, "compact")
                         refresh()
                     end,
                 },
@@ -1166,19 +1166,19 @@ function M.getMenuItems(ctx_menu)
         Config.makeLabelToggleItem("currently", _("Currently Reading"), refresh, _lc),
         {
             text           = _lc("Frame"),
-            checked_func   = function() return SUISettings:isTrue(pfx .. "currently_show_frame") end,
+            checked_func   = function() return PENSettings:isTrue(pfx .. "currently_show_frame") end,
             keep_menu_open = true,
             callback       = function()
-                SUISettings:saveSetting(pfx .. "currently_show_frame", not SUISettings:isTrue(pfx .. "currently_show_frame"))
+                PENSettings:saveSetting(pfx .. "currently_show_frame", not PENSettings:isTrue(pfx .. "currently_show_frame"))
                 refresh()
             end,
         },
         {
             text           = _lc("Solid Background"),
-            checked_func   = function() return SUISettings:isTrue(pfx .. "currently_solid_bg") end,
+            checked_func   = function() return PENSettings:isTrue(pfx .. "currently_solid_bg") end,
             keep_menu_open = true,
             callback       = function()
-                SUISettings:saveSetting(pfx .. "currently_solid_bg", not SUISettings:isTrue(pfx .. "currently_solid_bg"))
+                PENSettings:saveSetting(pfx .. "currently_solid_bg", not PENSettings:isTrue(pfx .. "currently_solid_bg"))
                 refresh()
             end,
         },

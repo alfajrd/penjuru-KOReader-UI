@@ -23,23 +23,23 @@ local HorizontalGroup  = require("ui/widget/horizontalgroup")
 local VerticalGroup    = require("ui/widget/verticalgroup")
 local VerticalSpan     = require("ui/widget/verticalspan")
 local logger           = require("logger")
-local _                = require("sui_i18n").translate
-local N_               = require("sui_i18n").ngettext
+local _                = require("pen_i18n").translate
+local N_               = require("pen_i18n").ngettext
 local T                = require("ffi/util").template
-local Config           = require("sui_config")
+local Config           = require("pen_config")
 local Registry         = require("desktop_modules/moduleregistry")
-local SUISettings = require("sui_store")
+local PENSettings = require("pen_store")
 local Event            = require("ui/event")
 local Screen           = Device.screen
-local UI               = require("sui_core")
-local Bottombar        = require("sui_bottombar")
+local UI               = require("pen_core")
+local Bottombar        = require("pen_bottombar")
 local ImageWidget      = require("ui/widget/imagewidget")
 local lfs              = require("libs/libkoreader-lfs")
 
 -- ---------------------------------------------------------------------------
 -- Look & Feel state — wallpaper background override
 --
--- All settings live under the "simpleui_style_*" namespace.
+-- All settings live under the "penjuru_style_*" namespace.
 --
 
 local _style_bg_cache     = nil   -- cached ImageWidget for the current wallpaper
@@ -58,10 +58,10 @@ local function _getPic()
 end
 
 -- Setting readers — centralised so _styleGetBgWidget stays readable.
-local function _wpStretch()    return SUISettings:isTrue("simpleui_style_wallpaper_stretch")       end
-local function _wpAutoRotate() return SUISettings:nilOrTrue("simpleui_style_wallpaper_autorotate") end
-local function _wpInvertNight() return SUISettings:isTrue("simpleui_style_wallpaper_invert_night") end
-local function _wpOpacity()    return SUISettings:readSetting("simpleui_style_wallpaper_opacity", 0) end
+local function _wpStretch()    return PENSettings:isTrue("penjuru_style_wallpaper_stretch")       end
+local function _wpAutoRotate() return PENSettings:nilOrTrue("penjuru_style_wallpaper_autorotate") end
+local function _wpInvertNight() return PENSettings:isTrue("penjuru_style_wallpaper_invert_night") end
+local function _wpOpacity()    return PENSettings:readSetting("penjuru_style_wallpaper_opacity", 0) end
 
 -- Pure helper: tests whether (x, y) falls inside a ratio-defined zone.
 -- Defined at module level so it is created once and never re-allocated per
@@ -77,15 +77,15 @@ end
 -- Entries 1..n are valid after a call; the rest are nil-cleared before returning.
 local _candidates = {}
 
--- Returns DataStorage/simpleui/sui_wallpapers/, creating it if needed.
+-- Returns DataStorage/penjuru/pen_wallpapers/, creating it if needed.
 local function _styleWallpapersDir()
     local ok_ds, DataStorage = pcall(require, "datastorage")
     local dir
     if ok_ds and DataStorage then
-        dir = DataStorage:getSettingsDir() .. "/simpleui/sui_wallpapers"
+        dir = DataStorage:getSettingsDir() .. "/penjuru/pen_wallpapers"
     else
         local src = debug.getinfo(1, "S").source or ""
-        dir = (src:match("^@(.+/)[^/]+$") or "./") .. "sui_wallpapers"
+        dir = (src:match("^@(.+/)[^/]+$") or "./") .. "pen_wallpapers"
     end
     if lfs.attributes(dir, "mode") ~= "directory" then lfs.mkdir(dir) end
     return dir
@@ -106,8 +106,8 @@ end
 local _style_bg_cache_bb = nil   -- pre-scaled Blitbuffer for stretch mode (or nil)
 
 local function _styleGetBgWidget()
-    if not SUISettings:isTrue("simpleui_style_wallpaper_enabled") then return nil end
-    local path = SUISettings:readSetting("simpleui_style_wallpaper")
+    if not PENSettings:isTrue("penjuru_style_wallpaper_enabled") then return nil end
+    local path = PENSettings:readSetting("penjuru_style_wallpaper")
     if not path then return nil end
 
     local sw, sh = Screen:getWidth(), Screen:getHeight()
@@ -220,7 +220,7 @@ local function _styleGetBgWidget()
     _style_bg_cache_w  = 0
     _style_bg_cache_h  = 0
     _style_bg_cache_nm = nil
-    logger.warn("sui_style: cannot load wallpaper: " .. tostring(path))
+    logger.warn("pen_style: cannot load wallpaper: " .. tostring(path))
     return nil
 end
 
@@ -266,7 +266,7 @@ local _DOT_COLOR_INACTIVE_DEFAULT = Blitbuffer.gray(0.55)
 -- requiring a full rebuild.  Both fall back to the static defaults when no
 -- custom "text_secondary" role is configured.
 local function _getTextMid()
-    local ok, SUIStyle = pcall(require, "sui_style")
+    local ok, SUIStyle = pcall(require, "pen_style")
     if ok and SUIStyle then
         local c = SUIStyle.getThemeColor("text_secondary")
         if c then return c end
@@ -275,7 +275,7 @@ local function _getTextMid()
 end
 
 local function _getDotInactive()
-    local ok, SUIStyle = pcall(require, "sui_style")
+    local ok, SUIStyle = pcall(require, "pen_style")
     if ok and SUIStyle then
         local c = SUIStyle.getThemeColor("text_secondary")
         if c then return c end
@@ -320,8 +320,8 @@ function DotWidget:paintTo(bb, x, y)
 end
 
 -- Settings prefixes — homescreen is fully namespaced, independent from continue page.
-local PFX    = "simpleui_hs_"
-local PFX_QA = "simpleui_hs_qa_"
+local PFX    = "penjuru_hs_"
+local PFX_QA = "penjuru_hs_qa_"
 
 -- Forward declaration needed so onCloseWidget() can reference it.
 local Homescreen = { _instance = nil }
@@ -355,7 +355,7 @@ local function sectionLabel(text, w)
     -- after the first render produces a fresh widget instead of reusing the
     -- stale one (the cache is also invalidated on rebuildLayout, but this
     -- guards against within-session theme switches without a full rebuild).
-    local ok_ss, SUIStyle = pcall(require, "sui_style")
+    local ok_ss, SUIStyle = pcall(require, "pen_style")
     local _label_fg = ok_ss and SUIStyle and SUIStyle.getThemeColor("fg")
     local color_key = _label_fg and tostring(_label_fg) or "default"
     local key = text .. "|" .. w .. "|" .. scale_pct .. "|" .. color_key
@@ -547,7 +547,7 @@ local function buildChevronFooter(goto_fn)
     -- Since these are SimpleUI-created Buttons (not IconButtons), we use
     -- applyPaginationIcons which calls _applyNativeBtn (btn.icon + :init() path).
     pcall(function()
-        local ok_ss, SS = pcall(require, "sui_style")
+        local ok_ss, SS = pcall(require, "pen_style")
         if not (ok_ss and SS and SS.applyPaginationIcons) then return end
         -- Build a pseudo-widget with the four named fields that applyPaginationIcons expects.
         local pseudo = {
@@ -1025,7 +1025,7 @@ function HomescreenWidget:init()
         if on_recent then
             self._kb_focus_idx = nil
             self:_refresh(true)
-            local Patches = require("sui_patches")
+            local Patches = require("pen_patches")
             Patches.enterNavbarKbFocus(function()
                 self_ref._kb_focus_idx = frec
                 self_ref:_refresh(true)
@@ -1039,7 +1039,7 @@ function HomescreenWidget:init()
         else
             self._kb_focus_idx = nil
             self:_refresh(true)
-            local Patches = require("sui_patches")
+            local Patches = require("pen_patches")
             Patches.enterNavbarKbFocus(function()
                 self_ref._kb_focus_idx = 1
                 self_ref:_refresh(true)
@@ -1200,11 +1200,11 @@ function HomescreenWidget:init()
             return nil
         end
 
-        local topbar_on  = SUISettings:nilOrTrue("simpleui_topbar_enabled")
+        local topbar_on  = PENSettings:nilOrTrue("penjuru_topbar_enabled")
         local zone_ratio_h
         if topbar_on then
-            local ok_tb, Topbar   = pcall(require, "sui_topbar")
-            local ok_ui, UI_core  = pcall(require, "sui_core")
+            local ok_tb, Topbar   = pcall(require, "pen_topbar")
+            local ok_ui, UI_core  = pcall(require, "pen_core")
             if ok_tb and ok_ui then
                 zone_ratio_h = (Topbar.TOTAL_TOP_H() + UI_core.MOD_GAP) / sh
             else
@@ -1216,7 +1216,7 @@ function HomescreenWidget:init()
 
         self:registerTouchZones({
             {
-                id          = "simpleui_hs_menu_tap",
+                id          = "penjuru_hs_menu_tap",
                 ges         = "tap",
                 screen_zone = { ratio_x = 0, ratio_y = 0, ratio_w = 1, ratio_h = zone_ratio_h },
                 handler = function(ges)
@@ -1226,7 +1226,7 @@ function HomescreenWidget:init()
                 end,
             },
             {
-                id          = "simpleui_hs_menu_swipe",
+                id          = "penjuru_hs_menu_swipe",
                 ges         = "swipe",
                 screen_zone = { ratio_x = 0, ratio_y = 0, ratio_w = 1, ratio_h = zone_ratio_h },
                 handler = function(ges)
@@ -1249,7 +1249,7 @@ function HomescreenWidget:init()
 
     self:registerTouchZones({
         {
-            id          = "simpleui_hs_footer_tap",
+            id          = "penjuru_hs_footer_tap",
             ges         = "tap",
             screen_zone = { ratio_x = 0, ratio_y = footer_ratio_y, ratio_w = 1, ratio_h = footer_ratio_h },
             overrides = { "BlockNavbarTap" },
@@ -1285,7 +1285,7 @@ function HomescreenWidget:init()
             end,
         },
         {
-            id          = "simpleui_hs_footer_swipe",
+            id          = "penjuru_hs_footer_swipe",
             ges         = "swipe",
             screen_zone = { ratio_x = 0, ratio_y = footer_ratio_y, ratio_w = 1, ratio_h = footer_ratio_h },
             overrides = { "HSSwipe" },
@@ -1330,14 +1330,14 @@ function HomescreenWidget:init()
     local priority_zones = {}
     for _, gt in ipairs(_gesture_types) do
         priority_zones[#priority_zones + 1] = {
-            id          = "simpleui_hs_top_" .. gt.id_suffix,
+            id          = "penjuru_hs_top_" .. gt.id_suffix,
             ges         = gt.ges,
             screen_zone = { ratio_x = 0, ratio_y = 0, ratio_w = 1, ratio_h = top_ratio_h },
             overrides = { gt.override },
             handler   = function(ges) return _hasModalOnTop(self) and false or _fmGestureAction(ges) end,
         }
         priority_zones[#priority_zones + 1] = {
-            id          = "simpleui_hs_bottom_" .. gt.id_suffix,
+            id          = "penjuru_hs_bottom_" .. gt.id_suffix,
             ges         = gt.ges,
             screen_zone = { ratio_x = 0, ratio_y = footer_ratio_y, ratio_w = 1, ratio_h = footer_ratio_h },
             overrides = { gt.override },
@@ -1461,36 +1461,36 @@ function HomescreenWidget:_buildCtx()
                 scale       = Config.getModuleScale("currently", PFX),
                 thumb_scale = Config.getThumbScale("currently", PFX),
                 lbl_scale   = Config.getItemLabelScale("currently", PFX),
-                bar_style   = SUISettings:readSetting(PFX .. "currently_bar_style") or "with_pct",
-                stats_style = SUISettings:readSetting(PFX .. "currently_stats_style") or "default",
-                elem_order  = SUISettings:readSetting(PFX .. "currently_elem_order"),
+                bar_style   = PENSettings:readSetting(PFX .. "currently_bar_style") or "with_pct",
+                stats_style = PENSettings:readSetting(PFX .. "currently_stats_style") or "default",
+                elem_order  = PENSettings:readSetting(PFX .. "currently_elem_order"),
                 show = {
-                    title    = SUISettings:nilOrTrue(PFX .. "currently_show_title"),
-                    author   = SUISettings:nilOrTrue(PFX .. "currently_show_author"),
-                    progress = SUISettings:nilOrTrue(PFX .. "currently_show_progress"),
-                    percent  = SUISettings:nilOrTrue(PFX .. "currently_show_percent"),
-                    days     = SUISettings:nilOrTrue(PFX .. "currently_show_book_days"),
-                    time     = SUISettings:nilOrTrue(PFX .. "currently_show_book_time"),
-                    remain   = SUISettings:nilOrTrue(PFX .. "currently_show_book_remaining"),
+                    title    = PENSettings:nilOrTrue(PFX .. "currently_show_title"),
+                    author   = PENSettings:nilOrTrue(PFX .. "currently_show_author"),
+                    progress = PENSettings:nilOrTrue(PFX .. "currently_show_progress"),
+                    percent  = PENSettings:nilOrTrue(PFX .. "currently_show_percent"),
+                    days     = PENSettings:nilOrTrue(PFX .. "currently_show_book_days"),
+                    time     = PENSettings:nilOrTrue(PFX .. "currently_show_book_time"),
+                    remain   = PENSettings:nilOrTrue(PFX .. "currently_show_book_remaining"),
                 },
             },
             coverdeck = {
                 scale         = Config.getModuleScale("coverdeck", PFX),
                 thumb_scale   = Config.getThumbScale("coverdeck", PFX),
                 lbl_scale     = Config.getItemLabelScale("coverdeck", PFX),
-                source        = SUISettings:readSetting(PFX .. "flow_recent_source") or "recent",
-                title_pos     = SUISettings:readSetting(PFX .. "coverdeck_title_pos") or "below",
-                show_finished = SUISettings:readSetting(PFX .. "coverdeck_show_finished") == true,
+                source        = PENSettings:readSetting(PFX .. "flow_recent_source") or "recent",
+                title_pos     = PENSettings:readSetting(PFX .. "coverdeck_title_pos") or "below",
+                show_finished = PENSettings:readSetting(PFX .. "coverdeck_show_finished") == true,
                 show = {
-                    title    = SUISettings:nilOrTrue(PFX .. "flow_show_title"),
-                    author   = SUISettings:nilOrTrue(PFX .. "flow_show_author"),
-                    progress = SUISettings:nilOrTrue(PFX .. "flow_show_progress"),
-                    percent  = SUISettings:nilOrTrue(PFX .. "flow_show_percent"),
-                    days     = SUISettings:nilOrTrue(PFX .. "flow_show_book_days"),
-                    time     = SUISettings:nilOrTrue(PFX .. "flow_show_book_time"),
-                    remain   = SUISettings:nilOrTrue(PFX .. "flow_show_book_remaining"),
+                    title    = PENSettings:nilOrTrue(PFX .. "flow_show_title"),
+                    author   = PENSettings:nilOrTrue(PFX .. "flow_show_author"),
+                    progress = PENSettings:nilOrTrue(PFX .. "flow_show_progress"),
+                    percent  = PENSettings:nilOrTrue(PFX .. "flow_show_percent"),
+                    days     = PENSettings:nilOrTrue(PFX .. "flow_show_book_days"),
+                    time     = PENSettings:nilOrTrue(PFX .. "flow_show_book_time"),
+                    remain   = PENSettings:nilOrTrue(PFX .. "flow_show_book_remaining"),
                 },
-                elem_order    = SUISettings:readSetting(PFX .. "coverdeck_elem_order"),
+                elem_order    = PENSettings:readSetting(PFX .. "coverdeck_elem_order"),
             },
         }
         self._cfg_cache = cfg
@@ -1509,10 +1509,10 @@ function HomescreenWidget:_buildCtx()
                 local max_recent = 5
                 local show_finished =
                     (mod_r  and Registry.isEnabled(mod_r,  PFX) and
-                        SUISettings:readSetting(PFX .. "recent_show_finished") == true)
+                        PENSettings:readSetting(PFX .. "recent_show_finished") == true)
                     or
                     (mod_cd and Registry.isEnabled(mod_cd, PFX) and
-                        SUISettings:readSetting(PFX .. "coverdeck_show_finished") == true)
+                        PENSettings:readSetting(PFX .. "coverdeck_show_finished") == true)
                 self._cached_books_state = SH.prefetchBooks(show_c, show_r, max_recent, show_finished)
                 if Config.cover_extraction_pending then
                     self:_scheduleCoverPoll()
@@ -1556,9 +1556,9 @@ function HomescreenWidget:_buildCtx()
         (cd_cfg and cd_cfg.show and
             (cd_cfg.show.book_days or cd_cfg.show.book_time or cd_cfg.show.book_remaining))
         or (not (cd_cfg and cd_cfg.show) and (
-            SUISettings:nilOrTrue(PFX .. "flow_show_book_days") or
-            SUISettings:nilOrTrue(PFX .. "flow_show_book_time") or
-            SUISettings:nilOrTrue(PFX .. "flow_show_book_remaining"))))
+            PENSettings:nilOrTrue(PFX .. "flow_show_book_days") or
+            PENSettings:nilOrTrue(PFX .. "flow_show_book_time") or
+            PENSettings:nilOrTrue(PFX .. "flow_show_book_remaining"))))
 
     -- "currently" always needs the DB when active (all its stats are DB-backed).
     -- The "recent" module (mod_r) shows no DB-backed stats, so it is excluded.
@@ -1577,7 +1577,7 @@ function HomescreenWidget:_buildCtx()
     if mod_rg and Registry.isEnabled(mod_rg, PFX) then
         needs_books = true
     elseif mod_rs and mod_rs.isEnabled and mod_rs.isEnabled(PFX) then
-        local rs_items = SUISettings:readSetting(PFX .. "reading_stats_items") or {}
+        local rs_items = PENSettings:readSetting(PFX .. "reading_stats_items") or {}
         for _, id in ipairs(rs_items) do
             if id == "total_books" then needs_books = true; break end
         end
@@ -1610,9 +1610,9 @@ function HomescreenWidget:_buildCtx()
         local c_cfg = cfg and cfg.currently
         local needs_bstats = (c_cfg and (c_cfg.show.days or c_cfg.show.time or c_cfg.show.remain))
             or (not c_cfg and (
-                SUISettings:nilOrTrue(PFX .. "currently_show_book_days") or
-                SUISettings:nilOrTrue(PFX .. "currently_show_book_time") or
-                SUISettings:nilOrTrue(PFX .. "currently_show_book_remaining")))
+                PENSettings:nilOrTrue(PFX .. "currently_show_book_days") or
+                PENSettings:nilOrTrue(PFX .. "currently_show_book_time") or
+                PENSettings:nilOrTrue(PFX .. "currently_show_book_remaining")))
         if needs_bstats then
             local pe_c  = bs.prefetched_data and bs.prefetched_data[bs.current_fp]
             local c_md5 = type(pe_c) == "table" and pe_c.partial_md5_checksum
@@ -1671,8 +1671,8 @@ function HomescreenWidget:_updateFooter(current_page, total_pages, topbar_on)
 
     local navpager_on   = Config.isNavpagerEnabled()
     local dot_pager_on  = Config.isDotPagerEnabled()
-    local pag_visible   = SUISettings:nilOrTrue("simpleui_bar_pagination_visible")
-    local hs_pag_hidden = SUISettings:isTrue("simpleui_hs_pagination_hidden")
+    local pag_visible   = PENSettings:nilOrTrue("penjuru_bar_pagination_visible")
+    local hs_pag_hidden = PENSettings:isTrue("penjuru_hs_pagination_hidden")
 
     local show_bar = not hs_pag_hidden
         and total_pages > 1 and (navpager_on or pag_visible or dot_pager_on)
@@ -1745,14 +1745,14 @@ end
 -- single function knows which module was held (no per-module closure needed).
 -- ---------------------------------------------------------------------------
 function HomescreenWidget:_onHoldModRelease(wrapper)
-    if not SUISettings:nilOrTrue("simpleui_hs_settings_on_hold") then
+    if not PENSettings:nilOrTrue("penjuru_hs_settings_on_hold") then
         return true
     end
     local mod = wrapper._sui_mod
     local hs  = wrapper._sui_hs
     if not mod or not hs then return true end
-    local Topbar   = require("sui_topbar")
-    local topbar_h = SUISettings:nilOrTrue("simpleui_topbar_enabled")
+    local Topbar   = require("pen_topbar")
+    local topbar_h = PENSettings:nilOrTrue("penjuru_topbar_enabled")
                      and Topbar.TOTAL_TOP_H() or 0
     local _lc = _
     UI.showSettingsMenu(
@@ -1818,7 +1818,7 @@ function HomescreenWidget:_makeModWrapper(mod, widget, inner_w)
             },
         }
         function w:onHoldMod()
-            if not SUISettings:nilOrTrue("simpleui_hs_settings_on_hold") then
+            if not PENSettings:nilOrTrue("penjuru_hs_settings_on_hold") then
                 return
             end
             return true
@@ -1882,7 +1882,7 @@ function HomescreenWidget:_updatePage(keep_cache, books_only, stats_only)
         end
         if #pages_of_mods == 0 then pages_of_mods[1] = {} end
 
-        local chosen_pages = SUISettings:readSetting(PFX .. "homescreen_num_pages")
+        local chosen_pages = PENSettings:readSetting(PFX .. "homescreen_num_pages")
         if chosen_pages and chosen_pages > #pages_of_mods then
             for _ = #pages_of_mods + 1, chosen_pages do
                 pages_of_mods[#pages_of_mods + 1] = {}
@@ -1953,7 +1953,7 @@ function HomescreenWidget:_updatePage(keep_cache, books_only, stats_only)
 
     body:clear()
 
-    local topbar_on = SUISettings:nilOrTrue("simpleui_topbar_enabled")
+    local topbar_on = PENSettings:nilOrTrue("penjuru_topbar_enabled")
 
     self._header_body_idx   = nil
     self._header_inner_w    = inner_w
@@ -2254,7 +2254,7 @@ function HomescreenWidget:_updatePage(keep_cache, books_only, stats_only)
     -- Warn when module heights overflow the visible area (portrait only).
     -- Skipped when the user has disabled the warning in settings.
     if not is_landscape
-       and SUISettings:nilOrTrue("simpleui_hs_overflow_warn") then
+       and PENSettings:nilOrTrue("penjuru_hs_overflow_warn") then
         local total_body_h = 0
         for i = 1, #body do
             local ok, sz = pcall(function() return body[i]:getSize() end)
@@ -2811,15 +2811,15 @@ local function _rebuildHomescreenLayout()
 end
 
 function Homescreen.styleGetWallpaper()
-    return SUISettings:readSetting("simpleui_style_wallpaper")
+    return PENSettings:readSetting("penjuru_style_wallpaper")
 end
 
 function Homescreen.styleSetWallpaper(path)
-    SUISettings:saveSetting("simpleui_style_wallpaper", path)
+    PENSettings:saveSetting("penjuru_style_wallpaper", path)
     if not path then
-        SUISettings:saveSetting("simpleui_statusbar_transparent", false)
-        SUISettings:saveSetting("simpleui_navbar_transparent", false)
-        SUISettings:saveSetting("simpleui_wallpaper_show_in_fm", false)
+        PENSettings:saveSetting("penjuru_statusbar_transparent", false)
+        PENSettings:saveSetting("penjuru_navbar_transparent", false)
+        PENSettings:saveSetting("penjuru_wallpaper_show_in_fm", false)
     end
     _styleFreeBgCache()
     _rebuildHomescreenLayout()
@@ -2827,38 +2827,38 @@ end
 
 -- ---------------------------------------------------------------------------
 -- Transparent bars — split into two independent settings.
--- Migration: if the old unified "simpleui_bars_transparent" key is present
+-- Migration: if the old unified "penjuru_bars_transparent" key is present
 -- we copy its value to both new keys once, then delete the legacy key so
 -- it doesn't interfere on subsequent launches.
 -- ---------------------------------------------------------------------------
 do
-    local legacy = "simpleui_bars_transparent"
-    if SUISettings:get(legacy) ~= nil then
-        local v = SUISettings:isTrue(legacy)
-        SUISettings:saveSetting("simpleui_statusbar_transparent", v)
-        SUISettings:saveSetting("simpleui_navbar_transparent",    v)
-        SUISettings:del(legacy)
+    local legacy = "penjuru_bars_transparent"
+    if PENSettings:get(legacy) ~= nil then
+        local v = PENSettings:isTrue(legacy)
+        PENSettings:saveSetting("penjuru_statusbar_transparent", v)
+        PENSettings:saveSetting("penjuru_navbar_transparent",    v)
+        PENSettings:del(legacy)
     end
 end
 
 function Homescreen.styleStatusbarTransparent()
     if not Homescreen.styleGetWallpaperEnabled() or not Homescreen.styleGetWallpaper() then return false end
-    return SUISettings:isTrue("simpleui_statusbar_transparent")
+    return PENSettings:isTrue("penjuru_statusbar_transparent")
 end
 
 function Homescreen.styleSetStatusbarTransparent(on)
-    SUISettings:saveSetting("simpleui_statusbar_transparent", on and true or false)
+    PENSettings:saveSetting("penjuru_statusbar_transparent", on and true or false)
     _styleFreeBgCache()
     _rebuildHomescreenLayout()
 end
 
 function Homescreen.styleNavbarTransparent()
     if not Homescreen.styleGetWallpaperEnabled() or not Homescreen.styleGetWallpaper() then return false end
-    return SUISettings:isTrue("simpleui_navbar_transparent")
+    return PENSettings:isTrue("penjuru_navbar_transparent")
 end
 
 function Homescreen.styleSetNavbarTransparent(on)
-    SUISettings:saveSetting("simpleui_navbar_transparent", on and true or false)
+    PENSettings:saveSetting("penjuru_navbar_transparent", on and true or false)
     _styleFreeBgCache()
     _rebuildHomescreenLayout()
 end
@@ -2926,22 +2926,22 @@ end
 --- fullscreen overlays (Collections, History, etc.).
 function Homescreen.styleGetWallpaperShowInFM()
     if not Homescreen.styleGetWallpaperEnabled() or not Homescreen.styleGetWallpaper() then return false end
-    return SUISettings:isTrue("simpleui_wallpaper_show_in_fm")
+    return PENSettings:isTrue("penjuru_wallpaper_show_in_fm")
 end
 function Homescreen.styleSetWallpaperShowInFM(on)
-    SUISettings:saveSetting("simpleui_wallpaper_show_in_fm", on and true or false)
+    PENSettings:saveSetting("penjuru_wallpaper_show_in_fm", on and true or false)
 end
 
 function Homescreen.styleGetWallpaperEnabled()
-    return SUISettings:isTrue("simpleui_style_wallpaper_enabled")
+    return PENSettings:isTrue("penjuru_style_wallpaper_enabled")
 end
 function Homescreen.styleSetWallpaperEnabled(on)
     local is_on = on ~= false and true or false
-    SUISettings:saveSetting("simpleui_style_wallpaper_enabled", is_on)
+    PENSettings:saveSetting("penjuru_style_wallpaper_enabled", is_on)
     if not is_on then
-        SUISettings:saveSetting("simpleui_statusbar_transparent", false)
-        SUISettings:saveSetting("simpleui_navbar_transparent", false)
-        SUISettings:saveSetting("simpleui_wallpaper_show_in_fm", false)
+        PENSettings:saveSetting("penjuru_statusbar_transparent", false)
+        PENSettings:saveSetting("penjuru_navbar_transparent", false)
+        PENSettings:saveSetting("penjuru_wallpaper_show_in_fm", false)
     end
     _styleFreeBgCache()
     _rebuildHomescreenLayout()
@@ -2951,7 +2951,7 @@ function Homescreen.styleGetWallpaperStretch()
     return _wpStretch()
 end
 function Homescreen.styleSetWallpaperStretch(on)
-    SUISettings:saveSetting("simpleui_style_wallpaper_stretch", on ~= false and true or false)
+    PENSettings:saveSetting("penjuru_style_wallpaper_stretch", on ~= false and true or false)
     _styleFreeBgCache()
     _rebuildHomescreenLayout()
 end
@@ -2960,7 +2960,7 @@ function Homescreen.styleGetWallpaperAutoRotate()
     return _wpAutoRotate()
 end
 function Homescreen.styleSetWallpaperAutoRotate(on)
-    SUISettings:saveSetting("simpleui_style_wallpaper_autorotate", on ~= false and true or false)
+    PENSettings:saveSetting("penjuru_style_wallpaper_autorotate", on ~= false and true or false)
     _styleFreeBgCache()
     _rebuildHomescreenLayout()
 end
@@ -2969,7 +2969,7 @@ function Homescreen.styleGetWallpaperInvertNight()
     return _wpInvertNight()
 end
 function Homescreen.styleSetWallpaperInvertNight(on)
-    SUISettings:saveSetting("simpleui_style_wallpaper_invert_night", on and true or false)
+    PENSettings:saveSetting("penjuru_style_wallpaper_invert_night", on and true or false)
     _styleFreeBgCache()
     _rebuildHomescreenLayout()
 end
@@ -2978,7 +2978,7 @@ function Homescreen.styleGetWallpaperOpacity()
     return _wpOpacity()
 end
 function Homescreen.styleSetWallpaperOpacity(val)
-    SUISettings:saveSetting("simpleui_style_wallpaper_opacity", math.max(0, math.min(99, val or 0)))
+    PENSettings:saveSetting("penjuru_style_wallpaper_opacity", math.max(0, math.min(99, val or 0)))
     -- Opacity is applied at paint-time (not baked into the ImageWidget cache),
     -- but a setDirty alone is not sufficient when called from a SpinWidget
     -- callback — the homescreen instance may not be in the foreground repaint
@@ -2989,7 +2989,7 @@ end
 
 --- Frees the internal wallpaper widget cache.
 --- Must be called after changing the simpleui_style_* keys directly
---- in SUISettings (e.g. after applying a preset), so that the next paint
+--- in PENSettings (e.g. after applying a preset), so that the next paint
 --- rebuilds the ImageWidget with the new wallpaper.
 function Homescreen.styleFreeBgCache()
     _styleFreeBgCache()

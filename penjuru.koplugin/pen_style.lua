@@ -9,8 +9,8 @@
 --
 -- How it works
 -- ────────────
--- Icons are stored as full SVG/PNG paths in SUISettings under the key
--- "simpleui_sysicon_<slot_id>".  nil means "use the default".
+-- Icons are stored as full SVG/PNG paths in PENSettings under the key
+-- "penjuru_sysicon_<slot_id>".  nil means "use the default".
 --
 -- For FM tab icons: we patch FileManagerMenu.setUpdateItemTable so that every
 -- time the menu is rebuilt the tab icons are replaced with the user's choices.
@@ -47,18 +47,18 @@
 --   SUIStyle.resetTheme()               — clear all theme color overrides
 --   SUIStyle.makeThemeMenuItems()        — returns sub_item_table for Style ▸ Theme Colors
 
-local SUISettings = require("sui_store")
+local PENSettings = require("pen_store")
 local logger      = require("logger")
-local _           = require("sui_i18n").translate
+local _           = require("pen_i18n").translate
 local Blitbuffer  = require("ffi/blitbuffer")
 
 -- ---------------------------------------------------------------------------
 -- Slot catalogue
 -- ---------------------------------------------------------------------------
 -- Each slot describes one configurable icon position.
---   id          key suffix for SUISettings ("simpleui_sysicon_<id>")
+--   id          key suffix for PENSettings ("penjuru_sysicon_<id>")
 --   label       display name shown in the picker menu
---   group       "sui_titlebar" | "bm_icons"
+--   group       "pen_titlebar" | "bm_icons"
 --   default_ko  KOReader built-in name (used only as documentation / preview)
 -- ---------------------------------------------------------------------------
 
@@ -67,48 +67,48 @@ local M = {}
 M.SLOTS = {
     -- ── SimpleUI titlebar buttons ────────────────────────────────────────
     {
-        id        = "sui_menu",
+        id        = "pen_menu",
         label     = function() return _("Menu Button") end,
-        group     = "sui_titlebar",
+        group     = "pen_titlebar",
         default_ko = "appbar.menu",
     },
     {
-        id        = "sui_search",
+        id        = "pen_search",
         label     = function() return _("Search Button") end,
-        group     = "sui_titlebar",
+        group     = "pen_titlebar",
         default_ko = "appbar.search",
     },
     {
-        id        = "sui_back",
+        id        = "pen_back",
         label     = function() return _("Back Button") end,
-        group     = "sui_titlebar",
+        group     = "pen_titlebar",
         default_ko = "appbar.menu",   -- hamburger is the default inj_back icon
     },
     -- ── Browse Meta titlebar icons ───────────────────────────────────────
     -- These override the four icons used by the Browse button in the FM
     -- titlebar (normal/author/series/tags mode).
     {
-        id        = "sui_browse_normal",
+        id        = "pen_browse_normal",
         label     = function() return _("Browse Button (default)") end,
-        group     = "sui_browse_icons",
+        group     = "pen_browse_icons",
         default_ko = "icons/default.svg",
     },
     {
-        id        = "sui_browse_author",
+        id        = "pen_browse_author",
         label     = function() return _("Browse Button (author)") end,
-        group     = "sui_browse_icons",
+        group     = "pen_browse_icons",
         default_ko = "icons/author.svg",
     },
     {
-        id        = "sui_browse_series",
+        id        = "pen_browse_series",
         label     = function() return _("Browse Button (series)") end,
-        group     = "sui_browse_icons",
+        group     = "pen_browse_icons",
         default_ko = "icons/series.svg",
     },
     {
-        id        = "sui_browse_tags",
+        id        = "pen_browse_tags",
         label     = function() return _("Browse Button (tags)") end,
-        group     = "sui_browse_icons",
+        group     = "pen_browse_icons",
         default_ko = "icons/tags.svg",
     },
     -- ── Native pagination bar chevrons ───────────────────────────────────
@@ -116,75 +116,75 @@ M.SLOTS = {
     -- (page_info_{left,right,first,last}_chev).  Applied after every
     -- Menu:init / FileChooser:init via M.applyPaginationIcons().
     {
-        id        = "sui_pager_prev",
+        id        = "pen_pager_prev",
         label     = function() return _("Pagination: Previous Page") end,
-        group     = "sui_pager_icons",
+        group     = "pen_pager_icons",
         default_ko = "chevron.left",
     },
     {
-        id        = "sui_pager_next",
+        id        = "pen_pager_next",
         label     = function() return _("Pagination: Next Page") end,
-        group     = "sui_pager_icons",
+        group     = "pen_pager_icons",
         default_ko = "chevron.right",
     },
     {
-        id        = "sui_pager_first",
+        id        = "pen_pager_first",
         label     = function() return _("Pagination: First Page") end,
-        group     = "sui_pager_icons",
+        group     = "pen_pager_icons",
         default_ko = "chevron.first",
     },
     {
-        id        = "sui_pager_last",
+        id        = "pen_pager_last",
         label     = function() return _("Pagination: Last Page") end,
-        group     = "sui_pager_icons",
+        group     = "pen_pager_icons",
         default_ko = "chevron.last",
     },
     -- ── Navpager arrows (bottom bar) ─────────────────────────────────────
     {
-        id        = "sui_navpager_prev",
+        id        = "pen_navpager_prev",
         label     = function() return _("Navpager: Previous") end,
-        group     = "sui_navpager_icons",
+        group     = "pen_navpager_icons",
         default_ko = "chevron.left",
     },
     {
-        id        = "sui_navpager_next",
+        id        = "pen_navpager_next",
         label     = function() return _("Navpager: Next") end,
-        group     = "sui_navpager_icons",
+        group     = "pen_navpager_icons",
         default_ko = "chevron.right",
     },
     -- ── Collections back button ──────────────────────────────────────────
     -- Overrides the page_return_arrow ("appbar.back") in Collections /
     -- coll_list widgets.  Applied after Menu:init via M.applyCollBackIcon().
     {
-        id        = "sui_coll_back",
+        id        = "pen_coll_back",
         label     = function() return _("Collections: Back Button") end,
-        group     = "sui_coll_icons",
+        group     = "pen_coll_icons",
         default_ko = "appbar.back",
     },
     -- ── Quick Actions Defaults ───────────────────────────────────────────
     {
-        id        = "sui_qa_folder",
+        id        = "pen_qa_folder",
         label     = function() return _("Default: Folder") end,
-        group     = "sui_qa_defaults",
+        group     = "pen_qa_defaults",
         default_ko = "icons/custom.svg",
     },
     {
-        id        = "sui_qa_plugin",
+        id        = "pen_qa_plugin",
         label     = function() return _("Default: Plugin") end,
-        group     = "sui_qa_defaults",
+        group     = "pen_qa_defaults",
         default_ko = "icons/plugin.svg",
     },
     {
-        id        = "sui_qa_system",
+        id        = "pen_qa_system",
         label     = function() return _("Default: System") end,
-        group     = "sui_qa_defaults",
+        group     = "pen_qa_defaults",
         default_ko = "appbar.settings",
     },
     -- ── Folder Covers ────────────────────────────────────────────────────
     {
-        id        = "sui_fc_empty",
+        id        = "pen_fc_empty",
         label     = function() return _("Folder Covers: Empty Folder") end,
-        group     = "sui_fc_icons",
+        group     = "pen_fc_icons",
         default_ko = "icons/custom.svg",
     },
 }
@@ -197,20 +197,20 @@ for _, s in ipairs(M.SLOTS) do _SLOT_BY_ID[s.id] = s end
 -- Settings helpers
 -- ---------------------------------------------------------------------------
 
-local function _key(id) return "simpleui_sysicon_" .. id end
+local function _key(id) return "penjuru_sysicon_" .. id end
 
 --- Returns the stored icon path for `id`, or nil if using the default.
 function M.getIcon(id)
-    local v = SUISettings:get(_key(id))
+    local v = PENSettings:get(_key(id))
     return (type(v) == "string" and v ~= "") and v or nil
 end
 
 --- Saves `path` as the icon for `id`.  Pass nil to reset to default.
 function M.setIcon(id, path)
     if type(path) == "string" and path ~= "" then
-        SUISettings:set(_key(id), path)
+        PENSettings:set(_key(id), path)
     else
-        SUISettings:del(_key(id))
+        PENSettings:del(_key(id))
     end
 end
 
@@ -230,7 +230,7 @@ local _SUPPORTED_ICON_EXTS = { png = true, svg = true, jpg = true, jpeg = true }
 ---
 --- @param path      string|any   candidate icon path
 --- @param fallback  string|nil   path to return when `path` is invalid (nil = no icon)
---- @param slot_id   string|nil   SUISettings key suffix; when given, a bad path
+--- @param slot_id   string|nil   PENSettings key suffix; when given, a bad path
 ---                               is deleted from settings so it is not retried.
 --- @return string|nil
 function M.safeIconPath(path, fallback, slot_id)
@@ -269,8 +269,8 @@ end
 --- Clears every system icon override.
 function M.resetAll()
     for _, s in ipairs(M.SLOTS) do
-        if s.group ~= "sui_qa_defaults" then
-            SUISettings:del(_key(s.id))
+        if s.group ~= "pen_qa_defaults" then
+            PENSettings:del(_key(s.id))
         end
     end
 end
@@ -364,10 +364,10 @@ end
 
 -- Slot-id → button field name on the widget.
 local _PG_CHEV_FIELDS = {
-    sui_pager_prev  = "page_info_left_chev",
-    sui_pager_next  = "page_info_right_chev",
-    sui_pager_first = "page_info_first_chev",
-    sui_pager_last  = "page_info_last_chev",
+    pen_pager_prev  = "page_info_left_chev",
+    pen_pager_next  = "page_info_right_chev",
+    pen_pager_first = "page_info_first_chev",
+    pen_pager_last  = "page_info_last_chev",
 }
 
 --- Applies stored pg_icons overrides to the pagination buttons of `widget`.
@@ -396,7 +396,7 @@ function M.applyCollBackIcon(widget)
     if not widget then return false end
     local btn = widget.page_return_arrow
     if not btn then return false end
-    return _applyNativeBtn("sui_coll_back", btn)
+    return _applyNativeBtn("pen_coll_back", btn)
 end
 
 -- ---------------------------------------------------------------------------
@@ -451,11 +451,11 @@ function M.installTabIconPatch(plugin)
         FMMenu = ok and m or nil
     end
     if not FMMenu then return end
-    if FMMenu._simpleui_sysicon_patched then return end
+    if FMMenu._penjuru_sysicon_patched then return end
 
     local orig = FMMenu.setUpdateItemTable
-    FMMenu._simpleui_sysicon_orig    = orig
-    FMMenu._simpleui_sysicon_patched = true
+    FMMenu._penjuru_sysicon_orig    = orig
+    FMMenu._penjuru_sysicon_patched = true
     plugin._sysicon_fmmenu_patched   = true
 
     FMMenu.setUpdateItemTable = function(fmm_self, ...)
@@ -473,10 +473,10 @@ end
 function M.removeTabIconPatch()
     if not _patch_installed then return end
     local FMMenu = package.loaded["apps/filemanager/filemanagermenu"]
-    if FMMenu and FMMenu._simpleui_sysicon_patched then
-        FMMenu.setUpdateItemTable           = FMMenu._simpleui_sysicon_orig
-        FMMenu._simpleui_sysicon_orig       = nil
-        FMMenu._simpleui_sysicon_patched    = nil
+    if FMMenu and FMMenu._penjuru_sysicon_patched then
+        FMMenu.setUpdateItemTable           = FMMenu._penjuru_sysicon_orig
+        FMMenu._penjuru_sysicon_orig       = nil
+        FMMenu._penjuru_sysicon_patched    = nil
     end
     _patch_installed = false
     logger.dbg("simpleui/style: FM tab icon patch removed")
@@ -507,7 +507,7 @@ end
 
 --- Returns the sub_item_table for Style ▸ Icons ▸ System Icons.
 function M.makeMenuItems(plugin)
-    local QA = require("sui_quickactions")
+    local QA = require("pen_quickactions")
 
     -- Helper: get the current FM instance (may be nil).
     local function _fm()
@@ -517,7 +517,7 @@ function M.makeMenuItems(plugin)
 
     -- Helper: reapply titlebar icons to the live FM and all injected widgets.
 local function _reapplyTitlebar()
-        local ok_tb, TB = pcall(require, "sui_titlebar")
+        local ok_tb, TB = pcall(require, "pen_titlebar")
         if not ok_tb or not TB then return end
         
         local fm = _fm()
@@ -557,21 +557,21 @@ local function _reapplyTitlebar()
 
     -- Helper: after a change, reapply everything that is affected.
     local function _refresh(group)
-        if group == "sui_titlebar" then
+        if group == "pen_titlebar" then
             _reapplyTitlebar()
         elseif group == "pg_icons" then
             _reapplyPaginationIcons()
         elseif group == "coll_icons" then
             _reapplyCollBackIcon()
-        elseif group == "sui_navpager_icons" then
+        elseif group == "pen_navpager_icons" then
             if plugin then plugin:_rebuildAllNavbars() end
-        elseif group == "sui_qa_defaults" then
-            local ok_qa, QA = pcall(require, "sui_quickactions")
+        elseif group == "pen_qa_defaults" then
+            local ok_qa, QA = pcall(require, "pen_quickactions")
             if ok_qa and QA.invalidateCustomQACache then QA.invalidateCustomQACache() end
             if plugin then plugin:_rebuildAllNavbars() end
-            local ok_hs, HS = pcall(require, "sui_homescreen")
+            local ok_hs, HS = pcall(require, "pen_homescreen")
             if ok_hs and HS and HS._instance then HS._instance:_refreshImmediate(false) end
-        elseif group == "sui_fc_icons" then
+        elseif group == "pen_fc_icons" then
             -- sui_foldercovers removed: out of scope for penjuru v1; FC cache invalidation skipped.
             local fm = _fm()
             if fm and fm.file_chooser then
@@ -641,7 +641,7 @@ local function _reapplyTitlebar()
             M.resetAll()
             _reapplyTitlebar()
             -- Refresh browse-mode icons in the live FM titlebar.
-            local ok_tb, TB = pcall(require, "sui_titlebar")
+            local ok_tb, TB = pcall(require, "pen_titlebar")
             if ok_tb and TB and TB.refreshBrowseIcons then
                 TB.refreshBrowseIcons(_fm())
             end
@@ -651,7 +651,7 @@ local function _reapplyTitlebar()
 
             -- Invalidate Quick Actions caches
             -- sui_foldercovers removed: out of scope for penjuru v1
-            local ok_qa, QA2 = pcall(require, "sui_quickactions")
+            local ok_qa, QA2 = pcall(require, "pen_quickactions")
             if ok_qa and QA2 and QA2.invalidateCustomQACache then QA2.invalidateCustomQACache() end
             local fm = _fm()
             if fm and fm.file_chooser then
@@ -667,20 +667,20 @@ local function _reapplyTitlebar()
 
     -- ── sui_titlebar group ────────────────────────────────────────────────
     for _, slot in ipairs(M.SLOTS) do
-        if slot.group == "sui_titlebar" then
+        if slot.group == "pen_titlebar" then
             items[#items + 1] = _makeRow(slot)
         end
     end
 
     -- ── bm_icons group ───────────────────────────────────────────────────
     for _, slot in ipairs(M.SLOTS) do
-        if slot.group == "sui_browse_icons" then
+        if slot.group == "pen_browse_icons" then
             local row = _makeRow(slot)
             -- After changing a browse icon, refresh the live browse button.
             local orig_cb = row.callback
             row.callback = function()
                 orig_cb()
-                local ok_tb, TB = pcall(require, "sui_titlebar")
+                local ok_tb, TB = pcall(require, "pen_titlebar")
                 if ok_tb and TB and TB.refreshBrowseIcons then
                     TB.refreshBrowseIcons(_fm())
                 end
@@ -691,28 +691,28 @@ local function _reapplyTitlebar()
 
     -- ── pg_icons group (pagination chevrons) ─────────────────────────────
     for _, slot in ipairs(M.SLOTS) do
-        if slot.group == "sui_pager_icons" then
+        if slot.group == "pen_pager_icons" then
             items[#items + 1] = _makeRow(slot)
         end
     end
 
     -- ── sui_navpager_icons group (Navpager) ──────────────────────────────
     for _, slot in ipairs(M.SLOTS) do
-        if slot.group == "sui_navpager_icons" then
+        if slot.group == "pen_navpager_icons" then
             items[#items + 1] = _makeRow(slot)
         end
     end
 
     -- ── coll_icons group (collections back) ──────────────────────────────
     for _, slot in ipairs(M.SLOTS) do
-        if slot.group == "sui_coll_icons" then
+        if slot.group == "pen_coll_icons" then
             items[#items + 1] = _makeRow(slot)
         end
     end
 
     -- ── sui_fc_icons group ───────────────────────────────────────────────
     for _, slot in ipairs(M.SLOTS) do
-        if slot.group == "sui_fc_icons" then
+        if slot.group == "pen_fc_icons" then
             items[#items + 1] = _makeRow(slot)
         end
     end
@@ -726,7 +726,7 @@ end
 -- Allows the user to replace KOReader's built-in UI font with any font
 -- installed on the system.
 --
--- Settings keys (all via SUISettings):
+-- Settings keys (all via PENSettings):
 --   simpleui_ui_font_name     string   — selected font family name
 --   simpleui_ui_font_enabled  bool     — true = custom font active
 --
@@ -739,8 +739,8 @@ end
 -- ---------------------------------------------------------------------------
 
 -- Settings keys
-local _FONT_KEY_NAME    = "simpleui_ui_font_name"
-local _FONT_KEY_ENABLED = "simpleui_ui_font_enabled"
+local _FONT_KEY_NAME    = "penjuru_ui_font_name"
+local _FONT_KEY_ENABLED = "penjuru_ui_font_enabled"
 local _FONT_DEFAULT     = "Noto Sans"
 
 -- Module-level lazy caches — populated once by _initFonts().
@@ -900,7 +900,7 @@ local function _applyFont(name)
     local Font = _reqFont()
     if not Font then return end
     _ensureFonts()
-    if not SUISettings:isTrue(_FONT_KEY_ENABLED) then return end
+    if not PENSettings:isTrue(_FONT_KEY_ENABLED) then return end
     if not (_fonts and _fonts[name]) then return end
     for slot, typ in pairs(_replaced) do
         Font.fontmap[slot] = _fonts[name][typ]
@@ -913,13 +913,13 @@ end
 --- Restore the saved font preference.  Called from main.lua at plugin init.
 function M.applyUIFont()
     _ensureFonts()
-    if SUISettings:isTrue(_FONT_KEY_ENABLED) then
-        local name = SUISettings:get(_FONT_KEY_NAME) or _FONT_DEFAULT
+    if PENSettings:isTrue(_FONT_KEY_ENABLED) then
+        local name = PENSettings:get(_FONT_KEY_NAME) or _FONT_DEFAULT
         if _fonts and _fonts[name] then
             _applyFont(name)
         else
             logger.warn("simpleui/style: active UI font not found on disk, disabling custom font:", name)
-            SUISettings:set(_FONT_KEY_ENABLED, false)
+            PENSettings:set(_FONT_KEY_ENABLED, false)
         end
     end
 end
@@ -941,10 +941,10 @@ function M.makeFontMenuItems()
     local UIManager = _reqUIManager()
 
     local function _isEnabled()
-        return SUISettings:isTrue(_FONT_KEY_ENABLED)
+        return PENSettings:isTrue(_FONT_KEY_ENABLED)
     end
     local function _currentName()
-        return SUISettings:get(_FONT_KEY_NAME) or _FONT_DEFAULT
+        return PENSettings:get(_FONT_KEY_NAME) or _FONT_DEFAULT
     end
 
     local items = {}
@@ -955,7 +955,7 @@ function M.makeFontMenuItems()
         checked_func = _isEnabled,
         callback     = function()
             local new_val = not _isEnabled()
-            SUISettings:set(_FONT_KEY_ENABLED, new_val)
+            PENSettings:set(_FONT_KEY_ENABLED, new_val)
             if new_val then _applyFont(_currentName()) end
             if UIManager then
                 UIManager:askForRestart(_("Restart to fully apply the UI font change."))
@@ -996,8 +996,8 @@ function M.makeFontMenuItems()
                 end,
                 keep_menu_open = true,
                 callback = function()
-                    SUISettings:set(_FONT_KEY_NAME, _name)
-                    SUISettings:set(_FONT_KEY_ENABLED, true)
+                    PENSettings:set(_FONT_KEY_NAME, _name)
+                    PENSettings:set(_FONT_KEY_ENABLED, true)
                     _applyFont(_name)
                     if UIManager then
                         UIManager:askForRestart(_("Restart to fully apply the UI font change."))
@@ -1014,7 +1014,7 @@ end
 -- Theme Colors
 -- ===========================================================================
 -- Granular per-role colour overrides for every SimpleUI surface.
--- All keys use the "simpleui_style_" prefix so that homescreen presets
+-- All keys use the "penjuru_style_" prefix so that homescreen presets
 -- capture them automatically (HS_PREFIXES in sui_presets.lua covers it).
 --
 -- Color storage
@@ -1052,15 +1052,15 @@ end
 
 -- Settings keys — all under simpleui_style_ so presets pick them up.
 local _ROLE_KEYS = {
-    bg              = "simpleui_style_theme_bg",
-    fg              = "simpleui_style_theme_fg",
-    bottombar_bg    = "simpleui_style_theme_bottombar_bg",
-    bottombar_fg    = "simpleui_style_theme_bottombar_fg",
-    statusbar_bg    = "simpleui_style_theme_statusbar_bg",
-    statusbar_fg    = "simpleui_style_theme_statusbar_fg",
-    text_secondary  = "simpleui_style_theme_text_secondary",
-    separator       = "simpleui_style_theme_separator",
-    accent          = "simpleui_style_theme_accent",
+    bg              = "penjuru_style_theme_bg",
+    fg              = "penjuru_style_theme_fg",
+    bottombar_bg    = "penjuru_style_theme_bottombar_bg",
+    bottombar_fg    = "penjuru_style_theme_bottombar_fg",
+    statusbar_bg    = "penjuru_style_theme_statusbar_bg",
+    statusbar_fg    = "penjuru_style_theme_statusbar_fg",
+    text_secondary  = "penjuru_style_theme_text_secondary",
+    separator       = "penjuru_style_theme_separator",
+    accent          = "penjuru_style_theme_accent",
 }
 
 -- Fallback chain: if role has no value, try these roles in order.
@@ -1122,7 +1122,7 @@ function M.getThemeColor(role)
     -- 2. Try the role's own key.
     local key = _ROLE_KEYS[role]
     if key then
-        local c = _hexToColor(SUISettings:get(key))
+        local c = _hexToColor(PENSettings:get(key))
         if c then
             _color_cache[role] = c
             return c
@@ -1135,7 +1135,7 @@ function M.getThemeColor(role)
         for _, fb_role in ipairs(fallbacks) do
             local fb_key = _ROLE_KEYS[fb_role]
             if fb_key then
-                local c = _hexToColor(SUISettings:get(fb_key))
+                local c = _hexToColor(PENSettings:get(fb_key))
                 if c then
                     _color_cache[role] = c
                     return c
@@ -1160,9 +1160,9 @@ function M.setThemeColor(role, hex)
     local key = _ROLE_KEYS[role]
     if not key then return end
     if type(hex) == "string" and hex:match("^#?%x%x%x%x%x%x$") then
-        SUISettings:set(key, hex:upper():gsub("^([^#])", "#%1"))
+        PENSettings:set(key, hex:upper():gsub("^([^#])", "#%1"))
     else
-        SUISettings:del(key)
+        PENSettings:del(key)
     end
     _invalidateColorCache()
     logger.dbg("simpleui/style/theme: setThemeColor", role, "→", hex or "(reset)")
@@ -1171,7 +1171,7 @@ end
 --- Clears every theme color override and invalidates the cache.
 function M.resetTheme()
     for _, key in pairs(_ROLE_KEYS) do
-        SUISettings:del(key)
+        PENSettings:del(key)
     end
     _invalidateColorCache()
     logger.dbg("simpleui/style/theme: resetTheme")
@@ -1269,11 +1269,11 @@ function M.makeThemeMenuItems()
     local function _openInputDialog(role, label_str)
         local ok_id, InputDialog = pcall(require, "ui/widget/inputdialog")
         local ok_ui, UIManager   = pcall(require, "ui/uimanager")
-        local ok_hs, HS          = pcall(require, "sui_homescreen")
+        local ok_hs, HS          = pcall(require, "pen_homescreen")
         if not (ok_id and ok_ui) then return end
 
         local key     = _ROLE_KEYS[role]
-        local current = (key and SUISettings:get(key)) or ""
+        local current = (key and PENSettings:get(key)) or ""
         local dlg
         dlg = InputDialog:new{
             title       = label_str,
@@ -1308,7 +1308,7 @@ function M.makeThemeMenuItems()
         return {
             text_func = function()
                 local key = _ROLE_KEYS[role]
-                local hex = key and SUISettings:get(key)
+                local hex = key and PENSettings:get(key)
                 -- Show the stored hex + edit pencil when a custom value is set.
                 -- When using a fallback we show a subtle "(fallback)" note.
                 if hex and hex ~= "" then
@@ -1318,7 +1318,7 @@ function M.makeThemeMenuItems()
                 local fb = _FALLBACKS[role]
                 if fb then
                     local fb_key = _ROLE_KEYS[fb[1]]
-                    if fb_key and SUISettings:get(fb_key) then
+                    if fb_key and PENSettings:get(fb_key) then
                         return label_str .. "  \u{21B3}"   -- ↳ (inherits)
                     end
                 end
@@ -1349,7 +1349,7 @@ function M.makeThemeMenuItems()
                             M.setThemeColor(role, hex)
                         end
                         local ok_ui, UIManager = pcall(require, "ui/uimanager")
-                        local ok_hs, HS        = pcall(require, "sui_homescreen")
+                        local ok_hs, HS        = pcall(require, "pen_homescreen")
                         if ok_ui and UIManager then UIManager:setDirty("all", "ui") end
                         if ok_hs and HS and HS.rebuildLayout then HS.rebuildLayout() end
                     end,
@@ -1369,7 +1369,7 @@ function M.makeThemeMenuItems()
         text     = _("Reset All Theme Colors"),
         callback = function()
             local ok_ui, UIManager = pcall(require, "ui/uimanager")
-            local ok_hs, HS        = pcall(require, "sui_homescreen")
+            local ok_hs, HS        = pcall(require, "pen_homescreen")
             M.resetTheme()
             if ok_ui and UIManager then UIManager:setDirty("all", "ui") end
             if ok_hs and HS and HS.rebuildLayout then HS.rebuildLayout() end
@@ -1398,18 +1398,18 @@ local _ACTION_SET = {
 }
 
 -- Maps icon-pack filename identifiers to internal action ids when they differ.
--- "sui_action_library.svg" is the public icon name for the "home" (Library) action.
+-- "pen_action_library.svg" is the public icon name for the "home" (Library) action.
 local _ICON_ID_ALIAS = { library = "home" }
 
 local function _filenameToKey(fname)
     local stem = fname:match("^(.+)%.[^%.]+$") or fname
     for _, s in ipairs(M.SLOTS) do
-        if s.id == stem then return "simpleui_sysicon_" .. stem, "sysicon" end
+        if s.id == stem then return "penjuru_sysicon_" .. stem, "sysicon" end
     end
-    local action_id = stem:match("^sui_action_(.+)$")
+    local action_id = stem:match("^pen_action_(.+)$")
     if action_id and _ACTION_SET[action_id] then
         local internal_id = _ICON_ID_ALIAS[action_id] or action_id
-        return "simpleui_action_" .. internal_id .. "_icon", "action"
+        return "penjuru_action_" .. internal_id .. "_icon", "action"
     end
     return nil, nil
 end
@@ -1418,7 +1418,7 @@ function M.getPacksDir()
     local ok, DS = pcall(require, "datastorage")
     if not ok or not DS then return nil end
     local lfs = require("libs/libkoreader-lfs")
-    local dir = DS:getSettingsDir() .. "/simpleui/sui_icons/packs"
+    local dir = DS:getSettingsDir() .. "/penjuru/pen_icons/packs"
     if lfs.attributes(dir, "mode") ~= "directory" then
         lfs.mkdir(dir)
     end
@@ -1431,7 +1431,7 @@ local function _loadManifest(pack_dir)
     if lfs.attributes(path, "mode") ~= "file" then return {} end
     local ok, data = pcall(dofile, path)
     if ok and type(data) == "table" then return data end
-    logger.warn("sui_style: invalid pack.lua in", pack_dir)
+    logger.warn("pen_style: invalid pack.lua in", pack_dir)
     return {}
 end
 
@@ -1480,7 +1480,7 @@ local function _applyFromDir(pack_dir)
         if settings_key then
             local full_path    = pack_dir .. "/" .. rel_fname
             if lfs.attributes(full_path, "mode") == "file" then
-                SUISettings:set(settings_key, full_path)
+                PENSettings:set(settings_key, full_path)
                 done_keys[settings_key] = true
                 result.applied = result.applied + 1
             else
@@ -1499,7 +1499,7 @@ local function _applyFromDir(pack_dir)
                     if not done_keys[settings_key] then
                         local full_path = pack_dir .. "/" .. fname
                         if lfs.attributes(full_path, "mode") == "file" then
-                            SUISettings:set(settings_key, full_path)
+                            PENSettings:set(settings_key, full_path)
                             done_keys[settings_key] = true
                             result.applied = result.applied + 1
                         else

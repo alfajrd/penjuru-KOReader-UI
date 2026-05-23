@@ -22,12 +22,12 @@ local VerticalGroup   = require("ui/widget/verticalgroup")
 local VerticalSpan    = require("ui/widget/verticalspan")
 local Screen          = Device.screen
 
-local _  = require("sui_i18n").translate
-local N_ = require("sui_i18n").ngettext
-local Config = require("sui_config")
-local QA     = require("sui_quickactions")
-local UI          = require("sui_core")
-local SUISettings = require("sui_store")
+local _  = require("pen_i18n").translate
+local N_ = require("pen_i18n").ngettext
+local Config = require("pen_config")
+local QA     = require("pen_quickactions")
+local UI          = require("pen_core")
+local PENSettings = require("pen_store")
 local PAD         = UI.PAD
 local CLR_TEXT_SUB = UI.CLR_TEXT_SUB
 
@@ -59,13 +59,13 @@ end
 local ALIGN_VALUES = { "left", "center", "right" }
 
 local function getAlignment(pfx, suffix)
-    local v = SUISettings:readSetting(pfx .. suffix .. "_align")
+    local v = PENSettings:readSetting(pfx .. suffix .. "_align")
     for _, a in ipairs(ALIGN_VALUES) do if a == v then return v end end
     return "center"  -- default
 end
 
 local function setAlignment(pfx, suffix, val)
-    SUISettings:saveSetting(pfx .. suffix .. "_align", val)
+    PENSettings:saveSetting(pfx .. suffix .. "_align", val)
 end
 
 local function alignLabel(align)
@@ -78,7 +78,7 @@ end
 -- Icon visibility helper
 -- ---------------------------------------------------------------------------
 local function isIconHidden(pfx, suffix)
-    return SUISettings:readSetting(pfx .. suffix .. "_hide_icon") == true
+    return PENSettings:readSetting(pfx .. suffix .. "_hide_icon") == true
 end
 
 -- ---------------------------------------------------------------------------
@@ -310,22 +310,22 @@ M.label      = nil
 M.default_on = false
 
 function M.isEnabled(pfx)
-    return SUISettings:readSetting(pfx .. MOD_SUFFIX .. "_enabled") == true
+    return PENSettings:readSetting(pfx .. MOD_SUFFIX .. "_enabled") == true
 end
 
 function M.setEnabled(pfx, on)
-    SUISettings:saveSetting(pfx .. MOD_SUFFIX .. "_enabled", on)
+    PENSettings:saveSetting(pfx .. MOD_SUFFIX .. "_enabled", on)
 end
 
 function M.build(w, ctx)
     if not M.isEnabled(ctx.pfx) then return nil end
-    local qa_ids    = SUISettings:readSetting(ctx.pfx .. ITEMS_KEY) or {}
+    local qa_ids    = PENSettings:readSetting(ctx.pfx .. ITEMS_KEY) or {}
     local show_icons = not isIconHidden(ctx.pfx, MOD_SUFFIX)
     local align     = getAlignment(ctx.pfx, MOD_SUFFIX)
     local d         = _getDims(Config.getModuleScale(MOD_ID, ctx.pfx))
     local lbl_scale = Config.getItemLabelScale(MOD_ID, ctx.pfx)
     d.fs = math.max(8, math.floor(d.fs * lbl_scale))
-    local ok_ss, SUIStyle  = pcall(require, "sui_style")
+    local ok_ss, SUIStyle  = pcall(require, "pen_style")
     local _theme_fg        = ok_ss and SUIStyle and SUIStyle.getThemeColor("fg")
     local _theme_secondary = ok_ss and SUIStyle and SUIStyle.getThemeColor("text_secondary")
     local colors = (_theme_fg or _theme_secondary) and {
@@ -336,7 +336,7 @@ function M.build(w, ctx)
 end
 
 function M.getHeight(ctx)
-    local qa_ids = SUISettings:readSetting(ctx.pfx .. ITEMS_KEY) or {}
+    local qa_ids = PENSettings:readSetting(ctx.pfx .. ITEMS_KEY) or {}
     local d      = _getDims(Config.getModuleScale(MOD_ID, ctx.pfx))
     local n      = #qa_ids
     -- When empty, getHeight must match the placeholder widget height
@@ -379,7 +379,7 @@ function M.getMenuItems(ctx_menu)
         checked_func   = function() return isIconHidden(pfx, MOD_SUFFIX) end,
         keep_menu_open = true,
         callback       = function()
-            SUISettings:saveSetting(pfx .. HIDE_ICON_KEY, not isIconHidden(pfx, MOD_SUFFIX))
+            PENSettings:saveSetting(pfx .. HIDE_ICON_KEY, not isIconHidden(pfx, MOD_SUFFIX))
             refresh()
         end,
     }
@@ -414,7 +414,7 @@ function M.getMenuItems(ctx_menu)
 
     -- Items submenu (add/remove/arrange)
     local function getItems()
-        return SUISettings:readSetting(pfx .. ITEMS_KEY) or {}
+        return PENSettings:readSetting(pfx .. ITEMS_KEY) or {}
     end
     local function isSelected(id)
         for _, v in ipairs(getItems()) do if v == id then return true end end
@@ -442,7 +442,7 @@ function M.getMenuItems(ctx_menu)
             end
             new[#new + 1] = id
         end
-        SUISettings:saveSetting(pfx .. ITEMS_KEY, new)
+        PENSettings:saveSetting(pfx .. ITEMS_KEY, new)
         refresh()
     end
 
@@ -481,7 +481,7 @@ function M.getMenuItems(ctx_menu)
                     for _, item in ipairs(sort_items) do
                         new_order[#new_order + 1] = item.orig_item
                     end
-                    SUISettings:saveSetting(pfx .. ITEMS_KEY, new_order)
+                    PENSettings:saveSetting(pfx .. ITEMS_KEY, new_order)
                     refresh()
                 end,
             })

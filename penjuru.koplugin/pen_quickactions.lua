@@ -35,11 +35,11 @@ local Device    = require("device")
 local Screen    = Device.screen
 local lfs       = require("libs/libkoreader-lfs")
 local logger    = require("logger")
-local _ = require("sui_i18n").translate
-local N_ = require("sui_i18n").ngettext
+local _ = require("pen_i18n").translate
+local N_ = require("pen_i18n").ngettext
 
-local Config      = require("sui_config")
-local SUISettings = require("sui_store")
+local Config      = require("pen_config")
+local PENSettings = require("pen_store")
 
 local QA = {}
 
@@ -57,7 +57,7 @@ local function _guardedSetIcon(path, on_valid, on_invalid)
         on_valid(nil)
         return
     end
-    local ok_ss, SUIStyle = pcall(require, "sui_style")
+    local ok_ss, SUIStyle = pcall(require, "pen_style")
     local safe = ok_ss and SUIStyle and SUIStyle.safeIconPath(path, nil)
     if safe then
         on_valid(safe)
@@ -80,7 +80,7 @@ function QA.getIconsDir()
     if not _icons_dir_cache then
         local ok_ds, DataStorage = pcall(require, "datastorage")
         if ok_ds and DataStorage then
-            _icons_dir_cache = DataStorage:getSettingsDir() .. "/simpleui/sui_icons"
+            _icons_dir_cache = DataStorage:getSettingsDir() .. "/penjuru/pen_icons"
         else
             local _qa_plugin_dir = debug.getinfo(1, "S").source:match("^@(.+/)[^/]+$") or "./"
             _icons_dir_cache = _qa_plugin_dir .. "icons/custom"
@@ -116,7 +116,7 @@ local function _BM()
     return nil  -- removed: sui_browsemeta out of scope
 end
 local function _Bottombar()
-    return package.loaded["sui_bottombar"] or require("sui_bottombar")
+    return package.loaded["pen_bottombar"] or require("pen_bottombar")
 end
 
 -- showUnavailable helper used inside execute closures.
@@ -175,10 +175,10 @@ end
 -- Register all built-in actions.
 -- Called once at module load time (bottom of this file).
 local function _registerBuiltins()
-    local function _simpleui_plugin()
+    local function _penjuru_plugin()
         -- Resolve the live plugin instance via the FM.
         local fm = _liveFM()
-        return fm and fm._simpleui_plugin
+        return fm and fm._penjuru_plugin
     end
 
     local builtins = {
@@ -203,8 +203,8 @@ local function _registerBuiltins()
             icon  = Config.ICON.ko_home,
             is_in_place = false,
             execute = function(ctx)
-                local plugin = ctx.plugin or _simpleui_plugin()
-                local ok_hs, HS = pcall(require, "sui_homescreen")
+                local plugin = ctx.plugin or _penjuru_plugin()
+                local ok_hs, HS = pcall(require, "pen_homescreen")
                 if ok_hs and HS and type(HS.show) == "function" then
                     local saved_page = HS._current_page or 1
                     if ctx.already_active then
@@ -309,7 +309,7 @@ local function _registerBuiltins()
             end,
             is_in_place = true,
             execute = function(ctx)
-                _Bottombar().doWifiToggle(ctx.plugin or _simpleui_plugin())
+                _Bottombar().doWifiToggle(ctx.plugin or _penjuru_plugin())
             end,
         },
         {
@@ -340,7 +340,7 @@ local function _registerBuiltins()
             icon  = Config.ICON.power,
             is_in_place = true,
             execute = function(ctx)
-                _Bottombar().showPowerDialog(ctx.plugin or _simpleui_plugin())
+                _Bottombar().showPowerDialog(ctx.plugin or _penjuru_plugin())
             end,
         },
         -- ── Browse meta actions ─────────────────────────────────────────────
@@ -525,22 +525,22 @@ local _qa_key_cache = {}
 local function getQASettingsKey(qa_id)
     local k = _qa_key_cache[qa_id]
     if not k then
-        k = "simpleui_cqa_" .. qa_id
+        k = "penjuru_cqa_" .. qa_id
         _qa_key_cache[qa_id] = k
     end
     return k
 end
 
 function QA.getCustomQAList()
-    return SUISettings:get("simpleui_cqa_list") or {}
+    return PENSettings:get("penjuru_cqa_list") or {}
 end
 
 function QA.saveCustomQAList(list)
-    SUISettings:set("simpleui_cqa_list", list)
+    PENSettings:set("penjuru_cqa_list", list)
 end
 
 function QA.getCustomQAConfig(qa_id)
-    local cfg = SUISettings:get(getQASettingsKey(qa_id)) or {}
+    local cfg = PENSettings:get(getQASettingsKey(qa_id)) or {}
     return {
         label             = cfg.label or qa_id,
         path              = cfg.path,
@@ -553,7 +553,7 @@ function QA.getCustomQAConfig(qa_id)
 end
 
 function QA.saveCustomQAConfig(qa_id, label, path, collection, icon, plugin_key, plugin_method, dispatcher_action)
-    SUISettings:set(getQASettingsKey(qa_id), {
+    PENSettings:set(getQASettingsKey(qa_id), {
         label             = label,
         path              = path,
         collection        = collection,
@@ -565,7 +565,7 @@ function QA.saveCustomQAConfig(qa_id, label, path, collection, icon, plugin_key,
 end
 
 function QA.deleteCustomQA(qa_id)
-    SUISettings:del(getQASettingsKey(qa_id))
+    PENSettings:del(getQASettingsKey(qa_id))
     _qa_key_cache[qa_id] = nil
     local list = QA.getCustomQAList()
     local new_list = {}
@@ -575,24 +575,24 @@ function QA.deleteCustomQA(qa_id)
     QA.saveCustomQAList(new_list)
     local mqa = package.loaded["desktop_modules/module_quick_actions"]
     if mqa and mqa.invalidateCustomQACache then mqa.invalidateCustomQACache() end
-    local tabs = SUISettings:get("simpleui_bar_tabs")
+    local tabs = PENSettings:get("penjuru_bar_tabs")
     if type(tabs) == "table" then
         local new_tabs = {}
         for _i, id in ipairs(tabs) do
             if id ~= qa_id then new_tabs[#new_tabs + 1] = id end
         end
-        SUISettings:set("simpleui_bar_tabs", new_tabs)
+        PENSettings:set("penjuru_bar_tabs", new_tabs)
     end
-    for _i, pfx in ipairs({ "simpleui_hs_qa_" }) do
+    for _i, pfx in ipairs({ "penjuru_hs_qa_" }) do
         for slot = 1, 3 do
             local key = pfx .. slot .. "_items"
-            local dqa = SUISettings:get(key)
+            local dqa = PENSettings:get(key)
             if type(dqa) == "table" then
                 local new_dqa = {}
                 for _i, id in ipairs(dqa) do
                     if id ~= qa_id then new_dqa[#new_dqa + 1] = id end
                 end
-                SUISettings:set(key, new_dqa)
+                PENSettings:set(key, new_dqa)
             end
         end
     end
@@ -627,14 +627,14 @@ function QA.renameQACollection(old_name, new_name)
 end
 
 function QA.sanitizeQASlots()
-    local Config = require("sui_config")
+    local Config = require("pen_config")
 
     local list = QA.getCustomQAList()
     local clean_list = {}
     local list_changed = false
     for _i, id in ipairs(list) do
         if id:match("^custom_qa_%d+$") then
-            local cfg = SUISettings:get(getQASettingsKey(id))
+            local cfg = PENSettings:get(getQASettingsKey(id))
             if type(cfg) == "table" and next(cfg) then
                 clean_list[#clean_list + 1] = id
             else
@@ -653,10 +653,10 @@ function QA.sanitizeQASlots()
     for _i, id in ipairs(list) do valid_custom[id] = true end
     local changed = list_changed
 
-    for _, pfx in ipairs({ "simpleui_hs_qa_" }) do
+    for _, pfx in ipairs({ "penjuru_hs_qa_" }) do
         for slot = 1, 3 do
             local key  = pfx .. slot .. "_items"
-            local items = SUISettings:get(key)
+            local items = PENSettings:get(key)
             if type(items) == "table" then
                 local clean = {}
                 local slot_changed = false
@@ -668,12 +668,12 @@ function QA.sanitizeQASlots()
                         changed = true
                     end
                 end
-                if slot_changed then SUISettings:set(key, clean) end
+                if slot_changed then PENSettings:set(key, clean) end
             end
         end
     end
 
-    local tabs = SUISettings:get("simpleui_bar_tabs")
+    local tabs = PENSettings:get("penjuru_bar_tabs")
     if type(tabs) == "table" then
         local clean_tabs = {}
         local tabs_changed = false
@@ -687,7 +687,7 @@ function QA.sanitizeQASlots()
             end
         end
         if tabs_changed then
-            SUISettings:set("simpleui_bar_tabs", clean_tabs)
+            PENSettings:set("penjuru_bar_tabs", clean_tabs)
             Config.invalidateTabsCache()
         end
     end
@@ -707,7 +707,7 @@ function QA.nextCustomQAId()
         if n and n > max_n then max_n = n end
     end
     local n = max_n + 1
-    while SUISettings:get("simpleui_cqa_custom_qa_" .. n) do n = n + 1 end
+    while PENSettings:get("penjuru_cqa_custom_qa_" .. n) do n = n + 1 end
     return "custom_qa_" .. n
 end
 
@@ -719,30 +719,30 @@ end
 -- Default-action label / icon overrides
 -- ---------------------------------------------------------------------------
 
-local function _defaultLabelKey(id) return "simpleui_action_" .. id .. "_label" end
-local function _defaultIconKey(id)  return "simpleui_action_" .. id .. "_icon"  end
+local function _defaultLabelKey(id) return "penjuru_action_" .. id .. "_label" end
+local function _defaultIconKey(id)  return "penjuru_action_" .. id .. "_icon"  end
 
 function QA.getDefaultActionLabel(id)
-    return SUISettings:get(_defaultLabelKey(id))
+    return PENSettings:get(_defaultLabelKey(id))
 end
 
 function QA.getDefaultActionIcon(id)
-    return SUISettings:get(_defaultIconKey(id))
+    return PENSettings:get(_defaultIconKey(id))
 end
 
 function QA.setDefaultActionLabel(id, label)
     if label and label ~= "" then
-        SUISettings:set(_defaultLabelKey(id), label)
+        PENSettings:set(_defaultLabelKey(id), label)
     else
-        SUISettings:del(_defaultLabelKey(id))
+        PENSettings:del(_defaultLabelKey(id))
     end
 end
 
 function QA.setDefaultActionIcon(id, icon)
     if icon then
-        SUISettings:set(_defaultIconKey(id), icon)
+        PENSettings:set(_defaultIconKey(id), icon)
     else
-        SUISettings:del(_defaultIconKey(id))
+        PENSettings:del(_defaultIconKey(id))
     end
 end
 
@@ -755,15 +755,15 @@ local _wifi_entry = { icon = "", label = "" }
 function QA.getEntry(id)
     -- Custom QA
     if id and id:match("^custom_qa_%d+$") then
-        local cfg = SUISettings:get("simpleui_cqa_" .. id) or {}
+        local cfg = PENSettings:get("penjuru_cqa_" .. id) or {}
         local default_icon
-        local ok_ss, SUIStyle = pcall(require, "sui_style")
+        local ok_ss, SUIStyle = pcall(require, "pen_style")
         if cfg.dispatcher_action and cfg.dispatcher_action ~= "" then
-            default_icon = (ok_ss and SUIStyle and SUIStyle.getIcon("sui_qa_system")) or Config.CUSTOM_DISPATCHER_ICON
+            default_icon = (ok_ss and SUIStyle and SUIStyle.getIcon("pen_qa_system")) or Config.CUSTOM_DISPATCHER_ICON
         elseif cfg.plugin_key and cfg.plugin_key ~= "" then
-            default_icon = (ok_ss and SUIStyle and SUIStyle.getIcon("sui_qa_plugin")) or Config.CUSTOM_PLUGIN_ICON
+            default_icon = (ok_ss and SUIStyle and SUIStyle.getIcon("pen_qa_plugin")) or Config.CUSTOM_PLUGIN_ICON
         else
-            default_icon = (ok_ss and SUIStyle and SUIStyle.getIcon("sui_qa_folder")) or Config.CUSTOM_ICON
+            default_icon = (ok_ss and SUIStyle and SUIStyle.getIcon("pen_qa_folder")) or Config.CUSTOM_ICON
         end
 
         local icon = cfg.icon or default_icon
@@ -1009,7 +1009,7 @@ local function _scanFMPlugins()
         dictionary=true, wikipedia=true, devicestatus=true, devicelistener=true,
         networklistener=true,
     }
-    local our_name  = "simpleui"
+    local our_name  = "penjuru"
     local seen_keys = {}
     local fm_val_to_key = {}
     for k, v in pairs(fm) do
@@ -1113,7 +1113,7 @@ function QA.showQuickActionDialog(plugin, qa_id, on_done)
     local start_path  = cfg.path or G_reader_settings:readSetting("home_dir") or "/"
     local chosen_icon = cfg.icon
     local dlg_title   = qa_id and _("Edit Quick Action") or _("New Quick Action")
-    local TOTAL_H     = require("sui_bottombar").TOTAL_H
+    local TOTAL_H     = require("pen_bottombar").TOTAL_H
 
     local function iconButtonLabel(default_lbl)
         if not chosen_icon then return default_lbl or _("Icon: Default") end
@@ -1321,36 +1321,36 @@ function QA.makeIconsMenuItems(plugin)
         keep_menu_open = true,
         callback       = function()
             for _k, a in ipairs(Config.ALL_ACTIONS) do
-                SUISettings:del("simpleui_action_" .. a.id .. "_icon")
+                PENSettings:del("penjuru_action_" .. a.id .. "_icon")
             end
-            SUISettings:del("simpleui_action_wifi_toggle_off_icon")
+            PENSettings:del("penjuru_action_wifi_toggle_off_icon")
             for _i, qa_id in ipairs(QA.getCustomQAList()) do
-                local cfg = SUISettings:get("simpleui_cqa_" .. qa_id)
+                local cfg = PENSettings:get("penjuru_cqa_" .. qa_id)
                 if type(cfg) == "table" then
                     cfg.icon = nil
-                    SUISettings:set("simpleui_cqa_" .. qa_id, cfg)
+                    PENSettings:set("penjuru_cqa_" .. qa_id, cfg)
                 end
             end
-            local ok_ss, SUIStyle = pcall(require, "sui_style")
+            local ok_ss, SUIStyle = pcall(require, "pen_style")
             if ok_ss and SUIStyle then
                 for _, s in ipairs(SUIStyle.SLOTS) do
-                    if s.group == "sui_qa_defaults" then
+                    if s.group == "pen_qa_defaults" then
                         SUIStyle.setIcon(s.id, nil)
                     end
                 end
             end
             QA.invalidateCustomQACache()
             plugin:_rebuildAllNavbars()
-            local ok, HS = pcall(require, "sui_homescreen")
+            local ok, HS = pcall(require, "pen_homescreen")
             if ok and HS and HS._instance then HS._instance:_refreshImmediate(false) end
         end,
         separator = true,
     }
 
-    local ok_ss, SUIStyle = pcall(require, "sui_style")
+    local ok_ss, SUIStyle = pcall(require, "pen_style")
     if ok_ss and SUIStyle then
         for _, slot in ipairs(SUIStyle.SLOTS) do
-            if slot.group == "sui_qa_defaults" then
+            if slot.group == "pen_qa_defaults" then
                 items[#items + 1] = {
                     text_func = function()
                         local path = SUIStyle.getIcon(slot.id)
@@ -1369,7 +1369,7 @@ function QA.makeIconsMenuItems(plugin)
                                     SUIStyle.setIcon(slot.id, safe_path)
                                     QA.invalidateCustomQACache()
                                     plugin:_rebuildAllNavbars()
-                                    local ok, HS = pcall(require, "sui_homescreen")
+                                    local ok, HS = pcall(require, "pen_homescreen")
                                     if ok and HS and HS._instance then HS._instance:_refreshImmediate(false) end
                                 end)
                             end,
@@ -1450,7 +1450,7 @@ function QA.makeIconsMenuItems(plugin)
                         end
                         QA.invalidateCustomQACache()
                         plugin:_rebuildAllNavbars()
-                        local ok, HS = pcall(require, "sui_homescreen")
+                        local ok, HS = pcall(require, "pen_homescreen")
                         if ok and HS and HS._instance then HS._instance:_refreshImmediate(false) end
                     end)
                 end, default_label, plugin, "_qa_icon_picker_style")
@@ -1570,7 +1570,7 @@ function QA.makeMenuItems(plugin)
             end
             if suppress_refresh then suppress_refresh() end
             QA.showQuickActionDialog(plugin, nil, function()
-                local ok, HS = pcall(require, "sui_homescreen")
+                local ok, HS = pcall(require, "pen_homescreen")
                 if ok and HS and HS._instance then HS._instance:_refreshImmediate(false) end
             end)
         end,
@@ -1628,7 +1628,7 @@ function QA.makeMenuItems(plugin)
                     callback = function(_menu_self, suppress_refresh)
                         if suppress_refresh then suppress_refresh() end
                         QA.showQuickActionDialog(plugin, _id, function()
-                            local ok, HS = pcall(require, "sui_homescreen")
+                            local ok, HS = pcall(require, "pen_homescreen")
                             if ok and HS and HS._instance then HS._instance:_refreshImmediate(false) end
                         end)
                     end,
@@ -1672,7 +1672,7 @@ function QA.executeCustomQA(action_id, fm, show_unavailable_fn)
         end
     end
 
-    local cfg = SUISettings:get("simpleui_cqa_" .. action_id) or {}
+    local cfg = PENSettings:get("penjuru_cqa_" .. action_id) or {}
 
     if cfg.dispatcher_action and cfg.dispatcher_action ~= "" then
         local ok_disp, Dispatcher = pcall(require, "dispatcher")
@@ -1733,7 +1733,7 @@ end
 -- ---------------------------------------------------------------------------
 
 function QA.isInPlaceCustomQA(action_id)
-    local cfg = SUISettings:get("simpleui_cqa_" .. action_id) or {}
+    local cfg = PENSettings:get("penjuru_cqa_" .. action_id) or {}
     if cfg.dispatcher_action and cfg.dispatcher_action ~= "" then return true end
     if cfg.plugin_key and cfg.plugin_method and cfg.plugin_key ~= "" then return true end
     return false

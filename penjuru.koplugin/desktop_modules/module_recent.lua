@@ -19,7 +19,7 @@ local TextWidget      = require("ui/widget/textwidget")
 local VerticalGroup   = require("ui/widget/verticalgroup")
 local Screen          = Device.screen
 local Size            = require("ui/size")
-local _ = require("sui_i18n").translate
+local _ = require("pen_i18n").translate
 
 local logger  = require("logger")
 local _SH = nil
@@ -32,9 +32,9 @@ local function getSH()
     return _SH
 end
 
-local Config       = require("sui_config")
-local UI           = require("sui_core")
-local SUISettings = require("sui_store")
+local Config       = require("pen_config")
+local UI           = require("pen_core")
+local PENSettings = require("pen_store")
 local PAD          = UI.PAD
 local PAD2         = UI.PAD2
 local MOD_GAP      = UI.MOD_GAP
@@ -49,16 +49,16 @@ local SETTING_OVERLAY       = "recent_show_overlay"    -- pfx .. this; default O
 local SETTING_SHOW_FINISHED = "recent_show_finished"   -- pfx .. this; default OFF
 
 local function showProgress(pfx)
-    return SUISettings:readSetting(pfx .. SETTING_PROGRESS) ~= false
+    return PENSettings:readSetting(pfx .. SETTING_PROGRESS) ~= false
 end
 local function showText(pfx)
-    return SUISettings:readSetting(pfx .. SETTING_TEXT) ~= false
+    return PENSettings:readSetting(pfx .. SETTING_TEXT) ~= false
 end
 local function showOverlay(pfx)
-    return SUISettings:readSetting(pfx .. SETTING_OVERLAY) == true
+    return PENSettings:readSetting(pfx .. SETTING_OVERLAY) == true
 end
 local function showFinished(pfx)
-    return SUISettings:readSetting(pfx .. SETTING_SHOW_FINISHED) == true
+    return PENSettings:readSetting(pfx .. SETTING_SHOW_FINISHED) == true
 end
 
 
@@ -88,7 +88,7 @@ function M.build(w, ctx)
     local pct_fs = math.max(8, math.floor(_BASE_RB_PCT_FS * scale * lbl_scale))
 
     -- Theme colors
-    local ok_ss, SUIStyle  = pcall(require, "sui_style")
+    local ok_ss, SUIStyle  = pcall(require, "pen_style")
     local _theme_fg        = ok_ss and SUIStyle and SUIStyle.getThemeColor("fg")
     local _theme_secondary = ok_ss and SUIStyle and SUIStyle.getThemeColor("text_secondary")
     local _CLR_DARK_EFF    = _theme_fg or Blitbuffer.COLOR_BLACK
@@ -228,8 +228,8 @@ function M.build(w, ctx)
         row[#row + 1] = cell_widget
     end
 
-    local show_frame = SUISettings:isTrue(ctx.pfx .. "recent_show_frame")
-    local solid_bg   = SUISettings:isTrue(ctx.pfx .. "recent_solid_bg")
+    local show_frame = PENSettings:isTrue(ctx.pfx .. "recent_show_frame")
+    local solid_bg   = PENSettings:isTrue(ctx.pfx .. "recent_solid_bg")
     local has_box    = show_frame or solid_bg
     local border_sz  = show_frame and 1 or 0
     local radius     = has_box and math.floor(Screen:scaleBySize(12) * scale) or 0
@@ -290,10 +290,10 @@ function M.getHeight(ctx)
             h = h + D.RB_LABEL_H
         end
     end
-    if SUISettings:isTrue(pfx .. "recent_show_frame") or SUISettings:isTrue(pfx .. "recent_solid_bg") then
+    if PENSettings:isTrue(pfx .. "recent_show_frame") or PENSettings:isTrue(pfx .. "recent_solid_bg") then
         h = h + PAD * 2
     end
-    return require("sui_config").getScaledLabelH() + h
+    return require("pen_config").getScaledLabelH() + h
 end
 
 
@@ -305,8 +305,8 @@ local function _makeScaleItem(ctx_menu)
         enabled_func = function() return not Config.isScaleLinked() end,
         title        = _lc("Scale"),
         info         = _lc("Scale for this module.\n100% is the default size."),
-        get          = function() return require("sui_config").getModuleScalePct("recent", pfx) end,
-        set          = function(v) require("sui_config").setModuleScale(v, "recent", pfx) end,
+        get          = function() return require("pen_config").getModuleScalePct("recent", pfx) end,
+        set          = function(v) require("pen_config").setModuleScale(v, "recent", pfx) end,
         refresh      = ctx_menu.refresh,
     })
 end
@@ -319,8 +319,8 @@ local function _makeThumbScaleItem(ctx_menu)
         separator = true,
         title     = _lc("Cover size"),
         info      = _lc("Scale for the cover thumbnails only.\nText and progress bar follow the module scale.\n100% is the default size."),
-        get       = function() return require("sui_config").getThumbScalePct("recent", pfx) end,
-        set       = function(v) require("sui_config").setThumbScale(v, "recent", pfx) end,
+        get       = function() return require("pen_config").getThumbScalePct("recent", pfx) end,
+        set       = function(v) require("pen_config").setThumbScale(v, "recent", pfx) end,
         refresh   = ctx_menu.refresh,
     })
 end
@@ -343,19 +343,19 @@ function M.getMenuItems(ctx_menu)
         Config.makeLabelToggleItem("recent", _("Recent Books"), refresh, _lc),
         {
             text           = _lc("Frame"),
-            checked_func   = function() return SUISettings:isTrue(pfx .. "recent_show_frame") end,
+            checked_func   = function() return PENSettings:isTrue(pfx .. "recent_show_frame") end,
             keep_menu_open = true,
             callback       = function()
-                SUISettings:saveSetting(pfx .. "recent_show_frame", not SUISettings:isTrue(pfx .. "recent_show_frame"))
+                PENSettings:saveSetting(pfx .. "recent_show_frame", not PENSettings:isTrue(pfx .. "recent_show_frame"))
                 refresh()
             end,
         },
         {
             text           = _lc("Solid Background"),
-            checked_func   = function() return SUISettings:isTrue(pfx .. "recent_solid_bg") end,
+            checked_func   = function() return PENSettings:isTrue(pfx .. "recent_solid_bg") end,
             keep_menu_open = true,
             callback       = function()
-                SUISettings:saveSetting(pfx .. "recent_solid_bg", not SUISettings:isTrue(pfx .. "recent_solid_bg"))
+                PENSettings:saveSetting(pfx .. "recent_solid_bg", not PENSettings:isTrue(pfx .. "recent_solid_bg"))
                 refresh()
             end,
         },
@@ -366,7 +366,7 @@ function M.getMenuItems(ctx_menu)
             enabled_func   = function() return not showOverlay(pfx) end,
             keep_menu_open = true,
             callback       = function()
-                SUISettings:saveSetting(pfx .. SETTING_PROGRESS, not showProgress(pfx))
+                PENSettings:saveSetting(pfx .. SETTING_PROGRESS, not showProgress(pfx))
                 refresh()
             end,
         },
@@ -376,7 +376,7 @@ function M.getMenuItems(ctx_menu)
             enabled_func   = function() return not showOverlay(pfx) end,
             keep_menu_open = true,
             callback       = function()
-                SUISettings:saveSetting(pfx .. SETTING_TEXT, not showText(pfx))
+                PENSettings:saveSetting(pfx .. SETTING_TEXT, not showText(pfx))
                 refresh()
             end,
         },
@@ -385,7 +385,7 @@ function M.getMenuItems(ctx_menu)
             checked_func   = function() return showOverlay(pfx) end,
             keep_menu_open = true,
             callback       = function()
-                SUISettings:saveSetting(pfx .. SETTING_OVERLAY, not showOverlay(pfx))
+                PENSettings:saveSetting(pfx .. SETTING_OVERLAY, not showOverlay(pfx))
                 refresh()
             end,
         },
@@ -394,7 +394,7 @@ function M.getMenuItems(ctx_menu)
             checked_func   = function() return showFinished(pfx) end,
             keep_menu_open = true,
             callback       = function()
-                SUISettings:saveSetting(pfx .. SETTING_SHOW_FINISHED, not showFinished(pfx))
+                PENSettings:saveSetting(pfx .. SETTING_SHOW_FINISHED, not showFinished(pfx))
                 refresh()
             end,
         },

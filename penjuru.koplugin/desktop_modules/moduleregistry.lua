@@ -50,7 +50,7 @@
 -- still use module_header directly are unaffected; it remains loadable.
 
 local logger = require("logger")
-local SUISettings = require("sui_store")
+local PENSettings = require("pen_store")
 
 local MODULES = {
     { require_mod = "desktop_modules/module_clock"         },
@@ -132,7 +132,7 @@ function Registry.isEnabled(mod, pfx)
         return mod.isEnabled(pfx)
     end
     if mod.enabled_key then
-        local v = SUISettings:readSetting(pfx .. mod.enabled_key)
+        local v = PENSettings:readSetting(pfx .. mod.enabled_key)
         if v == nil then return mod.default_on ~= false end
         return v == true
     end
@@ -151,7 +151,7 @@ end
 -- default, appending any modules not present in the saved list.
 -- Returns the cached default directly when no custom order has been saved.
 function Registry.loadOrder(pfx)
-    local saved = SUISettings:readSetting(pfx .. "module_order")
+    local saved = PENSettings:readSetting(pfx .. "module_order")
     if type(saved) ~= "table" or #saved == 0 then
         return Registry.defaultOrder()
     end

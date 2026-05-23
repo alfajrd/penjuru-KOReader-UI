@@ -15,7 +15,7 @@
 -- simpleui module uses directly as its local `_` / `N_`.
 --
 -- Public API:
---   local I18n = require("sui_i18n")
+--   local I18n = require("pen_i18n")
 --   local _    = I18n.translate    -- replaces: local _ = require("gettext")
 --   local N_   = I18n.ngettext     -- replaces: local N_ = _.ngettext
 --   I18n.getLang()                 -- still works
@@ -229,8 +229,8 @@ end
 -- Core translation functions.
 --
 -- Each simpleui module does:
---   local _  = require("sui_i18n").translate
---   local N_ = require("sui_i18n").ngettext
+--   local _  = require("pen_i18n").translate
+--   local N_ = require("pen_i18n").ngettext
 --
 -- Strings absent from simpleui's catalogue fall through to the native
 -- KOReader gettext without writing to or wrapping package.loaded["gettext"].

@@ -8,8 +8,8 @@ local Device    = require("device")
 local Screen    = Device.screen
 local lfs       = require("libs/libkoreader-lfs")
 local logger    = require("logger")
-local _ = require("sui_i18n").translate
-local N_ = require("sui_i18n").ngettext
+local _ = require("pen_i18n").translate
+local N_ = require("pen_i18n").ngettext
 local T = require("ffi/util").template
 
 -- Heavy UI widgets — lazy-loaded on first use so that require("menu") at boot
@@ -23,10 +23,10 @@ local function MultiInputDialog() return require("ui/widget/multiinputdialog") e
 local function PathChooser()      return require("ui/widget/pathchooser")       end
 local function SortWidget()       return require("ui/widget/sortwidget")        end
 
-local Config    = require("sui_config")
-local UI        = require("sui_core")
-local Bottombar = require("sui_bottombar")
-local SUISettings = require("sui_store")
+local Config    = require("pen_config")
+local UI        = require("pen_core")
+local Bottombar = require("pen_bottombar")
+local PENSettings = require("pen_store")
 
 -- ---------------------------------------------------------------------------
 -- Installer function
@@ -84,8 +84,8 @@ do
                     if icons_path and icons_dirs then break end
                 end
                 if icons_path then
-                    if icon_exists and not icons_path["simpleui_settings"] then
-                        icons_path["simpleui_settings"] = icon_file
+                    if icon_exists and not icons_path["penjuru_settings"] then
+                        icons_path["penjuru_settings"] = icon_file
                     end
                     injected_path = true
                 end
@@ -103,11 +103,11 @@ do
             end
 
             -- Strategy 3: if upvalue injection was unavailable (hardened builds),
-            -- patch IconWidget.init so icon="simpleui_settings" resolves directly.
+            -- patch IconWidget.init so icon="penjuru_settings" resolves directly.
             if not injected_path and not injected_dir and icon_exists then
                 local orig_init = iw.init
                 iw.init = function(self_iw)
-                    if self_iw.icon == "simpleui_settings" and not self_iw.file and not self_iw.image then
+                    if self_iw.icon == "penjuru_settings" and not self_iw.file and not self_iw.image then
                         self_iw.file = icon_file
                         return
                     end
@@ -388,9 +388,9 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
         --   Navpager    : navpager=true             (pagination_visible ignored)
         --   Oculto      : pagination_visible=false, navpager=false
         local function getGeral()
-            if SUISettings:isTrue("simpleui_bar_navpager_enabled") then
+            if PENSettings:isTrue("penjuru_bar_navpager_enabled") then
                 return "navpager"
-            elseif SUISettings:nilOrTrue("simpleui_bar_pagination_visible") then
+            elseif PENSettings:nilOrTrue("penjuru_bar_pagination_visible") then
                 return "predefinido"
             else
                 return "oculto"
@@ -399,11 +399,11 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
 
         local function setGeral(mode)
             if mode == "navpager" then
-                SUISettings:saveSetting("simpleui_bar_navpager_enabled", true)
-                SUISettings:saveSetting("simpleui_bar_pagination_visible", false)
+                PENSettings:saveSetting("penjuru_bar_navpager_enabled", true)
+                PENSettings:saveSetting("penjuru_bar_pagination_visible", false)
                 -- Navpager requires dot pager on homescreen (koreader style not allowed).
-                if not SUISettings:nilOrTrue("simpleui_bar_dotpager_always") then
-                    SUISettings:saveSetting("simpleui_bar_dotpager_always", true)
+                if not PENSettings:nilOrTrue("penjuru_bar_dotpager_always") then
+                    PENSettings:saveSetting("penjuru_bar_dotpager_always", true)
                 end
                 -- Trim tabs to navpager limit if needed.
                 local tabs = Config.loadTabConfig()
@@ -414,11 +414,11 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                     Config.saveTabConfig(tabs)
                 end
             elseif mode == "predefinido" then
-                SUISettings:saveSetting("simpleui_bar_navpager_enabled", false)
-                SUISettings:saveSetting("simpleui_bar_pagination_visible", true)
+                PENSettings:saveSetting("penjuru_bar_navpager_enabled", false)
+                PENSettings:saveSetting("penjuru_bar_pagination_visible", true)
             else -- "oculto"
-                SUISettings:saveSetting("simpleui_bar_navpager_enabled", false)
-                SUISettings:saveSetting("simpleui_bar_pagination_visible", false)
+                PENSettings:saveSetting("penjuru_bar_navpager_enabled", false)
+                PENSettings:saveSetting("penjuru_bar_pagination_visible", false)
             end
         end
 
@@ -427,7 +427,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                 text        = text,
                 ok_text     = _("Restart"), cancel_text = _("Later"),
                 ok_callback = function()
-                    SUISettings:flush()
+                    PENSettings:flush()
                     UIManager:restartKOReader()
                 end,
             })
@@ -481,18 +481,18 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                         radio        = true,
                         checked_func = function()
                             -- Dot Pager is always forced when Navpager is active.
-                            return not SUISettings:isTrue("simpleui_hs_pagination_hidden")
-                                and (SUISettings:nilOrTrue("simpleui_bar_dotpager_always")
+                            return not PENSettings:isTrue("penjuru_hs_pagination_hidden")
+                                and (PENSettings:nilOrTrue("penjuru_bar_dotpager_always")
                                     or getGeral() == "navpager")
                         end,
                         help_text    = _("Shows a row of dots at the bottom of the homescreen.\nThe active page dot is filled; the others are dimmed.\nAlways active when Navpager is selected."),
                         callback     = function()
-                            SUISettings:saveSetting("simpleui_hs_pagination_hidden", false)
-                            if not SUISettings:nilOrTrue("simpleui_bar_dotpager_always") then
-                                SUISettings:saveSetting("simpleui_bar_dotpager_always", true)
+                            PENSettings:saveSetting("penjuru_hs_pagination_hidden", false)
+                            if not PENSettings:nilOrTrue("penjuru_bar_dotpager_always") then
+                                PENSettings:saveSetting("penjuru_bar_dotpager_always", true)
                             end
                             plugin:_scheduleRebuild()
-                            local ok_hs, HS = pcall(require, "sui_homescreen")
+                            local ok_hs, HS = pcall(require, "pen_homescreen")
                             if ok_hs and HS then HS.refresh(true) end
                         end,
                         keep_menu_open = true,
@@ -503,18 +503,18 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                         -- Not selectable when Navpager is active.
                         enabled_func = function() return getGeral() ~= "navpager" end,
                         checked_func = function()
-                            return not SUISettings:isTrue("simpleui_hs_pagination_hidden")
-                                and not SUISettings:nilOrTrue("simpleui_bar_dotpager_always")
+                            return not PENSettings:isTrue("penjuru_hs_pagination_hidden")
+                                and not PENSettings:nilOrTrue("penjuru_bar_dotpager_always")
                                 and getGeral() ~= "navpager"
                         end,
                         help_text    = _("Uses the standard KOReader pagination bar on the homescreen.\nNot available when Navpager is active."),
                         callback     = function()
-                            SUISettings:saveSetting("simpleui_hs_pagination_hidden", false)
-                            if SUISettings:nilOrTrue("simpleui_bar_dotpager_always") then
-                                SUISettings:saveSetting("simpleui_bar_dotpager_always", false)
+                            PENSettings:saveSetting("penjuru_hs_pagination_hidden", false)
+                            if PENSettings:nilOrTrue("penjuru_bar_dotpager_always") then
+                                PENSettings:saveSetting("penjuru_bar_dotpager_always", false)
                             end
                             plugin:_scheduleRebuild()
-                            local ok_hs, HS = pcall(require, "sui_homescreen")
+                            local ok_hs, HS = pcall(require, "pen_homescreen")
                             if ok_hs and HS then HS.refresh(true) end
                         end,
                         keep_menu_open = true,
@@ -525,14 +525,14 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                         -- Not selectable when Navpager is active (navpager needs dot pager).
                         enabled_func = function() return getGeral() ~= "navpager" end,
                         checked_func = function()
-                            return SUISettings:isTrue("simpleui_hs_pagination_hidden")
+                            return PENSettings:isTrue("penjuru_hs_pagination_hidden")
                                 and getGeral() ~= "navpager"
                         end,
                         help_text    = _("Hides the pagination bar on the homescreen.\nNot available when Navpager is active."),
                         callback     = function()
-                            if SUISettings:isTrue("simpleui_hs_pagination_hidden") then return end
-                            SUISettings:saveSetting("simpleui_hs_pagination_hidden", true)
-                            local ok_hs, HS = pcall(require, "sui_homescreen")
+                            if PENSettings:isTrue("penjuru_hs_pagination_hidden") then return end
+                            PENSettings:saveSetting("penjuru_hs_pagination_hidden", true)
+                            local ok_hs, HS = pcall(require, "pen_homescreen")
                             if ok_hs and HS then HS.refresh(true) end
                         end,
                         keep_menu_open = true,
@@ -549,10 +549,10 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                         radio          = true,
                         enabled_func   = function() return getGeral() ~= "oculto" end,
                         checked_func   = function()
-                            return (SUISettings:readSetting("simpleui_bar_pagination_size") or "s") == "xs"
+                            return (PENSettings:readSetting("penjuru_bar_pagination_size") or "s") == "xs"
                         end,
                         callback       = function()
-                            SUISettings:saveSetting("simpleui_bar_pagination_size", "xs")
+                            PENSettings:saveSetting("penjuru_bar_pagination_size", "xs")
                             restartPrompt(_("Pagination bar size will change after restart.\n\nRestart now?"))
                         end,
                     },
@@ -561,10 +561,10 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                         radio          = true,
                         enabled_func   = function() return getGeral() ~= "oculto" end,
                         checked_func   = function()
-                            return (SUISettings:readSetting("simpleui_bar_pagination_size") or "s") == "s"
+                            return (PENSettings:readSetting("penjuru_bar_pagination_size") or "s") == "s"
                         end,
                         callback       = function()
-                            SUISettings:saveSetting("simpleui_bar_pagination_size", "s")
+                            PENSettings:saveSetting("penjuru_bar_pagination_size", "s")
                             restartPrompt(_("Pagination bar size will change after restart.\n\nRestart now?"))
                         end,
                     },
@@ -573,10 +573,10 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                         radio          = true,
                         enabled_func   = function() return getGeral() ~= "oculto" end,
                         checked_func   = function()
-                            return (SUISettings:readSetting("simpleui_bar_pagination_size") or "s") == "m"
+                            return (PENSettings:readSetting("penjuru_bar_pagination_size") or "s") == "m"
                         end,
                         callback       = function()
-                            SUISettings:saveSetting("simpleui_bar_pagination_size", "m")
+                            PENSettings:saveSetting("penjuru_bar_pagination_size", "m")
                             restartPrompt(_("Pagination bar size will change after restart.\n\nRestart now?"))
                         end,
                     },
@@ -586,12 +586,12 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
             {
                 text         = _("Number of Pages in Title Bar Always"),
                 checked_func = function()
-                    return SUISettings:isTrue("simpleui_bar_pagination_show_subtitle")
+                    return PENSettings:isTrue("penjuru_bar_pagination_show_subtitle")
                 end,
                 help_text    = _("Shows \"Page X of Y\" in the title bar subtitle when browsing the library, history or collections.\nNavpager enables this automatically.\nNot available when Navpager is active."),
                 callback     = function()
-                    local on = SUISettings:isTrue("simpleui_bar_pagination_show_subtitle")
-                    SUISettings:saveSetting("simpleui_bar_pagination_show_subtitle", not on)
+                    local on = PENSettings:isTrue("penjuru_bar_pagination_show_subtitle")
+                    PENSettings:saveSetting("penjuru_bar_pagination_show_subtitle", not on)
                     plugin:_scheduleRebuild()
                 end,
                 keep_menu_open = true,
@@ -608,10 +608,10 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
         items[#items + 1] = {
             text           = _("Swipe Indicator"),
             keep_menu_open = true,
-            checked_func   = function() return SUISettings:nilOrTrue("simpleui_topbar_swipe_indicator") end,
+            checked_func   = function() return PENSettings:nilOrTrue("penjuru_topbar_swipe_indicator") end,
             callback = function()
-                SUISettings:saveSetting("simpleui_topbar_swipe_indicator",
-                    not SUISettings:nilOrTrue("simpleui_topbar_swipe_indicator"))
+                PENSettings:saveSetting("penjuru_topbar_swipe_indicator",
+                    not PENSettings:nilOrTrue("penjuru_topbar_swipe_indicator"))
                 plugin:_scheduleRebuild()
             end,
         }
@@ -821,18 +821,18 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
         return {
             {
                 text_func    = function()
-                    return _("Top Bar") .. " — " .. (SUISettings:nilOrTrue("simpleui_topbar_enabled") and _("On") or _("Off"))
+                    return _("Top Bar") .. " — " .. (PENSettings:nilOrTrue("penjuru_topbar_enabled") and _("On") or _("Off"))
                 end,
-                checked_func = function() return SUISettings:nilOrTrue("simpleui_topbar_enabled") end,
+                checked_func = function() return PENSettings:nilOrTrue("penjuru_topbar_enabled") end,
                 keep_menu_open = true,
                 callback     = function()
-                    local on = SUISettings:nilOrTrue("simpleui_topbar_enabled")
-                    SUISettings:saveSetting("simpleui_topbar_enabled", not on)
+                    local on = PENSettings:nilOrTrue("penjuru_topbar_enabled")
+                    PENSettings:saveSetting("penjuru_topbar_enabled", not on)
                     UIManager:show(ConfirmBox():new{
                         text = string.format(_("Top Bar will be %s after restart.\n\nRestart now?"), on and _("disabled") or _("enabled")),
                         ok_text = _("Restart"), cancel_text = _("Later"),
                         ok_callback = function()
-                            SUISettings:flush()
+                            PENSettings:flush()
                             UIManager:restartKOReader()
                         end,
                     })
@@ -860,14 +860,14 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                             Config.setTopbarSizePct(spin.value)
                             UI.invalidateDimCache()
                             plugin:_rewrapAllWidgets()
-                            local ok_hs, HS = pcall(require, "sui_homescreen")
+                            local ok_hs, HS = pcall(require, "pen_homescreen")
                             if ok_hs and HS then HS.refresh(true) end
                             UIManager:show(ConfirmBox():new{
                                 text       = _("A restart is required to apply the new bar size across all layouts.\n\nRestart now?"),
                                 ok_text    = _("Restart"),
                                 cancel_text = _("Later"),
                                 ok_callback = function()
-                                    SUISettings:flush()
+                                    PENSettings:flush()
                                     UIManager:restartKOReader()
                                 end,
                             })
@@ -880,12 +880,12 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                 text         = _("Settings on Long Tap"),
                 help_text    = _("When enabled, long-pressing the top bar opens its settings menu.\nDisable this to prevent the settings menu from appearing on long tap."),
                 checked_func = function()
-                    return SUISettings:nilOrTrue("simpleui_topbar_settings_on_hold")
+                    return PENSettings:nilOrTrue("penjuru_topbar_settings_on_hold")
                 end,
                 keep_menu_open = true,
                 callback = function()
-                    local on = SUISettings:nilOrTrue("simpleui_topbar_settings_on_hold")
-                    SUISettings:saveSetting("simpleui_topbar_settings_on_hold", not on)
+                    local on = PENSettings:nilOrTrue("penjuru_topbar_settings_on_hold")
+                    PENSettings:saveSetting("penjuru_topbar_settings_on_hold", not on)
                 end,
             },
         }
@@ -899,18 +899,18 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
         return {
             {
                 text_func    = function()
-                    return _("Bottom Bar") .. " — " .. (SUISettings:nilOrTrue("simpleui_bar_enabled") and _("On") or _("Off"))
+                    return _("Bottom Bar") .. " — " .. (PENSettings:nilOrTrue("penjuru_bar_enabled") and _("On") or _("Off"))
                 end,
-                checked_func = function() return SUISettings:nilOrTrue("simpleui_bar_enabled") end,
+                checked_func = function() return PENSettings:nilOrTrue("penjuru_bar_enabled") end,
                 keep_menu_open = true,
                 callback     = function()
-                    local on = SUISettings:nilOrTrue("simpleui_bar_enabled")
-                    SUISettings:saveSetting("simpleui_bar_enabled", not on)
+                    local on = PENSettings:nilOrTrue("penjuru_bar_enabled")
+                    PENSettings:saveSetting("penjuru_bar_enabled", not on)
                     UIManager:show(ConfirmBox():new{
                         text = string.format(_("Bottom Bar will be %s after restart.\n\nRestart now?"), on and _("disabled") or _("enabled")),
                         ok_text = _("Restart"), cancel_text = _("Later"),
                         ok_callback = function()
-                            SUISettings:flush()
+                            PENSettings:flush()
                             UIManager:restartKOReader()
                         end,
                     })
@@ -939,14 +939,14 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                             Config.setBarSizePct(spin.value)
                             UI.invalidateDimCache()
                             plugin:_rewrapAllWidgets()
-                            local ok_hs, HS = pcall(require, "sui_homescreen")
+                            local ok_hs, HS = pcall(require, "pen_homescreen")
                             if ok_hs and HS then HS.refresh(true) end
                             UIManager:show(ConfirmBox():new{
                                 text       = _("A restart is required to apply the new bar size across all layouts.\n\nRestart now?"),
                                 ok_text    = _("Restart"),
                                 cancel_text = _("Later"),
                                 ok_callback = function()
-                                    SUISettings:flush()
+                                    PENSettings:flush()
                                     UIManager:restartKOReader()
                                 end,
                             })
@@ -968,7 +968,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                 refresh       = function()
                     UI.invalidateDimCache()
                     plugin:_rewrapAllWidgets()
-                    local ok_hs, HS = pcall(require, "sui_homescreen")
+                    local ok_hs, HS = pcall(require, "pen_homescreen")
                     if ok_hs and HS then HS.refresh(true) end
                 end,
                 value_min     = Config.BOT_MARGIN_MIN,
@@ -1018,15 +1018,15 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
             }),
             {
                 text_func    = function()
-                    return _("Top separator") .. " — " .. (SUISettings:isTrue("simpleui_bar_hide_separator") and _("Hidden") or _("Visible"))
+                    return _("Top separator") .. " — " .. (PENSettings:isTrue("penjuru_bar_hide_separator") and _("Hidden") or _("Visible"))
                 end,
-                checked_func = function() return not SUISettings:isTrue("simpleui_bar_hide_separator") end,
+                checked_func = function() return not PENSettings:isTrue("penjuru_bar_hide_separator") end,
                 keep_menu_open = true,
                 callback     = function()
-                    local hidden = SUISettings:isTrue("simpleui_bar_hide_separator")
-                    SUISettings:saveSetting("simpleui_bar_hide_separator", not hidden)
+                    local hidden = PENSettings:isTrue("penjuru_bar_hide_separator")
+                    PENSettings:saveSetting("penjuru_bar_hide_separator", not hidden)
                     plugin:_rebuildAllNavbars()
-                    local ok_hs, HS = pcall(require, "sui_homescreen")
+                    local ok_hs, HS = pcall(require, "pen_homescreen")
                     if ok_hs and HS then HS.refresh(true) end
                 end,
             },
@@ -1050,12 +1050,12 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                 text         = _("Settings on Long Tap"),
                 help_text    = _("When enabled, long-pressing the bottom bar opens its settings menu.\nDisable this to prevent the settings menu from appearing on long tap."),
                 checked_func = function()
-                    return SUISettings:nilOrTrue("simpleui_bar_settings_on_hold")
+                    return PENSettings:nilOrTrue("penjuru_bar_settings_on_hold")
                 end,
                 keep_menu_open = true,
                 callback = function()
-                    local on = SUISettings:nilOrTrue("simpleui_bar_settings_on_hold")
-                    SUISettings:saveSetting("simpleui_bar_settings_on_hold", not on)
+                    local on = PENSettings:nilOrTrue("penjuru_bar_settings_on_hold")
+                    PENSettings:saveSetting("penjuru_bar_settings_on_hold", not on)
                 end,
             },
         }
@@ -1071,17 +1071,17 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
     -- Resolves the live FM + window stack and re-applies (or restores) all
     -- titlebar state. Called by every toggle in this submenu.
     local function _reapplyAllTitlebars()
-        local Titlebar = require("sui_titlebar")
+        local Titlebar = require("pen_titlebar")
         local FM = package.loaded["apps/filemanager/filemanager"]
         local fm = FM and FM.instance
-        local stack = require("sui_core").getWindowStack()
+        local stack = require("pen_core").getWindowStack()
         Titlebar.reapplyAll(fm, stack)
         if fm then UIManager:setDirty(fm[1], "ui") end
     end
 
     -- Builds a visibility toggle list for one context ("fm" or "inj").
     local function makeTitleBarItemsForCtx(ctx)
-        local Titlebar = require("sui_titlebar")
+        local Titlebar = require("pen_titlebar")
         local items = {}
         for _i, item in ipairs(Titlebar.ITEMS) do
             if item.ctx == ctx then
@@ -1109,7 +1109,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
     -- cfg_getter / cfg_saver — functions that load/save the side config.
     -- ctx — "fm" or "inj", used to filter M.ITEMS.
     local function makeTitleBarArrangeMenu(ctx, cfg_getter, cfg_saver)
-        local Titlebar   = require("sui_titlebar")
+        local Titlebar   = require("pen_titlebar")
         local SEP_LEFT   = "__sep_left__"
         local SEP_RIGHT  = "__sep_right__"
 
@@ -1189,7 +1189,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
     end
 
     local function makeTitleBarFMMenu()
-        local Titlebar = require("sui_titlebar")
+        local Titlebar = require("pen_titlebar")
         local items = makeTitleBarItemsForCtx("fm")
         if #items > 0 then items[#items].separator = true end
         items[#items + 1] = {
@@ -1204,7 +1204,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
     end
 
     local function makeTitleBarSubMenu()
-        local Titlebar = require("sui_titlebar")
+        local Titlebar = require("pen_titlebar")
         local items = makeTitleBarItemsForCtx("sub")
         if #items > 0 then items[#items].separator = true end
         items[#items + 1] = {
@@ -1224,9 +1224,9 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                 text         = label,
                 radio        = true,
                 keep_menu_open = true,
-                checked_func = function() return require("sui_titlebar").getSizeKey() == key end,
+                checked_func = function() return require("pen_titlebar").getSizeKey() == key end,
                 callback     = function()
-                    require("sui_titlebar").setSizeKey(key)
+                    require("pen_titlebar").setSizeKey(key)
                     _reapplyAllTitlebars()
                 end,
             }
@@ -1234,16 +1234,16 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
         return {
             {
                 text_func    = function()
-                    local on = require("sui_titlebar").isEnabled()
+                    local on = require("pen_titlebar").isEnabled()
                     return _("Custom Title Bar") .. " — " .. (on and _("On") or _("Off"))
                 end,
-                checked_func = function() return require("sui_titlebar").isEnabled() end,
+                checked_func = function() return require("pen_titlebar").isEnabled() end,
                 separator    = true,
                 callback     = function()
-                    local Titlebar = require("sui_titlebar")
+                    local Titlebar = require("pen_titlebar")
                     local on = Titlebar.isEnabled()
                     Titlebar.setEnabled(not on)
-                    SUISettings:flush()
+                    PENSettings:flush()
                     UIManager:show(ConfirmBox():new{
                         text = string.format(
                             _("Custom Title Bar will be %s after restart.\n\nRestart now?"),
@@ -1259,7 +1259,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
             },
             {
                 text      = _("Button Size"),
-                enabled_func = function() return require("sui_titlebar").isEnabled() end,
+                enabled_func = function() return require("pen_titlebar").isEnabled() end,
                 separator = true,
                 sub_item_table = {
                     sizeItem(_("Compact"), "compact"),
@@ -1269,12 +1269,12 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
             },
             {
                 text         = _("Library Buttons"),
-                enabled_func = function() return require("sui_titlebar").isEnabled() end,
+                enabled_func = function() return require("pen_titlebar").isEnabled() end,
                 sub_item_table_func = makeTitleBarFMMenu,
             },
             {
                 text         = _("Sub-pages Buttons"),
-                enabled_func = function() return require("sui_titlebar").isEnabled() end,
+                enabled_func = function() return require("pen_titlebar").isEnabled() end,
                 sub_item_table_func = makeTitleBarSubMenu,
             },
         }
@@ -1287,7 +1287,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
     -- -----------------------------------------------------------------------
 
     -- Quick Actions — delegated to sui_quickactions.lua
-    local QA = require("sui_quickactions")
+    local QA = require("pen_quickactions")
     local function makeQuickActionsMenu()
         return QA.makeMenuItems(plugin)
     end
@@ -1308,7 +1308,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
         -- only repaints the menu frame region, not the full HS. nextTick runs after
         -- the current event's onCloseWidget teardown, so the HS is the top widget
         -- by the time the dirty is processed.
-        local HS = package.loaded["sui_homescreen"]
+        local HS = package.loaded["pen_homescreen"]
         if not (HS and HS._instance) then return end
         local hs = HS._instance
         hs:_refreshImmediate(false)
@@ -1322,8 +1322,8 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
     -- _goalTapCallback: shown when the user taps the Reading Goals widget on
     -- the Homescreen. Lets them set annual/physical goals.
     self._goalTapCallback = function()
-        local goal     = SUISettings:readSetting("simpleui_reading_goal") or 0
-        local physical = SUISettings:readSetting("simpleui_reading_goal_physical") or 0
+        local goal     = PENSettings:readSetting("penjuru_reading_goal") or 0
+        local physical = PENSettings:readSetting("penjuru_reading_goal_physical") or 0
         local ButtonDialog = require("ui/widget/buttondialog")
         local dlg
         dlg = ButtonDialog:new{ title = _("Annual Reading Goal"), buttons = {
@@ -1346,16 +1346,16 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
     -- -----------------------------------------------------------------------
     -- Shared parametric helpers
     -- All menu-building functions below accept a `ctx` table:
-    --   ctx.pfx       — settings key prefix, e.g. "simpleui_hs_"
-    --   ctx.pfx_qa    — QA settings prefix, e.g. "simpleui_hs_qa_"
+    --   ctx.pfx       — settings key prefix, e.g. "penjuru_hs_"
+    --   ctx.pfx_qa    — QA settings prefix, e.g. "penjuru_hs_qa_"
     --   ctx.refresh   — zero-arg function to refresh the page after a change
     -- -----------------------------------------------------------------------
 
     local MAX_QA_ITEMS = 6  -- max actions per QA slot (used by makeQAMenu)
 
     local HOMESCREEN_CTX = {
-        pfx     = "simpleui_hs_",
-        pfx_qa  = "simpleui_hs_qa_",
+        pfx     = "penjuru_hs_",
+        pfx_qa  = "penjuru_hs_qa_",
         refresh = refreshHomescreen,
     }
 
@@ -1387,7 +1387,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
         local items_key  = ctx.pfx_qa .. slot_n .. "_items"
         local labels_key = ctx.pfx_qa .. slot_n .. "_labels"
         local slot_label = string.format(_("Quick Actions %d"), slot_n)
-        local function getItems() return SUISettings:readSetting(items_key) or {} end
+        local function getItems() return PENSettings:readSetting(items_key) or {} end
         local function isSelected(id)
             for _i, v in ipairs(getItems()) do if v == id then return true end end
             return false
@@ -1403,7 +1403,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                 end
                 new_items[#new_items+1] = id
             end
-            SUISettings:saveSetting(items_key, new_items); ctx.refresh()
+            PENSettings:saveSetting(items_key, new_items); ctx.refresh()
         end
         local items_sub = {}
         local sorted_pool = {}
@@ -1423,7 +1423,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
               UIManager:show(SortWidget():new{ title = string.format(_("Arrange %s"), slot_label), covers_fullscreen = true, item_table = sort_items,
                   callback = function()
                       local new_order = {}; for _i, item in ipairs(sort_items) do new_order[#new_order+1] = item.orig_item end
-                      SUISettings:saveSetting(items_key, new_order); ctx.refresh()
+                      PENSettings:saveSetting(items_key, new_order); ctx.refresh()
                   end })
           end,
         }
@@ -1444,11 +1444,11 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
         return {
             {
                 text           = _("Hide Text"),
-                checked_func   = function() return not SUISettings:nilOrTrue(labels_key) end,
+                checked_func   = function() return not PENSettings:nilOrTrue(labels_key) end,
                 keep_menu_open = true,
                 separator      = true,
                 callback       = function()
-                    SUISettings:saveSetting(labels_key, not SUISettings:nilOrTrue(labels_key))
+                    PENSettings:saveSetting(labels_key, not PENSettings:nilOrTrue(labels_key))
                     ctx.refresh()
                 end,
             },
@@ -1488,7 +1488,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
         })
 
         local function loadOrder()
-            local saved   = SUISettings:readSetting(ctx.pfx .. "module_order")
+            local saved   = PENSettings:readSetting(ctx.pfx .. "module_order")
             local default = Registry.defaultOrder()
             if type(saved) ~= "table" or #saved == 0 then return default end
             local seen = {}; local result = {}
@@ -1512,7 +1512,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                     if type(_mod.setEnabled) == "function" then
                         _mod.setEnabled(ctx.pfx, not on)
                     elseif _mod.enabled_key then
-                        SUISettings:saveSetting(ctx.pfx .. _mod.enabled_key, not on)
+                        PENSettings:saveSetting(ctx.pfx .. _mod.enabled_key, not on)
                     end
                     ctx.refresh()
                 end,
@@ -1580,14 +1580,14 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                             callback = function()
                                 local T          = _
                                 local SpinWidget = require("ui/widget/spinwidget")
-                                local HS         = require("sui_homescreen")
+                                local HS         = require("pen_homescreen")
                                 local PAGE_BREAK = HS.PAGE_BREAK_ID
-                                local order = SUISettings:readSetting(ctx.pfx .. "module_order") or {}
+                                local order = PENSettings:readSetting(ctx.pfx .. "module_order") or {}
                                 local saved_breaks = 0
                                 for _i, key in ipairs(order) do
                                     if key == PAGE_BREAK then saved_breaks = saved_breaks + 1 end
                                 end
-                                local current_pages = SUISettings:readSetting(ctx.pfx .. "homescreen_num_pages")
+                                local current_pages = PENSettings:readSetting(ctx.pfx .. "homescreen_num_pages")
                                     or math.max(1, saved_breaks + 1)
                                 UIManager:show(SpinWidget:new{
                                     title_text    = _("Number of Pages"),
@@ -1601,11 +1601,11 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                     default_value = 1,
                                     callback = function(spin)
                                         local new_pages = spin.value
-                                        SUISettings:saveSetting(ctx.pfx .. "homescreen_num_pages", new_pages)
+                                        PENSettings:saveSetting(ctx.pfx .. "homescreen_num_pages", new_pages)
 
                                         -- Re-read the current order (captured above may be stale if
                                         -- another operation ran before the SpinWidget closed).
-                                        local cur_order = SUISettings:readSetting(ctx.pfx .. "module_order") or {}
+                                        local cur_order = PENSettings:readSetting(ctx.pfx .. "module_order") or {}
 
                                         -- Split cur_order into pages so we know which modules live
                                         -- on pages that are being removed.
@@ -1630,7 +1630,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                                     if type(mod.setEnabled) == "function" then
                                                         mod.setEnabled(ctx.pfx, false)
                                                     elseif mod.enabled_key then
-                                                        SUISettings:saveSetting(ctx.pfx .. mod.enabled_key, false)
+                                                        PENSettings:saveSetting(ctx.pfx .. mod.enabled_key, false)
                                                     end
                                                 end
                                             end
@@ -1660,10 +1660,10 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                         for _i2, k in ipairs(tail) do
                                             new_order[#new_order + 1] = k
                                         end
-                                        SUISettings:saveSetting(ctx.pfx .. "module_order", new_order)
+                                        PENSettings:saveSetting(ctx.pfx .. "module_order", new_order)
 
                                         -- Reset to page 1 if the current page no longer exists.
-                                        local HS2 = package.loaded["sui_homescreen"]
+                                        local HS2 = package.loaded["pen_homescreen"]
                                         if HS2 and HS2._instance then
                                             if (HS2._instance._current_page or 1) > new_pages then
                                                 HS2._instance._current_page = 1
@@ -1678,7 +1678,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                         {
                             text = _("Arrange Modules"), keep_menu_open = true,
                             callback = function()
-                                local HS         = require("sui_homescreen")
+                                local HS         = require("pen_homescreen")
                                 local PAGE_BREAK = HS.PAGE_BREAK_ID
                                 local T          = _
 
@@ -1703,7 +1703,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                 for _i, key in ipairs(order) do
                                     if key == PAGE_BREAK then saved_breaks = saved_breaks + 1 end
                                 end
-                                local n_pages = SUISettings:readSetting(ctx.pfx .. "homescreen_num_pages")
+                                local n_pages = PENSettings:readSetting(ctx.pfx .. "homescreen_num_pages")
                                     or math.max(1, saved_breaks + 1)
                                 n_pages = math.max(1, math.min(10, n_pages))
 
@@ -1783,8 +1783,8 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                             new_order[#new_order + 1] = k
                                         end
                                     end
-                                    SUISettings:saveSetting(ctx.pfx .. "module_order", new_order)
-                                    local HS2 = package.loaded["sui_homescreen"]
+                                    PENSettings:saveSetting(ctx.pfx .. "module_order", new_order)
+                                    local HS2 = package.loaded["pen_homescreen"]
                                     if HS2 and HS2._instance then HS2._instance._current_page = 1 end
                                     ctx.refresh()
                                     return true
@@ -1839,7 +1839,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                             default_value = Config.SCALE_DEF,
                                             callback = function(spin)
                                                 Config.setModuleScale(spin.value)
-                                                local HS = package.loaded["sui_homescreen"]
+                                                local HS = package.loaded["pen_homescreen"]
                                                 if HS and HS.invalidateLabelCache then HS.invalidateLabelCache() end
                                                 ctx.refresh()
                                             end,
@@ -1874,7 +1874,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                             default_value = Config.SCALE_DEF,
                                             callback = function(spin)
                                                 Config.setLabelScale(spin.value)
-                                                local HS = package.loaded["sui_homescreen"]
+                                                local HS = package.loaded["pen_homescreen"]
                                                 if HS and HS.invalidateLabelCache then HS.invalidateLabelCache() end
                                                 ctx.refresh()
                                             end,
@@ -1893,7 +1893,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                     ok_text = _("Reset"),
                                     ok_callback = function()
                                         Config.resetAllScales(ctx.pfx, ctx.pfx_qa)
-                                        local HS = package.loaded["sui_homescreen"]
+                                        local HS = package.loaded["pen_homescreen"]
                                         if HS and HS.invalidateLabelCache then HS.invalidateLabelCache() end
                                         ctx.refresh()
                                     end,
@@ -1919,16 +1919,16 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
         -- Helper to cleanly apply layout-affecting changes (transparency, wallpaper, preset).
         local function _applyFullLayoutRefresh()
             plugin:_rewrapAllWidgets()
-            local Patches = package.loaded["sui_patches"]
+            local Patches = package.loaded["pen_patches"]
             if Patches and Patches.injectWallpaperIntoFullscreenWidget then
-                local stack = require("sui_core").getWindowStack()
+                local stack = require("pen_core").getWindowStack()
                 for _, entry in ipairs(stack) do
                     if entry.widget and entry.widget._navbar_injected then
                         pcall(Patches.injectWallpaperIntoFullscreenWidget, entry.widget)
                     end
                 end
             end
-            local HS = package.loaded["sui_homescreen"]
+            local HS = package.loaded["pen_homescreen"]
             if HS and HS.rebuildLayout then
                 HS.rebuildLayout()
             end
@@ -1942,7 +1942,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
 
         -- ── Wallpapers sub-menu (delegates to Homescreen style API) ─────
         local function _HS()
-            local ok, hs = pcall(require, "sui_homescreen")
+            local ok, hs = pcall(require, "pen_homescreen")
             return ok and hs or nil
         end
 
@@ -2178,12 +2178,12 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                 text         = _("Return to Book Folder"),
                 help_text    = _("When enabled, opening the file browser after finishing or closing a book navigates to the folder the book is in, matching native KOReader behaviour.\nWhen disabled (default), SimpleUI always returns to the library root.\nThis option works independently of \"Start with Home Screen\"."),
                 checked_func = function()
-                    return SUISettings:isTrue("simpleui_hs_return_to_book_folder")
+                    return PENSettings:isTrue("penjuru_hs_return_to_book_folder")
                 end,
                 keep_menu_open = true,
                 callback = function()
-                    local on = SUISettings:isTrue("simpleui_hs_return_to_book_folder")
-                    SUISettings:saveSetting("simpleui_hs_return_to_book_folder", not on)
+                    local on = PENSettings:isTrue("penjuru_hs_return_to_book_folder")
+                    PENSettings:saveSetting("penjuru_hs_return_to_book_folder", not on)
                 end,
             },
             {
@@ -2194,39 +2194,39 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                         text         = _("Always"),
                         radio        = true,
                         checked_func = function()
-                            local mode = SUISettings:readSetting("simpleui_hs_closing_notice_mode")
+                            local mode = PENSettings:readSetting("penjuru_hs_closing_notice_mode")
                             if mode then return mode == "always" end
                             -- Migrate from old boolean: nil/true → "always"
-                            return SUISettings:nilOrTrue("simpleui_hs_closing_notice")
+                            return PENSettings:nilOrTrue("penjuru_hs_closing_notice")
                         end,
                         keep_menu_open = true,
                         callback = function()
-                            SUISettings:saveSetting("simpleui_hs_closing_notice_mode", "always")
+                            PENSettings:saveSetting("penjuru_hs_closing_notice_mode", "always")
                         end,
                     },
                     {
                         text         = _("Gesture Only"),
                         radio        = true,
                         checked_func = function()
-                            return SUISettings:readSetting("simpleui_hs_closing_notice_mode") == "gesture_only"
+                            return PENSettings:readSetting("penjuru_hs_closing_notice_mode") == "gesture_only"
                         end,
                         keep_menu_open = true,
                         callback = function()
-                            SUISettings:saveSetting("simpleui_hs_closing_notice_mode", "gesture_only")
+                            PENSettings:saveSetting("penjuru_hs_closing_notice_mode", "gesture_only")
                         end,
                     },
                     {
                         text         = _("Never"),
                         radio        = true,
                         checked_func = function()
-                            local mode = SUISettings:readSetting("simpleui_hs_closing_notice_mode")
+                            local mode = PENSettings:readSetting("penjuru_hs_closing_notice_mode")
                             if mode then return mode == "never" end
                             -- Migrate from old boolean: explicit false → "never"
-                            return SUISettings:get("simpleui_hs_closing_notice") == false
+                            return PENSettings:get("penjuru_hs_closing_notice") == false
                         end,
                         keep_menu_open = true,
                         callback = function()
-                            SUISettings:saveSetting("simpleui_hs_closing_notice_mode", "never")
+                            PENSettings:saveSetting("penjuru_hs_closing_notice_mode", "never")
                         end,
                     },
                 },
@@ -2235,27 +2235,27 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                 text         = _("Settings on Long Tap"),
                 help_text    = _("When enabled, long-pressing a section opens its settings menu.\nDisable this to prevent the settings menu from appearing on long tap."),
                 checked_func = function()
-                    return SUISettings:nilOrTrue("simpleui_hs_settings_on_hold")
+                    return PENSettings:nilOrTrue("penjuru_hs_settings_on_hold")
                 end,
                 keep_menu_open = true,
                 callback = function()
-                    local on = SUISettings:nilOrTrue("simpleui_hs_settings_on_hold")
-                    SUISettings:saveSetting("simpleui_hs_settings_on_hold", not on)
+                    local on = PENSettings:nilOrTrue("penjuru_hs_settings_on_hold")
+                    PENSettings:saveSetting("penjuru_hs_settings_on_hold", not on)
                 end,
             },
             {
                 text         = _("Warn When Modules Overflow"),
                 help_text    = _("When enabled, a notice is shown if the modules on a page are taller than the visible area.\nDisable this to silence the warning."),
                 checked_func = function()
-                    return SUISettings:nilOrTrue("simpleui_hs_overflow_warn")
+                    return PENSettings:nilOrTrue("penjuru_hs_overflow_warn")
                 end,
                 keep_menu_open = true,
                 callback = function()
-                    local on = SUISettings:nilOrTrue("simpleui_hs_overflow_warn")
-                    SUISettings:saveSetting("simpleui_hs_overflow_warn", not on)
+                    local on = PENSettings:nilOrTrue("penjuru_hs_overflow_warn")
+                    PENSettings:saveSetting("penjuru_hs_overflow_warn", not on)
                     -- Reset the per-session dedup key so the warning fires
                     -- immediately if overflow is still present and was re-enabled.
-                    local ok_hs, HS = pcall(require, "sui_homescreen")
+                    local ok_hs, HS = pcall(require, "pen_homescreen")
                     if ok_hs and HS and HS._instance then
                         HS._instance._overflow_warn_key = nil
                     end
@@ -2286,8 +2286,8 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                     items[#items + 1] = {
                         text_func = function()
                             -- Show a checkmark next to the preset whose name
-                            -- matches the value stored in "simpleui_hs_active_preset".
-                            local active = SUISettings:get("simpleui_hs_active_preset")
+                            -- matches the value stored in "penjuru_hs_active_preset".
+                            local active = PENSettings:get("penjuru_hs_active_preset")
                             if active == _name then
                                 return "✓  " .. _name
                             end
@@ -2297,7 +2297,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                             local p = _Presets()
                             if not p then return end
                             if p.apply(_name) then
-                                SUISettings:set("simpleui_hs_active_preset", _name)
+                                PENSettings:set("penjuru_hs_active_preset", _name)
                                 UIManager:nextTick(function()
                                     _applyFullLayoutRefresh()
                                 end)
@@ -2349,7 +2349,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                     local overwrite = p.exists(name)
                                     local function _doSave()
                                         p.save(name)
-                                        SUISettings:set("simpleui_hs_active_preset", name)
+                                        PENSettings:set("penjuru_hs_active_preset", name)
                                         UIManager:close(dialog)
                                         UIManager:show(InfoMessage():new{
                                             text    = string.format(_("Preset \"%s\" saved."), name),
@@ -2400,7 +2400,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                         cancel_text = _("Cancel"),
                                         ok_callback = function()
                                             p3.save(_name)
-                                            SUISettings:set("simpleui_hs_active_preset", _name)
+                                            PENSettings:set("penjuru_hs_active_preset", _name)
                                             UIManager:show(InfoMessage():new{
                                                 text    = string.format(_("Preset \"%s\" updated."), _name),
                                                 timeout = 2,
@@ -2462,9 +2462,9 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                                         return
                                                     end
                                                     p3.rename(_name, new_name)
-                                                    local active = SUISettings:get("simpleui_hs_active_preset")
+                                                    local active = PENSettings:get("penjuru_hs_active_preset")
                                                     if active == _name then
-                                                        SUISettings:set("simpleui_hs_active_preset", new_name)
+                                                        PENSettings:set("penjuru_hs_active_preset", new_name)
                                                     end
                                                     UIManager:close(dialog2)
                                                 end,
@@ -2503,9 +2503,9 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                             local p3 = _Presets()
                                             if not p3 then return end
                                             p3.delete(_name)
-                                            local active = SUISettings:get("simpleui_hs_active_preset")
+                                            local active = PENSettings:get("penjuru_hs_active_preset")
                                             if active == _name then
-                                                SUISettings:del("simpleui_hs_active_preset")
+                                                PENSettings:del("penjuru_hs_active_preset")
                                             end
                                         end,
                                     })
@@ -2533,7 +2533,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                             if not dir then return end
                             local FM = package.loaded["apps/filemanager/filemanager"]
                             if FM and FM.instance and FM.instance.file_chooser then
-                                local HS = package.loaded["sui_homescreen"]
+                                local HS = package.loaded["pen_homescreen"]
                                 if HS and HS._instance then
                                     HS._instance._navbar_closing_intentionally = true
                                     require("ui/uimanager"):close(HS._instance)
@@ -2620,7 +2620,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                 text_func = function()
                     local P     = _Presets()
                     local names = P and P.listNames() or {}
-                    local active = SUISettings:get("simpleui_hs_active_preset")
+                    local active = PENSettings:get("penjuru_hs_active_preset")
                     if active and active ~= "" then
                         return string.format(_("Homepage Presets  [%s]"), active)
                     end
@@ -2674,12 +2674,12 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
         sub_item_table = {
             {
                 text_func    = function()
-                    return _("Simple UI") .. " — " .. (SUISettings:nilOrTrue("simpleui_enabled") and _("On") or _("Off"))
+                    return _("Simple UI") .. " — " .. (PENSettings:nilOrTrue("penjuru_enabled") and _("On") or _("Off"))
                 end,
-                checked_func = function() return SUISettings:nilOrTrue("simpleui_enabled") end,
+                checked_func = function() return PENSettings:nilOrTrue("penjuru_enabled") end,
                 callback     = function()
-                    local on = SUISettings:nilOrTrue("simpleui_enabled")
-                    SUISettings:saveSetting("simpleui_enabled", not on)
+                    local on = PENSettings:nilOrTrue("penjuru_enabled")
+                    PENSettings:saveSetting("penjuru_enabled", not on)
                     -- When disabling SimpleUI, reset "Start with Homescreen" if active,
                     -- because "homescreen_simpleui" is not a value the base KOReader
                     -- understands — leaving it set would cause a blank screen on next boot.
@@ -2689,7 +2689,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                     -- Flush immediately so a hard reboot / crash cannot leave the
                     -- setting unsaved, which would cause a white-screen boot loop
                     -- the next time KOReader starts with the plugin installed.
-                    SUISettings:flush()
+                    PENSettings:flush()
                     UIManager:show(ConfirmBox():new{
                         text        = string.format(_("Simple UI will be %s after restart.\n\nRestart now?"), on and _("disabled") or _("enabled")),
                         ok_text     = _("Restart"), cancel_text = _("Later"),
@@ -2709,12 +2709,12 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                         text       = _("Settings Tab"),
                         help_text  = _("Show or hide the dedicated Simple UI tab in the menu bar.\nWhen hidden, Simple UI settings remain accessible via the main menu.\nTakes effect after a restart."),
                         checked_func = function()
-                            return SUISettings:nilOrTrue("simpleui_settings_tab_enabled")
+                            return PENSettings:nilOrTrue("penjuru_settings_tab_enabled")
                         end,
                         keep_menu_open = true,
                         callback = function()
-                            local on = SUISettings:nilOrTrue("simpleui_settings_tab_enabled")
-                            SUISettings:saveSetting("simpleui_settings_tab_enabled", not on)
+                            local on = PENSettings:nilOrTrue("penjuru_settings_tab_enabled")
+                            PENSettings:saveSetting("penjuru_settings_tab_enabled", not on)
                             UIManager:show(ConfirmBox():new{
                                 text = string.format(
                                     _("The Simple UI settings tab will be %s after restart.\n\nRestart now?"),
@@ -2722,7 +2722,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                 ),
                                 ok_text = _("Restart"), cancel_text = _("Later"),
                                 ok_callback = function()
-                                    SUISettings:flush()
+                                    PENSettings:flush()
                                     UIManager:restartKOReader()
                                 end,
                             })
@@ -2771,15 +2771,15 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                             --[[ ORIGINAL icon presets code (sui_presets removed):
                                 sub_item_table_func = function()
                                     local ok_ip, P   = nil  -- removed: sui_presets
-                                    local ok_qa, QA2 = pcall(require, "sui_quickactions")
-                                    local ok_ss, SS2 = pcall(require, "sui_style")
+                                    local ok_qa, QA2 = pcall(require, "pen_quickactions")
+                                    local ok_ss, SS2 = pcall(require, "pen_style")
                                     local IP  = ok_ip and P and P.icons or nil
                                     local QA2 = ok_qa and QA2 or nil
 
                                     -- Helper: reapply all icon changes after a preset is applied.
                                     local function _reapplyAll()
                                         -- Titlebar (system icons).
-                                        local ok_tb, TB = pcall(require, "sui_titlebar")
+                                        local ok_tb, TB = pcall(require, "pen_titlebar")
                                         if ok_tb and TB then
                                             local FM = package.loaded["apps/filemanager/filemanager"]
                                             local fm = FM and FM.instance
@@ -2791,7 +2791,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                             end
                                         end
                                         -- Pagination chevrons and collections back button.
-                                        local ok_ss2, SS2 = pcall(require, "sui_style")
+                                        local ok_ss2, SS2 = pcall(require, "pen_style")
                                         if ok_ss2 and SS2 then
                                             local FM2 = package.loaded["apps/filemanager/filemanager"]
                                             local fm2 = FM2 and FM2.instance
@@ -2828,7 +2828,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                         -- Homescreen: rebuild layout after the menu
                                         -- closes (nextTick) so setDirty is
                                         -- processed with the HS on top of the stack.
-                                        local HS = package.loaded["sui_homescreen"]
+                                        local HS = package.loaded["pen_homescreen"]
                                         if HS and HS._instance then
                                             local hs = HS._instance
                                             UIManager:nextTick(function()
@@ -2848,13 +2848,13 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                             local _name = name
                                             items[#items + 1] = {
                                                 text_func = function()
-                                                    local active = SUISettings:get("simpleui_icon_active_preset")
+                                                    local active = PENSettings:get("penjuru_icon_active_preset")
                                                     return (active == _name and "\u{2713}  " or "    ") .. _name
                                                 end,
                                                 callback = function()
                                                     if not IP then return end
                                                     if IP.apply(_name, QA2) then
-                                                        SUISettings:set("simpleui_icon_active_preset", _name)
+                                                        PENSettings:set("penjuru_icon_active_preset", _name)
                                                         _reapplyAll()
                                                     else
                                                         UIManager:show(InfoMessage():new{
@@ -2899,7 +2899,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                                             end
                                                             local function _doSave()
                                                                 IP.save(name)
-                                                                SUISettings:set("simpleui_icon_active_preset", name)
+                                                                PENSettings:set("penjuru_icon_active_preset", name)
                                                                 UIManager:close(dialog)
                                                                 UIManager:show(InfoMessage():new{
                                                                     text    = string.format(_("Preset \"%s\" saved."), name),
@@ -2944,7 +2944,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                                                 ok_callback = function()
                                                                     if IP then
                                                                         IP.save(_name)
-                                                                        SUISettings:set("simpleui_icon_active_preset", _name)
+                                                                        PENSettings:set("penjuru_icon_active_preset", _name)
                                                                         UIManager:show(InfoMessage():new{
                                                                             text    = string.format(_("Preset \"%s\" updated."), _name),
                                                                             timeout = 2,
@@ -3001,9 +3001,9 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                                                             end
                                                                             if IP then
                                                                                 IP.rename(_name, new_name)
-                                                                                local active = SUISettings:get("simpleui_icon_active_preset")
+                                                                                local active = PENSettings:get("penjuru_icon_active_preset")
                                                                                 if active == _name then
-                                                                                    SUISettings:set("simpleui_icon_active_preset", new_name)
+                                                                                    PENSettings:set("penjuru_icon_active_preset", new_name)
                                                                                 end
                                                                             end
                                                                             UIManager:close(dialog2)
@@ -3038,9 +3038,9 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                                                 ok_callback = function()
                                                                     if IP then
                                                                         IP.delete(_name)
-                                                                        local active = SUISettings:get("simpleui_icon_active_preset")
+                                                                        local active = PENSettings:get("penjuru_icon_active_preset")
                                                                         if active == _name then
-                                                                            SUISettings:del("simpleui_icon_active_preset")
+                                                                            PENSettings:del("penjuru_icon_active_preset")
                                                                         end
                                                                     end
                                                                 end,
@@ -3068,7 +3068,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                                     if not dir then return end
                                                     local FM = package.loaded["apps/filemanager/filemanager"]
                                                     if FM and FM.instance and FM.instance.file_chooser then
-                                                    local HS = package.loaded["sui_homescreen"]
+                                                    local HS = package.loaded["pen_homescreen"]
                                                     if HS and HS._instance then
                                                         HS._instance._navbar_closing_intentionally = true
                                                         require("ui/uimanager"):close(HS._instance)
@@ -3152,14 +3152,14 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                             -- ── Icon Packs ────────────────────────────────────────────
                             {
                                 text_func = function()
-                                    local ok_ip, IP = pcall(require, "sui_style")
+                                    local ok_ip, IP = pcall(require, "pen_style")
                                     if not ok_ip or not IP then return _("Icon Packs") end
                                     local n = #IP.listPacks()
                                     if n == 0 then return _("Icon Packs") end
                                     return string.format(_("Icon Packs  (%d)"), n)
                                 end,
                                 sub_item_table_func = function()
-                                    local ok_ip, IP = pcall(require, "sui_style")
+                                    local ok_ip, IP = pcall(require, "pen_style")
                                     if not ok_ip or not IP then
                                         return {{ text = _("Module unavailable"), enabled = false }}
                                     end
@@ -3167,7 +3167,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                     -- ── Helper: reapply all icon changes ─────────────────
                                     local function _reapplyAllPacks()
                                         -- Titlebar (system icons)
-                                        local ok_tb, TB = pcall(require, "sui_titlebar")
+                                        local ok_tb, TB = pcall(require, "pen_titlebar")
                                         if ok_tb and TB then
                                             local FM = package.loaded["apps/filemanager/filemanager"]
                                             local fm = FM and FM.instance
@@ -3179,7 +3179,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                             end
                                         end
                                         -- Pagination chevrons and collections back button
-                                        local ok_ss2, SS2 = pcall(require, "sui_style")
+                                        local ok_ss2, SS2 = pcall(require, "pen_style")
                                         if ok_ss2 and SS2 then
                                             local FM2 = package.loaded["apps/filemanager/filemanager"]
                                             local fm2 = FM2 and FM2.instance
@@ -3202,7 +3202,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
 
                                         -- Invalidate Quick Actions caches
                                         -- sui_foldercovers removed: out of scope for penjuru v1
-                                        local ok_qa, QA_pack = pcall(require, "sui_quickactions")
+                                        local ok_qa, QA_pack = pcall(require, "pen_quickactions")
                                         if ok_qa and QA_pack and QA_pack.invalidateCustomQACache then QA_pack.invalidateCustomQACache() end
                                         local FM = package.loaded["apps/filemanager/filemanager"]
                                         local fm_inst = FM and FM.instance
@@ -3215,7 +3215,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                         -- QA navbars
                                         plugin:_rebuildAllNavbars()
                                         -- Homescreen
-                                        local HS = package.loaded["sui_homescreen"]
+                                        local HS = package.loaded["pen_homescreen"]
                                         if HS and HS._instance then
                                             local hs = HS._instance
                                             UIManager:nextTick(function()
@@ -3322,11 +3322,11 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
 
                             {
                                 text_func = function()
-                                    local ok_ss, SUIStyle = pcall(require, "sui_style")
+                                    local ok_ss, SUIStyle = pcall(require, "pen_style")
                                     if not ok_ss or not SUIStyle then return _("System Icons") end
                                     local has_custom = false
                                     for _, s in ipairs(SUIStyle.SLOTS) do
-                                        if s.group ~= "sui_qa_defaults" and SUIStyle.getIcon(s.id) ~= nil then
+                                        if s.group ~= "pen_qa_defaults" and SUIStyle.getIcon(s.id) ~= nil then
                                             has_custom = true
                                             break
                                         end
@@ -3334,7 +3334,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                     return _("System Icons") .. (has_custom and "  \u{270E}" or "")
                                 end,
                                 sub_item_table_func = function()
-                                    local ok_ss, SUIStyle = pcall(require, "sui_style")
+                                    local ok_ss, SUIStyle = pcall(require, "pen_style")
                                     if not ok_ss or not SUIStyle then return {} end
                                     return SUIStyle.makeMenuItems(plugin)
                                 end,
@@ -3342,7 +3342,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                             {
                                 text_func = function()
                                     local has_custom = false
-                                    local ok_qa, QA2 = pcall(require, "sui_quickactions")
+                                    local ok_qa, QA2 = pcall(require, "pen_quickactions")
                                     if ok_qa and QA2 then
                                         for _, a in ipairs(Config.ALL_ACTIONS) do
                                             if QA2.getDefaultActionIcon(a.id) ~= nil then
@@ -3368,10 +3368,10 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                         end
                                     end
                                     if not has_custom then
-                                        local ok_ss, SUIStyle = pcall(require, "sui_style")
+                                        local ok_ss, SUIStyle = pcall(require, "pen_style")
                                         if ok_ss and SUIStyle then
                                             for _, s in ipairs(SUIStyle.SLOTS) do
-                                                if s.group == "sui_qa_defaults" and SUIStyle.getIcon(s.id) ~= nil then
+                                                if s.group == "pen_qa_defaults" and SUIStyle.getIcon(s.id) ~= nil then
                                                     has_custom = true
                                                     break
                                                 end
@@ -3381,7 +3381,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                     return _("Quick Actions Icons") .. (has_custom and "  \u{270E}" or "")
                                 end,
                                 sub_item_table_func = function()
-                                    local ok_qa, QA2 = pcall(require, "sui_quickactions")
+                                    local ok_qa, QA2 = pcall(require, "pen_quickactions")
                                     if not ok_qa or not QA2 then return {} end
                                     return QA2.makeIconsMenuItems(plugin)
                                 end,
@@ -3392,17 +3392,17 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                     {
                         text = _("UI Font"),
                         text_func = function()
-                            local ok_ss, SUIStyle = pcall(require, "sui_style")
+                            local ok_ss, SUIStyle = pcall(require, "pen_style")
                             if not ok_ss or not SUIStyle then return _("UI Font") end
-                        local enabled = SUISettings:isTrue("simpleui_ui_font_enabled")
-                            local name    = SUISettings:get("simpleui_ui_font_name") or "Noto Sans"
+                        local enabled = PENSettings:isTrue("penjuru_ui_font_enabled")
+                            local name    = PENSettings:get("penjuru_ui_font_name") or "Noto Sans"
                             if not enabled then
                                 return _("UI Font  (default)")
                             end
                             return string.format(_("UI Font  [%s]"), name)
                         end,
                         sub_item_table_func = function()
-                            local ok_ss, SUIStyle = pcall(require, "sui_style")
+                            local ok_ss, SUIStyle = pcall(require, "pen_style")
                             if not ok_ss or not SUIStyle then return {} end
                             local ok_fi, items = pcall(SUIStyle.makeFontMenuItems)
                             if not ok_fi or type(items) ~= "table" then return {} end
@@ -3415,19 +3415,19 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                     {
                         text_func = function()
                             -- Show the edit pencil if any theme color role is set.
-                            local has = SUISettings:get("simpleui_style_theme_bg")
-                                     or SUISettings:get("simpleui_style_theme_fg")
-                                     or SUISettings:get("simpleui_style_theme_bottombar_bg")
-                                     or SUISettings:get("simpleui_style_theme_bottombar_fg")
-                                     or SUISettings:get("simpleui_style_theme_statusbar_bg")
-                                     or SUISettings:get("simpleui_style_theme_statusbar_fg")
-                                     or SUISettings:get("simpleui_style_theme_text_secondary")
-                                     or SUISettings:get("simpleui_style_theme_separator")
-                                     or SUISettings:get("simpleui_style_theme_accent")
+                            local has = PENSettings:get("penjuru_style_theme_bg")
+                                     or PENSettings:get("penjuru_style_theme_fg")
+                                     or PENSettings:get("penjuru_style_theme_bottombar_bg")
+                                     or PENSettings:get("penjuru_style_theme_bottombar_fg")
+                                     or PENSettings:get("penjuru_style_theme_statusbar_bg")
+                                     or PENSettings:get("penjuru_style_theme_statusbar_fg")
+                                     or PENSettings:get("penjuru_style_theme_text_secondary")
+                                     or PENSettings:get("penjuru_style_theme_separator")
+                                     or PENSettings:get("penjuru_style_theme_accent")
                             return _("Theme Colors") .. (has and "  \u{270E}" or "")
                         end,
                         sub_item_table_func = function()
-                            local ok_ss, SUIStyle = pcall(require, "sui_style")
+                            local ok_ss, SUIStyle = pcall(require, "pen_style")
                             if not ok_ss or not SUIStyle then return {} end
                             local ok_fi, items = pcall(SUIStyle.makeThemeMenuItems)
                             if not ok_fi or type(items) ~= "table" then return {} end
@@ -3446,12 +3446,12 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                         {
                             text         = _("Browse by Author / Series / Tags"),
                             checked_func = function()
-                                local ok_bm, BM = pcall(require, "sui_browsemeta")
+                                local ok_bm, BM = pcall(require, "pen_browsemeta")
                                 return ok_bm and BM and BM.isEnabled()
                             end,
                             separator    = true,
                             callback     = function()
-                                local ok_bm, BM = pcall(require, "sui_browsemeta")
+                                local ok_bm, BM = pcall(require, "pen_browsemeta")
                                 if not (ok_bm and BM) then return end
                                 local enabling = not BM.isEnabled()
                                 BM.setEnabled(enabling)
@@ -3461,7 +3461,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                 local FM2 = package.loaded["apps/filemanager/filemanager"]
                                 local fm2 = FM2 and FM2.instance
                                 if fm2 then
-                                    local ok_tb, TB = pcall(require, "sui_titlebar")
+                                    local ok_tb, TB = pcall(require, "pen_titlebar")
                                     if ok_tb and TB then pcall(TB.restore, fm2) end
                                 end
                                 if enabling then
@@ -3485,7 +3485,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                 end
                                 -- Rebuild titlebar (with or without browse button).
                                 if fm2 then
-                                    local ok_tb, TB = pcall(require, "sui_titlebar")
+                                    local ok_tb, TB = pcall(require, "pen_titlebar")
                                     if ok_tb and TB then pcall(TB.apply, fm2) end
                                 end
                             end,
@@ -3840,7 +3840,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                             callback       = function() FC.setLabelPosition("bottom"); _refreshFC() end,
                                         },
                                         (function()
-                                            local Config = require("sui_config")
+                                            local Config = require("pen_config")
                                             return Config.makeScaleItem({
                                                 text_func    = function() return _("Text size") end,
                                                 enabled_func = function() return FC.getLabelMode() ~= "hidden" end,
@@ -3872,7 +3872,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                                         text        = _("Title strip disabled.\n\nRestart now?"),
                                                         ok_text     = _("Restart"), cancel_text = _("Later"),
                                                         ok_callback = function()
-                                                            SUISettings:flush()
+                                                            PENSettings:flush()
                                                             UIManager:restartKOReader()
                                                         end,
                                                     })
@@ -3893,7 +3893,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                                     text        = _("Title strip enabled.\n\nRestart now?"),
                                                     ok_text     = _("Restart"), cancel_text = _("Later"),
                                                     ok_callback = function()
-                                                        SUISettings:flush()
+                                                        PENSettings:flush()
                                                         UIManager:restartKOReader()
                                                     end,
                                                 })
@@ -3913,7 +3913,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                                     text        = _("Title and author strip enabled.\n\nRestart now?"),
                                                     ok_text     = _("Restart"), cancel_text = _("Later"),
                                                     ok_callback = function()
-                                                        SUISettings:flush()
+                                                        PENSettings:flush()
                                                         UIManager:restartKOReader()
                                                     end,
                                                 })
@@ -4020,13 +4020,13 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                     cancel_text = _("Cancel"),
                                     ok_callback = function()
                                         local keys_to_delete = {}
-                                        for k, _ in SUISettings:iterateKeys() do
+                                        for k, _ in PENSettings:iterateKeys() do
                                             keys_to_delete[#keys_to_delete + 1] = k
                                         end
                                         for _, k in ipairs(keys_to_delete) do
-                                            SUISettings:del(k)
+                                            PENSettings:del(k)
                                         end
-                                        SUISettings:flush()
+                                        PENSettings:flush()
                                         
                                         if G_reader_settings:readSetting("start_with") == "homescreen_simpleui" then
                                             G_reader_settings:saveSetting("start_with", "filemanager")

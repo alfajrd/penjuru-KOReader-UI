@@ -14,12 +14,12 @@ local VerticalSpan    = require("ui/widget/verticalspan")
 local LeftContainer   = require("ui/widget/container/leftcontainer")
 local RightContainer  = require("ui/widget/container/rightcontainer")
 local Screen          = Device.screen
-local _ = require("sui_i18n").translate
+local _ = require("pen_i18n").translate
 
-local UI           = require("sui_core")
+local UI           = require("pen_core")
 local UIManager    = require("ui/uimanager")
-local Config       = require("sui_config")
-local SUISettings = require("sui_store")
+local Config       = require("pen_config")
+local PENSettings = require("pen_store")
 local PAD          = UI.PAD
 local PAD2         = UI.PAD2
 local CLR_TEXT_SUB = UI.CLR_TEXT_SUB
@@ -92,13 +92,13 @@ local SETTING_ALIGN     = "clock_align"      -- pfx .. "clock_align"     (defaul
 local ALIGN_VALUES = { "left", "center", "right" }
 
 local function getAlignment(pfx)
-    local v = SUISettings:readSetting(pfx .. SETTING_ALIGN)
+    local v = PENSettings:readSetting(pfx .. SETTING_ALIGN)
     for _, a in ipairs(ALIGN_VALUES) do if a == v then return v end end
     return "center"  -- default
 end
 
 local function setAlignment(pfx, val)
-    SUISettings:saveSetting(pfx .. SETTING_ALIGN, val)
+    PENSettings:saveSetting(pfx .. SETTING_ALIGN, val)
 end
 
 local function alignLabel(align, _lc)
@@ -117,29 +117,29 @@ local function _clampElemGap(n)
 end
 
 local function getDateGapPct(pfx)
-    local v = SUISettings:readSetting(pfx .. SETTING_DATE_GAP)
+    local v = PENSettings:readSetting(pfx .. SETTING_DATE_GAP)
     local n = tonumber(v)
     return n and _clampElemGap(n) or ELEM_GAP_DEF
 end
 
 local function getBattGapPct(pfx)
-    local v = SUISettings:readSetting(pfx .. SETTING_BATT_GAP)
+    local v = PENSettings:readSetting(pfx .. SETTING_BATT_GAP)
     local n = tonumber(v)
     return n and _clampElemGap(n) or ELEM_GAP_DEF
 end
 
 local function isClockEnabled(pfx)
-    local v = SUISettings:readSetting(pfx .. SETTING_ON)
+    local v = PENSettings:readSetting(pfx .. SETTING_ON)
     return v ~= false   -- default ON
 end
 
 local function isDateEnabled(pfx)
-    local v = SUISettings:readSetting(pfx .. SETTING_DATE)
+    local v = PENSettings:readSetting(pfx .. SETTING_DATE)
     return v ~= false   -- default ON
 end
 
 local function isBattEnabled(pfx)
-    local v = SUISettings:readSetting(pfx .. SETTING_BATTERY)
+    local v = PENSettings:readSetting(pfx .. SETTING_BATTERY)
     return v ~= false   -- default ON
 end
 
@@ -215,7 +215,7 @@ local function build(w, pfx, vspan_pool)
     local inner_w    = w - PAD * 2
 
     -- Theme: when fg is set, use it for sub-text; otherwise fall back to CLR_TEXT_SUB.
-    local ok_ss, SUIStyle  = pcall(require, "sui_style")
+    local ok_ss, SUIStyle  = pcall(require, "pen_style")
     local theme_fg         = ok_ss and SUIStyle and SUIStyle.getThemeColor("fg")
     local theme_secondary  = ok_ss and SUIStyle and SUIStyle.getThemeColor("text_secondary")
     local sub_fg           = theme_secondary or theme_fg or CLR_TEXT_SUB
@@ -297,13 +297,13 @@ end
 
 function M.setEnabled(pfx, on)
     if not on then
-        SUISettings:saveSetting(pfx .. SETTING_ON, false)
-        SUISettings:saveSetting(pfx .. SETTING_DATE, false)
-        SUISettings:saveSetting(pfx .. SETTING_BATTERY, false)
+        PENSettings:saveSetting(pfx .. SETTING_ON, false)
+        PENSettings:saveSetting(pfx .. SETTING_DATE, false)
+        PENSettings:saveSetting(pfx .. SETTING_BATTERY, false)
     else
-        SUISettings:saveSetting(pfx .. SETTING_ON, true)
-        SUISettings:saveSetting(pfx .. SETTING_DATE, true)
-        SUISettings:saveSetting(pfx .. SETTING_BATTERY, true)
+        PENSettings:saveSetting(pfx .. SETTING_ON, true)
+        PENSettings:saveSetting(pfx .. SETTING_DATE, true)
+        PENSettings:saveSetting(pfx .. SETTING_BATTERY, true)
     end
 end
 
@@ -328,7 +328,7 @@ local function _tick()
     -- Abort if the homescreen instance has changed or gone away.
     local hs = _hs_widget
     if not hs then return end
-    local HS = package.loaded["sui_homescreen"]
+    local HS = package.loaded["pen_homescreen"]
     if not HS or HS._instance ~= hs then _hs_widget = nil; return end
 
     -- Do not update while suspended — some platforms fire pending timers
@@ -342,14 +342,14 @@ local function _tick()
     -- Two complementary guards:
     -- • hs._suspended — set by HomescreenWidget:onSuspend() when the Suspend
     --   event reaches the widget via broadcastEvent.
-    -- • plugin._simpleui_suspended — set by SimpleUIPlugin:onSuspend(), which
+    -- • plugin._penjuru_suspended — set by SimpleUIPlugin:onSuspend(), which
     --   runs in the same broadcastEvent pass but may arrive before or after the
     --   widget handler depending on stack order. Checking both closes the race
     --   window where the UIManager has already dequeued this timer for execution
     --   in the current tick before either flag was set.
     local FM = package.loaded["apps/filemanager/filemanager"]
-    local plugin = FM and FM.instance and FM.instance._simpleui_plugin
-    if hs._suspended or (plugin and plugin._simpleui_suspended) or Device.screen_saver_mode then
+    local plugin = FM and FM.instance and FM.instance._penjuru_plugin
+    if hs._suspended or (plugin and plugin._penjuru_suspended) or Device.screen_saver_mode then
         return
     end
 
@@ -368,7 +368,7 @@ local function _tick()
 
     if body and idx and body[idx] and hs._navbar_container then
         local sw      = Screen:getWidth()
-        local SIDE_PAD = require("sui_core").SIDE_M()
+        local SIDE_PAD = require("pen_core").SIDE_M()
         local inner_w  = hs._clock_inner_w or (sw - SIDE_PAD * 2)
 
         -- In landscape mode the homescreen applies a scale reduction factor to
@@ -441,8 +441,8 @@ local function _tick()
     --
     -- `plugin` was resolved above for the suspend guard — reuse it here.
     -- ---------------------------------------------------------------------------
-    if plugin and not plugin._simpleui_suspended then
-        local Topbar = package.loaded["sui_topbar"]
+    if plugin and not plugin._penjuru_suspended then
+        local Topbar = package.loaded["pen_topbar"]
         if Topbar then
             -- Cancel the topbar's own pending timer before refreshing — without
             -- this, the topbar would fire again on its old schedule in addition
@@ -542,7 +542,7 @@ function M.getMenuItems(ctx_menu)
     local _lc     = ctx_menu._
 
     local function toggle(key, current)
-        SUISettings:saveSetting(pfx .. key, not current)
+        PENSettings:saveSetting(pfx .. key, not current)
         refresh()
     end
 
@@ -619,7 +619,7 @@ function M.getMenuItems(ctx_menu)
                     cancel_text   = _lc("Cancel"),
                     default_value = ELEM_GAP_DEF,
                     callback      = function(spin)
-                        SUISettings:saveSetting(pfx .. SETTING_DATE_GAP, _clampElemGap(spin.value))
+                        PENSettings:saveSetting(pfx .. SETTING_DATE_GAP, _clampElemGap(spin.value))
                         refresh()
                     end,
                 })
@@ -649,7 +649,7 @@ function M.getMenuItems(ctx_menu)
                     cancel_text   = _lc("Cancel"),
                     default_value = ELEM_GAP_DEF,
                     callback      = function(spin)
-                        SUISettings:saveSetting(pfx .. SETTING_BATT_GAP, _clampElemGap(spin.value))
+                        PENSettings:saveSetting(pfx .. SETTING_BATT_GAP, _clampElemGap(spin.value))
                         refresh()
                     end,
                 })

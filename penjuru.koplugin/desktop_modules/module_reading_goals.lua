@@ -17,13 +17,13 @@ local UIManager       = require("ui/uimanager")
 local VerticalGroup   = require("ui/widget/verticalgroup")
 local VerticalSpan    = require("ui/widget/verticalspan")
 local Screen          = Device.screen
-local _ = require("sui_i18n").translate
-local N_ = require("sui_i18n").ngettext
+local _ = require("pen_i18n").translate
+local N_ = require("pen_i18n").ngettext
 local logger          = require("logger")
-local Config          = require("sui_config")
+local Config          = require("pen_config")
 
-local UI           = require("sui_core")
-local SUISettings = require("sui_store")
+local UI           = require("pen_core")
+local PENSettings = require("pen_store")
 local PAD          = UI.PAD
 local PAD2         = UI.PAD2
 local LABEL_H      = UI.LABEL_H
@@ -80,17 +80,17 @@ end
 local function _getYearStr() return os.date("%Y") end
 
 -- Settings keys
-local SHOW_ANNUAL = "simpleui_reading_goals_show_annual"
-local SHOW_DAILY  = "simpleui_reading_goals_show_daily"
-local LAYOUT_KEY  = "simpleui_reading_goals_layout"  -- "default" | "compact"
+local SHOW_ANNUAL = "penjuru_reading_goals_show_annual"
+local SHOW_DAILY  = "penjuru_reading_goals_show_daily"
+local LAYOUT_KEY  = "penjuru_reading_goals_layout"  -- "default" | "compact"
 
-local function isCompact()    return SUISettings:readSetting(LAYOUT_KEY) == "compact" end
-local function showAnnual()   return SUISettings:readSetting(SHOW_ANNUAL) ~= false end
-local function showDaily()    return SUISettings:readSetting(SHOW_DAILY)  ~= false end
+local function isCompact()    return PENSettings:readSetting(LAYOUT_KEY) == "compact" end
+local function showAnnual()   return PENSettings:readSetting(SHOW_ANNUAL) ~= false end
+local function showDaily()    return PENSettings:readSetting(SHOW_DAILY)  ~= false end
 
-local function getAnnualGoal()     return SUISettings:readSetting("simpleui_reading_goal") or 0 end
-local function getAnnualPhysical() return SUISettings:readSetting("simpleui_reading_goal_physical") or 0 end
-local function getDailyGoalSecs()  return SUISettings:readSetting("simpleui_daily_reading_goal_secs") or 0 end
+local function getAnnualGoal()     return PENSettings:readSetting("penjuru_reading_goal") or 0 end
+local function getAnnualPhysical() return PENSettings:readSetting("penjuru_reading_goal_physical") or 0 end
+local function getDailyGoalSecs()  return PENSettings:readSetting("penjuru_daily_reading_goal_secs") or 0 end
 
 -- Formats seconds as "Xh Ym" / "Xh" / "Ym"
 local function formatDuration(secs)
@@ -354,7 +354,7 @@ end
 local function _refreshHS()
     local SP = package.loaded["desktop_modules/module_stats_provider"]
     if SP then SP.invalidate() end
-    local HS = package.loaded["sui_homescreen"]
+    local HS = package.loaded["pen_homescreen"]
     if HS then HS.refresh(false) end
 end
 
@@ -368,7 +368,7 @@ local function showAnnualGoalDialog(on_confirm)
         value_min   = 0, value_max = 365, value_step = 1,
         ok_text     = _("Save"), cancel_text = _("Cancel"),
         callback    = function(spin)
-            SUISettings:saveSetting("simpleui_reading_goal", math.floor(spin.value))
+            PENSettings:saveSetting("penjuru_reading_goal", math.floor(spin.value))
             _refreshHS()
             if on_confirm then on_confirm() end
         end,
@@ -384,7 +384,7 @@ local function showAnnualPhysicalDialog(on_confirm)
         value       = getAnnualPhysical(), value_min = 0, value_max = 365, value_step = 1,
         ok_text     = _("Save"), cancel_text = _("Cancel"),
         callback    = function(spin)
-            SUISettings:saveSetting("simpleui_reading_goal_physical", math.floor(spin.value))
+            PENSettings:saveSetting("penjuru_reading_goal_physical", math.floor(spin.value))
             _refreshHS()
             if on_confirm then on_confirm() end
         end,
@@ -401,7 +401,7 @@ local function showDailySettingsDialog(on_confirm)
         value       = cur_minutes, value_min = 0, value_max = 720, value_step = 5,
         ok_text     = _("Save"), cancel_text = _("Cancel"),
         callback    = function(spin)
-            SUISettings:saveSetting("simpleui_daily_reading_goal_secs",
+            PENSettings:saveSetting("penjuru_daily_reading_goal_secs",
                 math.floor(spin.value) * 60)
             _refreshHS()
             if on_confirm then on_confirm() end
@@ -493,7 +493,7 @@ function M.build(w, ctx)
     local compact = isCompact()
 
     -- Theme
-    local ok_ss, SUIStyle  = pcall(require, "sui_style")
+    local ok_ss, SUIStyle  = pcall(require, "pen_style")
     local _theme_fg        = ok_ss and SUIStyle and SUIStyle.getThemeColor("fg")
     local _theme_secondary = ok_ss and SUIStyle and SUIStyle.getThemeColor("text_secondary")
     local CLR_TEXT_BLK_EFF = _theme_fg or _CLR_TEXT_LBL
@@ -560,8 +560,8 @@ function M.build(w, ctx)
         end
     end
 
-    local show_frame = SUISettings:isTrue(ctx.pfx .. "reading_goals_show_frame")
-    local solid_bg   = SUISettings:isTrue(ctx.pfx .. "reading_goals_solid_bg")
+    local show_frame = PENSettings:isTrue(ctx.pfx .. "reading_goals_show_frame")
+    local solid_bg   = PENSettings:isTrue(ctx.pfx .. "reading_goals_solid_bg")
     local has_box    = show_frame or solid_bg
     local border_sz  = show_frame and 1 or 0
     local radius     = has_box and math.floor(Screen:scaleBySize(12) * scale) or 0
@@ -592,7 +592,7 @@ function M.getHeight(_ctx)
     local n = (showAnnual() and 1 or 0) + (showDaily() and 1 or 0)
     if n == 0 then return 0 end
     local pfx = _ctx and _ctx.pfx or ""
-    local label_h = require("sui_config").getScaledLabelH()
+    local label_h = require("pen_config").getScaledLabelH()
     local h = 0
     if isCompact() then
         h = _compactRowsHeight(n, _compactDims(Config.getModuleScale("reading_goals", pfx)))
@@ -600,7 +600,7 @@ function M.getHeight(_ctx)
         local d = _scaledDims(Config.getModuleScale("reading_goals", pfx))
         h = n * d.goal_row_h + (n == 2 and d.row_gap or 0)
     end
-    if SUISettings:isTrue(pfx .. "reading_goals_show_frame") or SUISettings:isTrue(pfx .. "reading_goals_solid_bg") then
+    if PENSettings:isTrue(pfx .. "reading_goals_show_frame") or PENSettings:isTrue(pfx .. "reading_goals_solid_bg") then
         h = h + PAD * 2
     end
     return label_h + h
@@ -636,7 +636,7 @@ function M.getMenuItems(ctx_menu)
                 checked_func = function() return not isCompact() end,
                 keep_menu_open = true,
                 callback = function()
-                    SUISettings:saveSetting(LAYOUT_KEY, "default")
+                    PENSettings:saveSetting(LAYOUT_KEY, "default")
                     refresh()
                 end },
               { text         = _lc("Compact"),
@@ -644,7 +644,7 @@ function M.getMenuItems(ctx_menu)
                 checked_func = function() return isCompact() end,
                 keep_menu_open = true,
                 callback = function()
-                    SUISettings:saveSetting(LAYOUT_KEY, "compact")
+                    PENSettings:saveSetting(LAYOUT_KEY, "compact")
                     refresh()
                 end },
           },
@@ -654,19 +654,19 @@ function M.getMenuItems(ctx_menu)
         Config.makeLabelToggleItem("reading_goals", _("Reading Goals"), refresh, _lc),
         {
             text           = _lc("Frame"),
-            checked_func   = function() return SUISettings:isTrue(ctx_menu.pfx .. "reading_goals_show_frame") end,
+            checked_func   = function() return PENSettings:isTrue(ctx_menu.pfx .. "reading_goals_show_frame") end,
             keep_menu_open = true,
             callback       = function()
-                SUISettings:saveSetting(ctx_menu.pfx .. "reading_goals_show_frame", not SUISettings:isTrue(ctx_menu.pfx .. "reading_goals_show_frame"))
+                PENSettings:saveSetting(ctx_menu.pfx .. "reading_goals_show_frame", not PENSettings:isTrue(ctx_menu.pfx .. "reading_goals_show_frame"))
                 refresh()
             end,
         },
         {
             text           = _lc("Solid Background"),
-            checked_func   = function() return SUISettings:isTrue(ctx_menu.pfx .. "reading_goals_solid_bg") end,
+            checked_func   = function() return PENSettings:isTrue(ctx_menu.pfx .. "reading_goals_solid_bg") end,
             keep_menu_open = true,
             callback       = function()
-                SUISettings:saveSetting(ctx_menu.pfx .. "reading_goals_solid_bg", not SUISettings:isTrue(ctx_menu.pfx .. "reading_goals_solid_bg"))
+                PENSettings:saveSetting(ctx_menu.pfx .. "reading_goals_solid_bg", not PENSettings:isTrue(ctx_menu.pfx .. "reading_goals_solid_bg"))
                 refresh()
             end,
         },
@@ -674,7 +674,7 @@ function M.getMenuItems(ctx_menu)
           checked_func = function() return showAnnual() end,
           keep_menu_open = true,
           callback = function()
-              SUISettings:saveSetting(SHOW_ANNUAL, not showAnnual())
+              PENSettings:saveSetting(SHOW_ANNUAL, not showAnnual())
               refresh()
           end },
         { text_func = function()
@@ -695,7 +695,7 @@ function M.getMenuItems(ctx_menu)
           checked_func = function() return showDaily() end,
           keep_menu_open = true,
           callback = function()
-              SUISettings:saveSetting(SHOW_DAILY, not showDaily())
+              PENSettings:saveSetting(SHOW_DAILY, not showDaily())
               refresh()
           end },
         { text_func = function()

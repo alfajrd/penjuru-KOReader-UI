@@ -2,7 +2,7 @@
 -- Dedicated settings store for all SimpleUI preferences.
 --
 -- Settings are persisted to:
---   DataStorage:getSettingsDir() .. "/simpleui/sui_settings.lua"
+--   DataStorage:getSettingsDir() .. "/penjuru/pen_settings.lua"
 --
 -- This file is inside the simpleui/ user-data directory that is created on
 -- first run by main.lua — the same folder that holds sui_icons/, sui_quotes/,
@@ -12,18 +12,18 @@
 --
 -- Public API — all methods use colon syntax (consistent with G_reader_settings):
 --
---   SUISettings:get(key)              → value or nil
---   SUISettings:set(key, value)       → (saves immediately)
---   SUISettings:del(key)              → (removes key)
---   SUISettings:isTrue(key)           → boolean  (nil → false)
---   SUISettings:nilOrTrue(key)        → boolean  (nil → true)
---   SUISettings:flush()               → force-write to disk
+--   PENSettings:get(key)              → value or nil
+--   PENSettings:set(key, value)       → (saves immediately)
+--   PENSettings:del(key)              → (removes key)
+--   PENSettings:isTrue(key)           → boolean  (nil → false)
+--   PENSettings:nilOrTrue(key)        → boolean  (nil → true)
+--   PENSettings:flush()               → force-write to disk
 --
 -- Compatibility aliases (identical behaviour, G_reader_settings-style names):
 --
---   SUISettings:readSetting(key)      → same as :get(key)
---   SUISettings:saveSetting(key, v)   → same as :set(key, v)
---   SUISettings:delSetting(key)       → same as :del(key)
+--   PENSettings:readSetting(key)      → same as :get(key)
+--   PENSettings:saveSetting(key, v)   → same as :set(key, v)
+--   PENSettings:delSetting(key)       → same as :del(key)
 --
 -- The module is a singleton: requiring it multiple times always returns the
 -- same table (Lua's module cache ensures this).
@@ -40,13 +40,13 @@ local function _getPath()
     if _settings_path then return _settings_path end
     local ok_ds, DataStorage = pcall(require, "datastorage")
     if ok_ds and DataStorage then
-        _settings_path = DataStorage:getSettingsDir() .. "/simpleui/sui_settings.lua"
+        _settings_path = DataStorage:getSettingsDir() .. "/penjuru/pen_settings.lua"
     else
         -- Fallback: store next to this file (should never happen in practice).
         local src = debug.getinfo(1, "S").source or "@./"
         local dir = src:sub(1, 1) == "@" and src:sub(2):match("^(.*)/[^/]+$") or "."
-        _settings_path = dir .. "/sui_settings.lua.data"
-        logger.warn("simpleui/sui_settings: DataStorage unavailable, using fallback path:", _settings_path)
+        _settings_path = dir .. "/pen_settings.lua.data"
+        logger.warn("penjuru/pen_store: DataStorage unavailable, using fallback path:", _settings_path)
     end
     return _settings_path
 end
@@ -83,16 +83,16 @@ end
 -- Public module table
 -- ---------------------------------------------------------------------------
 
-local SUISettings = {}
+local PENSettings = {}
 
 --- Read a value.  Returns nil when the key is absent, or default_value if provided.
-function SUISettings:get(key, default_value)
+function PENSettings:get(key, default_value)
     return _getStore():readSetting(key, default_value)
 end
 
 --- Write a value and persist to disk immediately.
---- Passing nil is equivalent to SUISettings:del(key).
-function SUISettings:set(key, value)
+--- Passing nil is equivalent to PENSettings:del(key).
+function PENSettings:set(key, value)
     if value == nil then
         _getStore():delSetting(key)
     else
@@ -105,27 +105,27 @@ function SUISettings:set(key, value)
 end
 
 --- Delete a key and persist to disk immediately.
-function SUISettings:del(key)
+function PENSettings:del(key)
     _getStore():delSetting(key)
     if _store then _store:flush() end
 end
 
 --- Returns true only when the stored value is the boolean true.
 --- Absent keys and all other values return false.
-function SUISettings:isTrue(key)
+function PENSettings:isTrue(key)
     local v = _getStore():readSetting(key)
     return v == true
 end
 
 --- Returns true when the stored value is anything other than false.
 --- Absent keys (nil) return true — use this for "enabled unless explicitly disabled".
-function SUISettings:nilOrTrue(key)
+function PENSettings:nilOrTrue(key)
     local v = _getStore():readSetting(key)
     return v ~= false
 end
 
 --- Force an immediate write to disk.
-function SUISettings:flush()
+function PENSettings:flush()
     if _store then
         _store:flush()
     end
@@ -135,11 +135,11 @@ end
 -- Compatibility aliases — G_reader_settings-style method names.
 -- ---------------------------------------------------------------------------
 
-function SUISettings:readSetting(key, default_value)
+function PENSettings:readSetting(key, default_value)
     return _getStore():readSetting(key, default_value)
 end
 
-function SUISettings:saveSetting(key, value)
+function PENSettings:saveSetting(key, value)
     if value == nil then
         _getStore():delSetting(key)
     else
@@ -148,18 +148,18 @@ function SUISettings:saveSetting(key, value)
     if _store then _store:flush() end
 end
 
-function SUISettings:delSetting(key)
+function PENSettings:delSetting(key)
     _getStore():delSetting(key)
     if _store then _store:flush() end
 end
 
---- Iterate over all key/value pairs currently stored in SUISettings.
+--- Iterate over all key/value pairs currently stored in PENSettings.
 --- Returns a stateless iterator compatible with generic for:
----   for k, v in SUISettings:iterateKeys() do ... end
---- NOTE: do NOT call SUISettings:set() or :del() inside the loop;
+---   for k, v in PENSettings:iterateKeys() do ... end
+--- NOTE: do NOT call PENSettings:set() or :del() inside the loop;
 --- modifying the table while iterating has undefined behaviour in Lua.
 --- Collect changes first, then apply them after the loop.
-function SUISettings:iterateKeys()
+function PENSettings:iterateKeys()
     local data = _getStore().data  -- LuaSettings exposes its raw data table
     if type(data) ~= "table" then
         return function() end  -- empty iterator — store not yet initialised
@@ -167,4 +167,4 @@ function SUISettings:iterateKeys()
     return next, data, nil
 end
 
-return SUISettings
+return PENSettings

@@ -24,11 +24,11 @@ local VerticalSpan    = require("ui/widget/verticalspan")
 local Screen          = Device.screen
 local logger          = require("logger")
 local lfs             = require("libs/libkoreader-lfs")
-local _ = require("sui_i18n").translate
-local Config          = require("sui_config")
+local _ = require("pen_i18n").translate
+local Config          = require("pen_config")
 
-local UI           = require("sui_core")
-local SUISettings = require("sui_store")
+local UI           = require("pen_core")
+local PENSettings = require("pen_store")
 local CLR_TEXT_SUB = UI.CLR_TEXT_SUB
 local PAD     = UI.PAD
 local PAD2    = UI.PAD2
@@ -113,46 +113,46 @@ end
 -- ---------------------------------------------------------------------------
 -- Settings keys
 -- ---------------------------------------------------------------------------
-local SETTINGS_KEY       = "simpleui_collections_list"
-local COVER_OVERRIDE_KEY = "simpleui_collections_covers"
-local BADGE_POSITION_KEY = "simpleui_collections_badge_position"
-local BADGE_COLOR_KEY    = "simpleui_collections_badge_color"
-local BADGE_HIDDEN_KEY   = "simpleui_collections_badge_hidden"
+local SETTINGS_KEY       = "penjuru_collections_list"
+local COVER_OVERRIDE_KEY = "penjuru_collections_covers"
+local BADGE_POSITION_KEY = "penjuru_collections_badge_position"
+local BADGE_COLOR_KEY    = "penjuru_collections_badge_color"
+local BADGE_HIDDEN_KEY   = "penjuru_collections_badge_hidden"
 
 local function getBadgePosition()
-    return SUISettings:readSetting(BADGE_POSITION_KEY) or "top"
+    return PENSettings:readSetting(BADGE_POSITION_KEY) or "top"
 end
 local function saveBadgePosition(v)
-    SUISettings:saveSetting(BADGE_POSITION_KEY, v)
+    PENSettings:saveSetting(BADGE_POSITION_KEY, v)
 end
 
 -- "dark"  = black background, white text, gray border.
 -- "light" = white background, black text, gray border.
 local function getBadgeColor()
-    return SUISettings:readSetting(BADGE_COLOR_KEY) or "dark"
+    return PENSettings:readSetting(BADGE_COLOR_KEY) or "dark"
 end
 local function saveBadgeColor(v)
-    SUISettings:saveSetting(BADGE_COLOR_KEY, v)
+    PENSettings:saveSetting(BADGE_COLOR_KEY, v)
 end
 
 local function getBadgeHidden()
-    return SUISettings:readSetting(BADGE_HIDDEN_KEY) or false
+    return PENSettings:readSetting(BADGE_HIDDEN_KEY) or false
 end
 local function saveBadgeHidden(v)
-    SUISettings:saveSetting(BADGE_HIDDEN_KEY, v)
+    PENSettings:saveSetting(BADGE_HIDDEN_KEY, v)
 end
 
 local function getSelectedCollections()
-    return SUISettings:readSetting(SETTINGS_KEY) or {}
+    return PENSettings:readSetting(SETTINGS_KEY) or {}
 end
 local function saveSelectedCollections(list)
-    SUISettings:saveSetting(SETTINGS_KEY, list)
+    PENSettings:saveSetting(SETTINGS_KEY, list)
 end
 local function getCoverOverrides()
-    return SUISettings:readSetting(COVER_OVERRIDE_KEY) or {}
+    return PENSettings:readSetting(COVER_OVERRIDE_KEY) or {}
 end
 local function saveCoverOverrides(t)
-    SUISettings:saveSetting(COVER_OVERRIDE_KEY, t)
+    PENSettings:saveSetting(COVER_OVERRIDE_KEY, t)
 end
 
 -- ---------------------------------------------------------------------------
@@ -340,7 +340,7 @@ M.default_on  = false
 M.has_covers  = true   -- activates e-ink dithering and cover poll
 
 function M.setEnabled(pfx, on)
-    SUISettings:saveSetting(pfx .. "collections", on)
+    PENSettings:saveSetting(pfx .. "collections", on)
 end
 
 local MAX_COLL = 5
@@ -368,7 +368,7 @@ function M.build(w, ctx)
         d.coll_cell_h = d.coll_h + d.accent_h + d.label_gap + 2 * d.tbw_line_h
     end
     local selected_raw = getSelectedCollections()
-    local ok_ss, SUIStyle = pcall(require, "sui_style")
+    local ok_ss, SUIStyle = pcall(require, "pen_style")
     local _theme_fg        = ok_ss and SUIStyle and SUIStyle.getThemeColor("fg")
     local _theme_secondary = ok_ss and SUIStyle and SUIStyle.getThemeColor("text_secondary")
     local _theme_accent    = ok_ss and SUIStyle and SUIStyle.getThemeColor("accent")
@@ -528,8 +528,8 @@ function M.build(w, ctx)
         }
     end
 
-    local show_frame = SUISettings:isTrue(ctx.pfx .. "collections_show_frame")
-    local solid_bg   = SUISettings:isTrue(ctx.pfx .. "collections_solid_bg")
+    local show_frame = PENSettings:isTrue(ctx.pfx .. "collections_show_frame")
+    local solid_bg   = PENSettings:isTrue(ctx.pfx .. "collections_solid_bg")
     local has_box    = show_frame or solid_bg
     local border_sz  = show_frame and 1 or 0
     local radius     = has_box and math.floor(Screen:scaleBySize(12) * scale) or 0
@@ -591,7 +591,7 @@ function M.getHeight(ctx)
         return Config.getScaledLabelH() + d.empty_h
     end
     local h = d.coll_cell_h
-    if SUISettings:isTrue(_ctx and _ctx.pfx .. "collections_show_frame") or SUISettings:isTrue(_ctx and _ctx.pfx .. "collections_solid_bg") then
+    if PENSettings:isTrue(_ctx and _ctx.pfx .. "collections_show_frame") or PENSettings:isTrue(_ctx and _ctx.pfx .. "collections_solid_bg") then
         h = h + PAD * 2 + PAD2
     end
     return Config.getScaledLabelH() + h
@@ -772,19 +772,19 @@ function M.getMenuItems(ctx_menu)
     })
     items[#items + 1] = {
         text           = _lc("Frame"),
-        checked_func   = function() return SUISettings:isTrue(ctx_menu.pfx .. "collections_show_frame") end,
+        checked_func   = function() return PENSettings:isTrue(ctx_menu.pfx .. "collections_show_frame") end,
         keep_menu_open = true,
         callback       = function()
-            SUISettings:saveSetting(ctx_menu.pfx .. "collections_show_frame", not SUISettings:isTrue(ctx_menu.pfx .. "collections_show_frame"))
+            PENSettings:saveSetting(ctx_menu.pfx .. "collections_show_frame", not PENSettings:isTrue(ctx_menu.pfx .. "collections_show_frame"))
             refresh()
         end,
     }
     items[#items + 1] = {
         text           = _lc("Solid Background"),
-        checked_func   = function() return SUISettings:isTrue(ctx_menu.pfx .. "collections_solid_bg") end,
+        checked_func   = function() return PENSettings:isTrue(ctx_menu.pfx .. "collections_solid_bg") end,
         keep_menu_open = true,
         callback       = function()
-            SUISettings:saveSetting(ctx_menu.pfx .. "collections_solid_bg", not SUISettings:isTrue(ctx_menu.pfx .. "collections_solid_bg"))
+            PENSettings:saveSetting(ctx_menu.pfx .. "collections_solid_bg", not PENSettings:isTrue(ctx_menu.pfx .. "collections_solid_bg"))
             refresh()
         end,
     }

@@ -20,7 +20,7 @@ local VerticalSpan    = require("ui/widget/verticalspan")
 local Screen          = Device.screen
 local lfs             = require("libs/libkoreader-lfs")
 local util            = require("util")
-local Config          = require("sui_config")
+local Config          = require("pen_config")
 
 local math_floor = math.floor
 local math_max   = math.max
