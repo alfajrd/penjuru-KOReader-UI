@@ -867,21 +867,12 @@ function M.patchCollections(plugin)
         local orig_remove = RC.removeCollection
         plugin._orig_rc_remove = orig_remove
         RC.removeCollection = function(rc_self, coll_name, ...)
-            local TBR = package.loaded["desktop_modules/module_tbr"]
-            -- The TBR collection cannot be permanently deleted.
-            -- Let RC delete it (so the KOReader UI gets its confirmation flow),
-            -- then immediately recreate it empty and sync settings.
+            -- module_tbr removed: out of scope for penjuru v1; TBR guard removed.
             local result = orig_remove(rc_self, coll_name, ...)
             local ok2, err = pcall(function()
-                if TBR and coll_name == TBR.TBR_COLL_NAME then
-                    rc_self:addCollection(TBR.TBR_COLL_NAME)
-                    rc_self:write({ [TBR.TBR_COLL_NAME] = true })
-                    SUISettings:saveSetting("simpleui_tbr_list", {})
-                else
-                    _removeFromPool(coll_name)
-                    Config.purgeQACollection(coll_name)
-                    Config.invalidateTabsCache()
-                end
+                _removeFromPool(coll_name)
+                Config.purgeQACollection(coll_name)
+                Config.invalidateTabsCache()
                 plugin:_scheduleRebuild()
             end)
             if not ok2 then logger.warn("simpleui: removeCollection hook:", tostring(err)) end
@@ -893,18 +884,7 @@ function M.patchCollections(plugin)
         local orig_rename = RC.renameCollection
         plugin._orig_rc_rename = orig_rename
         RC.renameCollection = function(rc_self, old_name, new_name, ...)
-            -- Prevent renaming the TBR collection — its name is the plugin's key.
-            local TBR = package.loaded["desktop_modules/module_tbr"]
-            if TBR and old_name == TBR.TBR_COLL_NAME then
-                local ok_im, InfoMessage = pcall(require, "ui/widget/infomessage")
-                if ok_im then
-                    require("ui/uimanager"):show(InfoMessage:new{
-                        text    = _("The «To Be Read» collection cannot be renamed."),
-                        timeout = 2,
-                    })
-                end
-                return  -- abort
-            end
+            -- module_tbr removed: TBR rename-prevention removed.
             local result = orig_rename(rc_self, old_name, new_name, ...)
             local ok2, err = pcall(function()
                 _renameInPool(old_name, new_name)
@@ -916,243 +896,9 @@ function M.patchCollections(plugin)
         end
     end
 
-    -- ---------------------------------------------------------------------------
-    -- TBR hooks on RC.addItem / RC.removeItem:
-    -- Fire only when the user adds/removes books via the *native KOReader*
-    -- collections UI.  The plugin's addTBR/removeTBR functions bypass these
-    -- hooked methods entirely to avoid re-entrancy.
-    -- Responsibilities: enforce the 5-book cap on add; sync G_reader_settings.
-    -- ---------------------------------------------------------------------------
-
-    -- Helper: re-read the TBR list from RC and persist into G_reader_settings.
-    local function _syncTBRSettings(TBR)
-        local list = TBR.getTBRList()
-        SUISettings:saveSetting("simpleui_tbr_list", list)
-    end
-
-    local function _getTBR()
-        return package.loaded["desktop_modules/module_tbr"]
-    end
-
-    if type(RC.addItem) == "function" then
-        local orig_add = RC.addItem
-        plugin._orig_rc_additem = orig_add
-        RC.addItem = function(rc_self, file, coll_name, attr, ...)
-            local TBR = _getTBR()
-            if TBR and coll_name == TBR.TBR_COLL_NAME then
-                local coll  = rc_self.coll and rc_self.coll[coll_name]
-                local count = 0
-                if coll then for _ in pairs(coll) do count = count + 1 end end
-                if count >= (TBR.TBR_MAX or 5) then
-                    local ok_im, InfoMessage = pcall(require, "ui/widget/infomessage")
-                    if ok_im then
-                        require("ui/uimanager"):show(InfoMessage:new{
-                            text    = _("To Be Read list is full (max. 5 books)."),
-                            timeout = 2,
-                        })
-                    end
-                    return  -- abort — do NOT call orig_add
-                end
-            end
-            orig_add(rc_self, file, coll_name, attr, ...)
-            if TBR and coll_name == TBR.TBR_COLL_NAME then
-                local ok2, err = pcall(function()
-                    _syncTBRSettings(TBR)
-                    plugin:_scheduleRebuild()
-                end)
-                if not ok2 then logger.warn("simpleui: RC.addItem TBR hook:", tostring(err)) end
-            end
-        end
-    end
-
-    if type(RC.addItemsMultiple) == "function" then
-        local orig_add_multiple = RC.addItemsMultiple
-        plugin._orig_rc_additemsmultiple = orig_add_multiple
-        RC.addItemsMultiple = function(rc_self, files, collections_to_add, ...)
-            local TBR = _getTBR()
-            if TBR and collections_to_add[TBR.TBR_COLL_NAME] then
-                -- Count how many slots remain in the TBR collection.
-                local coll  = rc_self.coll and rc_self.coll[TBR.TBR_COLL_NAME]
-                local count = 0
-                if coll then for _ in pairs(coll) do count = count + 1 end end
-                local max     = TBR.TBR_MAX or 5
-                local allowed = max - count
-                if allowed <= 0 then
-                    -- No room at all — block addition and warn.
-                    collections_to_add = {}
-                    for k, v in pairs(collections_to_add or {}) do
-                        if k ~= TBR.TBR_COLL_NAME then collections_to_add[k] = v end
-                    end
-                    local ok_im, InfoMessage = pcall(require, "ui/widget/infomessage")
-                    if ok_im then
-                        require("ui/uimanager"):show(InfoMessage:new{
-                            text    = _("To Be Read list is full (max. 5 books)."),
-                            timeout = 2,
-                        })
-                    end
-                    -- Still call orig for any other collections in the map.
-                    local stripped = {}
-                    for k, v in pairs(collections_to_add) do
-                        if k ~= TBR.TBR_COLL_NAME then stripped[k] = v end
-                    end
-                    if next(stripped) then
-                        orig_add_multiple(rc_self, files, stripped, ...)
-                    end
-                    return 0
-                elseif allowed < (function() local n=0; for _ in pairs(files) do n=n+1 end; return n end)() then
-                    -- Partial room — let the original run but truncate TBR additions afterwards
-                    -- by removing any excess entries that pushed it over the limit.
-                    local result = orig_add_multiple(rc_self, files, collections_to_add, ...)
-                    local coll2 = rc_self.coll and rc_self.coll[TBR.TBR_COLL_NAME]
-                    if coll2 then
-                        -- Build ordered list and drop those beyond TBR_MAX.
-                        local items = {}
-                        for _, item in pairs(coll2) do items[#items+1] = item end
-                        table.sort(items, function(a,b) return (a.order or 0) < (b.order or 0) end)
-                        if #items > max then
-                            for i = max + 1, #items do
-                                coll2[items[i].file] = nil
-                            end
-                            rc_self:write({ [TBR.TBR_COLL_NAME] = true })
-                        end
-                        local ok_im, InfoMessage = pcall(require, "ui/widget/infomessage")
-                        if ok_im then
-                            require("ui/uimanager"):show(InfoMessage:new{
-                                text    = _("To Be Read list is full (max. 5 books)."),
-                                timeout = 2,
-                            })
-                        end
-                    end
-                    pcall(function() _syncTBRSettings(TBR); plugin:_scheduleRebuild() end)
-                    return result
-                end
-            end
-            local result = orig_add_multiple(rc_self, files, collections_to_add, ...)
-            local TBR2 = _getTBR()
-            if TBR2 and collections_to_add[TBR2.TBR_COLL_NAME] then
-                pcall(function() _syncTBRSettings(TBR2); plugin:_scheduleRebuild() end)
-            end
-            return result
-        end
-    end
-
-    if type(RC.addRemoveItemMultiple) == "function" then
-        local orig_add_remove = RC.addRemoveItemMultiple
-        plugin._orig_rc_addremoveitemmultiple = orig_add_remove
-        RC.addRemoveItemMultiple = function(rc_self, file, collections_to_add, ...)
-            local TBR = _getTBR()
-            if TBR and collections_to_add[TBR.TBR_COLL_NAME] then
-                local coll  = rc_self.coll and rc_self.coll[TBR.TBR_COLL_NAME]
-                local count = 0
-                if coll then for _ in pairs(coll) do count = count + 1 end end
-                local max = TBR.TBR_MAX or 5
-                -- Check if this file is already in TBR (would be a no-op add).
-                local real = file
-                pcall(function() real = require("ffi/util").realpath(file) or file end)
-                local already_in = coll and coll[real] ~= nil
-                if not already_in and count >= max then
-                    -- Strip TBR from the add map and warn.
-                    local stripped = {}
-                    for k, v in pairs(collections_to_add) do
-                        if k ~= TBR.TBR_COLL_NAME then stripped[k] = v end
-                    end
-                    local ok_im, InfoMessage = pcall(require, "ui/widget/infomessage")
-                    if ok_im then
-                        require("ui/uimanager"):show(InfoMessage:new{
-                            text    = _("To Be Read list is full (max. 5 books)."),
-                            timeout = 2,
-                        })
-                    end
-                    orig_add_remove(rc_self, file, stripped, ...)
-                    pcall(function() _syncTBRSettings(TBR); plugin:_scheduleRebuild() end)
-                    return
-                end
-            end
-            orig_add_remove(rc_self, file, collections_to_add, ...)
-            local TBR2 = _getTBR()
-            if TBR2 and collections_to_add[TBR2.TBR_COLL_NAME] then
-                pcall(function() _syncTBRSettings(TBR2); plugin:_scheduleRebuild() end)
-            end
-        end
-    end
-
-    if type(RC.removeItem) == "function" then
-        local orig_remove_item = RC.removeItem
-        plugin._orig_rc_removeitem = orig_remove_item
-        RC.removeItem = function(rc_self, file, coll_name, no_write, ...)
-            orig_remove_item(rc_self, file, coll_name, no_write, ...)
-            local TBR = _getTBR()
-            -- coll_name == nil means "remove from all collections".
-            if TBR and (coll_name == TBR.TBR_COLL_NAME or coll_name == nil) then
-                local ok2, err = pcall(function()
-                    _syncTBRSettings(TBR)
-                    plugin:_scheduleRebuild()
-                end)
-                if not ok2 then logger.warn("simpleui: RC.removeItem TBR hook:", tostring(err)) end
-            end
-        end
-    end
-
-    -- Patch FMColl.updateCollListItemTable to:
-    --   1. Hide the TBR collection when it is empty (no books).
-    --   2. Show the localised display name instead of the raw RC key.
-    if type(FMColl.updateCollListItemTable) == "function" then
-        local orig_update = FMColl.updateCollListItemTable
-        plugin._orig_fmcoll_update_coll_list = orig_update
-        FMColl.updateCollListItemTable = function(fmc_self, do_init, item_number)
-            orig_update(fmc_self, do_init, item_number)
-            local TBR = package.loaded["desktop_modules/module_tbr"]
-            if not TBR then return end
-            local coll_list = fmc_self.coll_list
-            if not (coll_list and coll_list.item_table) then return end
-            local tbr_name  = TBR.TBR_COLL_NAME
-            local tbr_empty = TBR.getTBRCount() == 0
-            local changed   = false
-            local filtered  = {}
-            for _, item in ipairs(coll_list.item_table) do
-                if item.name == tbr_name then
-                    if tbr_empty then
-                        -- Omit the TBR entry entirely when empty.
-                        changed = true
-                    else
-                        -- Replace the raw key with the localised display name.
-                        local disp = TBR.getDisplayName()
-                        if item.text ~= disp then
-                            item.text = disp
-                            changed   = true
-                        end
-                        filtered[#filtered + 1] = item
-                    end
-                else
-                    filtered[#filtered + 1] = item
-                end
-            end
-            if changed then
-                local new_title
-                pcall(function()
-                    new_title = T(_("Collections (%1)"), #filtered)
-                end)
-                if not new_title then
-                    new_title = "Collections (" .. #filtered .. ")"
-                end
-                coll_list:switchItemTable(new_title, filtered, -1)
-            end
-        end
-    end
-
-    -- Patch FMColl.getCollectionTitle so the TBR collection shows its
-    -- localised name whenever KOReader renders it (e.g. inside a book list).
-    if type(FMColl.getCollectionTitle) == "function" then
-        local orig_title = FMColl.getCollectionTitle
-        plugin._orig_fmcoll_get_coll_title = orig_title
-        FMColl.getCollectionTitle = function(fmc_self, collection_name)
-            local TBR = package.loaded["desktop_modules/module_tbr"]
-            if TBR and collection_name == TBR.TBR_COLL_NAME then
-                return TBR.getDisplayName()
-            end
-            return orig_title(fmc_self, collection_name)
-        end
-    end
+    -- TBR hooks on RC.addItem / RC.removeItem removed: module_tbr out of scope for penjuru v1.
+    -- FMColl.updateCollListItemTable TBR patch removed: module_tbr out of scope for penjuru v1.
+    -- FMColl.getCollectionTitle TBR patch removed: module_tbr out of scope for penjuru v1.
 end
 
 -- Patches SortWidget and PathChooser to fit inside the content area.
@@ -3115,19 +2861,8 @@ function M.installAll(plugin)
     if SUISettings:isTrue("simpleui_debug_button_bounds") then
         M.installButtonBoundsDebug(plugin)
     end
-    -- Folder covers are installed only when the feature is enabled to avoid
-    -- wrapping MosaicMenuItem.update unconditionally, which would hide the
-    -- BookInfoManager upvalue from third-party user-patches.
-    -- FC.install() is also called from sui_menu.lua when the toggle is turned on.
-    local ok_fc, FC = pcall(require, "sui_foldercovers")
-    if ok_fc and FC and FC.isEnabled() then
-        pcall(FC.install)
-    end
-    -- Virtual author/series browser — installed only when the feature is enabled
-    -- in settings (default: on). When disabled, FileChooser is left unpatched so
-    -- third-party user-patches (e.g. 2-author-series.lua) can run unobstructed.
-    local ok_bm, BM = pcall(require, "sui_browsemeta")
-    if ok_bm and BM and BM.isEnabled() then pcall(BM.install) end
+    -- sui_foldercovers removed: out of scope for penjuru v1
+    -- sui_browsemeta removed: out of scope for penjuru v1
     -- Wallpaper in FM and fullscreen overlay surfaces.
     M.patchWallpaperFM(plugin)
 end
@@ -3333,14 +3068,8 @@ function M.teardownAll(plugin)
     local Registry = package.loaded["desktop_modules/moduleregistry"]
     if Registry then Registry.invalidate() end
 
-    local FC = package.loaded["sui_foldercovers"]
-    if FC then pcall(FC.uninstall) end
-
-    local BM = package.loaded["sui_browsemeta"]
-    if BM then
-        pcall(BM.uninstall)
-        pcall(BM.reset)
-    end
+    -- sui_foldercovers teardown removed: out of scope for penjuru v1
+    -- sui_browsemeta teardown removed: out of scope for penjuru v1
 
     -- Restore wallpaper FM patch.
     -- Do NOT restore _orig_fm_wallpaper_setup: patchFileManagerClass's teardown

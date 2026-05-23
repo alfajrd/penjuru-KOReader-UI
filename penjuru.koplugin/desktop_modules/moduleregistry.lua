@@ -45,21 +45,21 @@
 --   if Registry then Registry.unregister("myplugin_foo_id") end
 --
 -- NOTE: module_header is intentionally absent — it has been split into
--- module_clock (Clock / Clock+Date / Custom Text) and module_quote
--- (Quote of the Day). Installations that still use module_header directly
--- are unaffected; it remains loadable as a standalone file.
+-- module_clock (Clock / Clock+Date / Custom Text). module_quote has been
+-- removed (replaced by module_highlights in Plan B). Installations that
+-- still use module_header directly are unaffected; it remains loadable.
 
 local logger = require("logger")
 local SUISettings = require("sui_store")
 
 local MODULES = {
     { require_mod = "desktop_modules/module_clock"         },
-    { require_mod = "desktop_modules/module_quote"         },
+    -- module_quote removed: replaced by module_highlights in Plan B
     { require_mod = "desktop_modules/module_currently"     },
     { require_mod = "desktop_modules/module_recent"        },
-    { require_mod = "desktop_modules/module_coverdeck"     },
+    -- module_coverdeck removed: out of scope for penjuru v1
     { require_mod = "desktop_modules/module_new_books"     },
-    { require_mod = "desktop_modules/module_tbr"           },
+    -- module_tbr removed: replaced by module_newly_catalogued in Plan B
     { require_mod = "desktop_modules/module_collections"   },
     { require_mod = "desktop_modules/module_reading_goals" },
     { require_mod = "desktop_modules/module_reading_stats" },
@@ -160,20 +160,7 @@ function Registry.loadOrder(pfx)
     for _, v in ipairs(saved)   do seen[v] = true; result[#result+1] = v end
     for _, v in ipairs(default) do
         if not seen[v] then
-            if v == "coverdeck" then
-                local insert_at = nil
-                for i, id in ipairs(result) do
-                    if id == "recent" then insert_at = i + 1; break end
-                    if id == "currently" then insert_at = i + 1 end
-                end
-                if insert_at then
-                    table.insert(result, insert_at, v)
-                else
-                    result[#result+1] = v
-                end
-            else
-                result[#result+1] = v
-            end
+            result[#result+1] = v
         end
     end
     return result

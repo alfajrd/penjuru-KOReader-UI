@@ -163,11 +163,11 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
 
     -- Returns true when the given action id should be shown in menus on this device.
     -- Currently only "frontlight" is hardware-gated; all other ids are always shown.
+    -- browse_authors/series/tags removed: sui_browsemeta out of scope for penjuru v1.
     local function actionAvailable(id)
         if id == "frontlight" then return hasFrontlight() end
         if id == "browse_authors" or id == "browse_series" or id == "browse_tags" then
-            local ok_bm, BM = pcall(require, "sui_browsemeta")
-            return ok_bm and BM and BM.isEnabled()
+            return false  -- removed: sui_browsemeta out of scope
         end
         return true
     end
@@ -2266,12 +2266,9 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
             }       -- end Behaviour item
         end         -- end makeBehaviourMenu
 
-        -- ── Presets sub-menu ────────────────────────────────────────────
-        -- Lazy-require so that sui_presets.lua is only loaded when the user
-        -- actually opens the Homescreen menu (never at boot).
+        -- sui_presets removed: out of scope for penjuru v1 (one locked aesthetic).
         local function _Presets()
-            local ok, p = pcall(require, "sui_presets")
-            return ok and p or nil
+            return nil  -- removed: sui_presets out of scope
         end
 
         local function makePresetsMenu()
@@ -2762,19 +2759,18 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                         sub_item_table = {
                             -- ── Icon Presets ──────────────────────────────────────────
                             {
+                                -- Icon Presets removed: sui_presets out of scope for penjuru v1.
                                 text_func = function()
-                                    local ok_ip, P = pcall(require, "sui_presets")
-                                    if not ok_ip or not P then return _("Icon Presets") end
-                                    local names = P.icons.listNames()
-                                    local active = SUISettings:get("simpleui_icon_active_preset")
-                                    if active and active ~= "" then
-                                        return string.format(_("Icon Presets  [%s]"), active)
-                                    end
-                                    if #names == 0 then return _("Icon Presets") end
-                                    return string.format(_("Icon Presets  (%d)"), #names)
+                                    return _("Icon Presets")
                                 end,
+                                enabled = false,
                                 sub_item_table_func = function()
-                                    local ok_ip, P   = pcall(require, "sui_presets")
+                                    return {}
+                                end,
+                            },
+                            --[[ ORIGINAL icon presets code (sui_presets removed):
+                                sub_item_table_func = function()
+                                    local ok_ip, P   = nil  -- removed: sui_presets
                                     local ok_qa, QA2 = pcall(require, "sui_quickactions")
                                     local ok_ss, SS2 = pcall(require, "sui_style")
                                     local IP  = ok_ip and P and P.icons or nil
@@ -2816,10 +2812,9 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                             end
                                         end
 
-                                        -- Invalidate Quick Actions & Folder Covers caches
+                                        -- Invalidate Quick Actions caches
+                                        -- sui_foldercovers removed: out of scope for penjuru v1
                                         if QA2 and QA2.invalidateCustomQACache then QA2.invalidateCustomQACache() end
-                                        local ok_fc, FC = pcall(require, "sui_foldercovers")
-                                        if ok_fc and FC and FC.invalidateCache then FC.invalidateCache() end
                                         local FM = package.loaded["apps/filemanager/filemanager"]
                                         local fm_inst = FM and FM.instance
                                         if fm_inst and fm_inst.file_chooser then
@@ -3152,6 +3147,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                 end,
                                 separator = true,
                             },
+                            ]] -- end removed Icon Presets block
 
                             -- ── Icon Packs ────────────────────────────────────────────
                             {
@@ -3204,11 +3200,10 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                                             end
                                         end
 
-                                        -- Invalidate Quick Actions & Folder Covers caches
+                                        -- Invalidate Quick Actions caches
+                                        -- sui_foldercovers removed: out of scope for penjuru v1
                                         local ok_qa, QA_pack = pcall(require, "sui_quickactions")
                                         if ok_qa and QA_pack and QA_pack.invalidateCustomQACache then QA_pack.invalidateCustomQACache() end
-                                        local ok_fc, FC = pcall(require, "sui_foldercovers")
-                                        if ok_fc and FC and FC.invalidateCache then FC.invalidateCache() end
                                         local FM = package.loaded["apps/filemanager/filemanager"]
                                         local fm_inst = FM and FM.instance
                                         if fm_inst and fm_inst.file_chooser then
@@ -3442,26 +3437,11 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                     -- END DISABLED: Theme Colors ]]
                 },
             },
-            {
+            -- Library menu removed: sui_foldercovers and sui_browsemeta out of scope for penjuru v1.
+            --[[ REMOVED: {
                 text = _("Library"),
                 sub_item_table_func = function()
-                    local ok_fc, FC = pcall(require, "sui_foldercovers")
-                    if not ok_fc or not FC then return {} end
-                    -- Refresh the mosaic view immediately after any setting change.
-                    local function _refreshFC()
-                        local FM = package.loaded["apps/filemanager/filemanager"]
-                        local fm = FM and FM.instance
-                        if fm and fm.file_chooser then
-                            -- refreshPath rebuilds the item list from scratch and
-                            -- passes it through switchItemTable, which is where the
-                            -- series-grouping hook (_sgProcessItemTable) runs.
-                            -- updateItems alone skips that hook, so grouping would
-                            -- only appear after a manual refresh.
-                        fm._navbar_suppress_path_change = true
-                        fm.file_chooser:refreshPath()
-                        fm._navbar_suppress_path_change = nil
-                        end
-                    end
+                    -- (foldercovers + browsemeta menu removed)
                     return {
                         {
                             text         = _("Browse by Author / Series / Tags"),
@@ -4000,6 +3980,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                     }
                 end,
             },
+            ]] -- end of removed Library menu
             -- -----------------------------------------------------------------
             -- Developer submenu
             -- To re-enable: change _SHOW_DEVELOPER_MENU to true (line below).
@@ -4027,20 +4008,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
                             keep_menu_open = true,
                             callback       = function() end,
                         },
-                        {
-                            text      = _("Check for Updates"),
-                            callback  = function()
-                                local ok, Updater = pcall(require, "sui_updater")
-                                if not ok then
-                                    UIManager:show(InfoMessage():new{
-                                        text    = _("Updater module not found."),
-                                        timeout = 4,
-                                    })
-                                    return
-                                end
-                                Updater.checkForUpdates()
-                            end,
-                        },
+                        -- "Check for Updates" removed: sui_updater out of scope for penjuru v1
                         {
                             text      = _("Factory Reset"),
                             separator = true,
@@ -4073,17 +4041,7 @@ SimpleUIPlugin.addToMainMenu = function(self, menu_items)
             },
         },
     }
-    -- Update banner: injected as the first item of the main menu
-    -- when a newer version is available. Uses in-memory cache (zero I/O).
-    -- Kept separate from the table literal so sub_item_table remains a
-    -- plain table — buildTabItems reads it directly and requires that.
-    do
-        local ok_u, Updater = pcall(require, "sui_updater")
-        local banner = (ok_u and Updater) and Updater.build_update_banner_item() or nil
-        if banner then
-            table.insert(menu_items.simpleui.sub_item_table, 1, banner)
-        end
-    end
+    -- sui_updater banner removed: out of scope for penjuru v1
 end -- addToMainMenu
 
 -- Build the item list for the dedicated SimpleUI settings tab.

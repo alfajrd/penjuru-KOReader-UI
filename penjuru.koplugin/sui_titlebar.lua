@@ -58,19 +58,14 @@ end
 local M = {}
 
 
-local _BM_cache  -- nil = not yet tried; false = unavailable; table = module
+-- sui_browsemeta removed: out of scope for penjuru v1.
+local _BM_cache = false  -- always unavailable
 local function _BrowseMeta()
-    if _BM_cache == nil then
-        local ok, m = pcall(require, "sui_browsemeta")
-        _BM_cache = (ok and m) or false
-    end
-    return _BM_cache or nil
+    return nil  -- removed: sui_browsemeta out of scope
 end
 
--- Invalidate the cache so that reapplyAll picks up a newly-enabled BrowseMeta.
--- Called by reapply() before re-running apply().
 local function _resetBMCache()
-    _BM_cache = nil
+    -- no-op: sui_browsemeta removed
 end
 
 -- ---------------------------------------------------------------------------

@@ -1498,10 +1498,9 @@ function HomescreenWidget:_buildCtx()
 
     local mod_c  = Registry.get("currently")
     local mod_r  = Registry.get("recent")
-    local mod_cd = Registry.get("coverdeck")
+    local mod_cd = nil  -- removed: module_coverdeck out of scope for penjuru v1
     local show_c = mod_c and Registry.isEnabled(mod_c, PFX)
     local show_r = (mod_r and Registry.isEnabled(mod_r, PFX))
-                or (mod_cd and Registry.isEnabled(mod_cd, PFX))
 
     if not self._cached_books_state then
         local SH = _getBookShared()
@@ -1600,26 +1599,9 @@ function HomescreenWidget:_buildCtx()
         end
     end
 
-    -- Pre-compute coverdeck book stats for the current centre cover so
-    -- module_coverdeck.build() does not run DB queries on the paint path.
-    -- coverdeck_needs_db already encodes the "needs DB stats" check, so we
-    -- reuse it directly rather than repeating the visibility logic here.
-    local coverdeck_center_stats = nil
-    if coverdeck_needs_db and self._db_conn then
-        local saved_center_fp = SUISettings:readSetting(PFX .. "flow_recent_fp")
-        local center_fp = saved_center_fp or (bs.recent_fps and bs.recent_fps[1])
-        local pe = center_fp and bs.prefetched_data and bs.prefetched_data[center_fp]
-        local center_md5 = type(pe) == "table" and pe.partial_md5_checksum
-        if center_md5 then
-            local cd_mod = package.loaded["desktop_modules/module_coverdeck"]
-            if cd_mod and cd_mod.fetchBookStatsForCtx then
-                coverdeck_center_stats = {
-                    fp    = center_fp,
-                    stats = cd_mod.fetchBookStatsForCtx(center_md5, self._db_conn),
-                }
-            end
-        end
-    end
+    -- module_coverdeck removed: out of scope for penjuru v1.
+    -- coverdeck centre-stats pre-computation removed.
+    local coverdeck_center_stats = nil  -- removed: module_coverdeck out of scope
 
     -- Pre-compute Currently Reading book stats to move the DB query off the
     -- hot paint path (md5 is already in prefetched_data — no extra IO).

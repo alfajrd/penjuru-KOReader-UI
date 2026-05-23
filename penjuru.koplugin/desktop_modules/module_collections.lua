@@ -408,19 +408,10 @@ function M.build(w, ctx)
     if #synced_raw ~= #selected_raw then
         saveSelectedCollections(synced_raw)
     end
-    -- Hide the TBR collection when it is empty so it does not occupy a slot.
+    -- module_tbr removed: TBR empty-hide logic removed; pass all collections through.
     local selected = {}
-    do
-        local TBR = package.loaded["desktop_modules/module_tbr"]
-        for _, n in ipairs(synced_raw) do
-            if TBR and n == TBR.TBR_COLL_NAME then
-                if TBR.getTBRCount() > 0 then
-                    selected[#selected + 1] = n
-                end
-            else
-                selected[#selected + 1] = n
-            end
-        end
+    for _, n in ipairs(synced_raw) do
+        selected[#selected + 1] = n
     end
 
     if #selected == 0 then
@@ -477,13 +468,8 @@ function M.build(w, ctx)
         -- Label centred over the cover thumbnail only, not the full stack_cell_w
         -- (which includes the spine on the left). A leading HorizontalSpan
         -- of stack_extra pushes the label to start at the thumbnail left edge.
+        -- module_tbr removed: TBR localised display name removed.
         local display_name = coll_name
-        do
-            local TBR = package.loaded["desktop_modules/module_tbr"]
-            if TBR and coll_name == TBR.TBR_COLL_NAME then
-                display_name = TBR.getDisplayName()
-            end
-        end
         -- d.tbw_line_h mirrors TextBoxWidget's internal line_height_px formula
         -- (math.floor(1.3 * font_size + 0.5)), calculated once in getDims so that
         -- coll_cell_h and the widget height are always in sync.
@@ -684,23 +670,7 @@ function M.getMenuItems(ctx_menu)
         table.sort(others, function(a, b) return a:lower() < b:lower() end)
         for _, n in ipairs(others) do all_colls[#all_colls + 1] = n end
     end
-    -- Hide the TBR collection from the selection list when it is empty.
-    do
-        local TBR = package.loaded["desktop_modules/module_tbr"]
-        if TBR then
-            local filtered = {}
-            for _, n in ipairs(all_colls) do
-                if n == TBR.TBR_COLL_NAME then
-                    if TBR.getTBRCount() > 0 then
-                        filtered[#filtered + 1] = n
-                    end
-                else
-                    filtered[#filtered + 1] = n
-                end
-            end
-            all_colls = filtered
-        end
-    end
+    -- module_tbr removed: TBR empty-hide logic removed from selection list.
 
     local function openCoverPicker(coll_name)
         if not ok_rc then return end
@@ -870,13 +840,8 @@ function M.getMenuItems(ctx_menu)
     else
         for _loop_, coll_name in ipairs(all_colls) do
             local _n = coll_name
-            local _display_n = (function()
-                local TBR = package.loaded["desktop_modules/module_tbr"]
-                if TBR and _n == TBR.TBR_COLL_NAME then
-                    return TBR.getDisplayName()
-                end
-                return _n
-            end)()
+            -- module_tbr removed: TBR localised name removed.
+            local _display_n = _n
             items[#items + 1] = {
                 text_func = function()
                     local cur = M.getSelected()

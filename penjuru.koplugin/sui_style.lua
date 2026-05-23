@@ -572,8 +572,7 @@ local function _reapplyTitlebar()
             local ok_hs, HS = pcall(require, "sui_homescreen")
             if ok_hs and HS and HS._instance then HS._instance:_refreshImmediate(false) end
         elseif group == "sui_fc_icons" then
-            local ok_fc, FC = pcall(require, "sui_foldercovers")
-            if ok_fc and FC and FC.invalidateCache then FC.invalidateCache() end
+            -- sui_foldercovers removed: out of scope for penjuru v1; FC cache invalidation skipped.
             local fm = _fm()
             if fm and fm.file_chooser then
                 fm._navbar_suppress_path_change = true
@@ -650,11 +649,10 @@ local function _reapplyTitlebar()
             _reapplyPaginationIcons()
             _reapplyCollBackIcon()
 
-            -- Invalidate Quick Actions & Folder Covers caches
+            -- Invalidate Quick Actions caches
+            -- sui_foldercovers removed: out of scope for penjuru v1
             local ok_qa, QA2 = pcall(require, "sui_quickactions")
             if ok_qa and QA2 and QA2.invalidateCustomQACache then QA2.invalidateCustomQACache() end
-            local ok_fc, FC = pcall(require, "sui_foldercovers")
-            if ok_fc and FC and FC.invalidateCache then FC.invalidateCache() end
             local fm = _fm()
             if fm and fm.file_chooser then
                 fm._navbar_suppress_path_change = true

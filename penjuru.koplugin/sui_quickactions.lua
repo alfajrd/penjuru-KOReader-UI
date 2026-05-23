@@ -111,9 +111,9 @@ local _builtin_descriptors = {}
 local _registry = {}        -- id → descriptor (built-ins + externals)
 local _registry_order = {}  -- ordered list of all registered ids
 
--- Lazy references — loaded on first use to avoid circular requires at boot.
+-- sui_browsemeta removed: out of scope for penjuru v1.
 local function _BM()
-    return package.loaded["sui_browsemeta"] or require("sui_browsemeta")
+    return nil  -- removed: sui_browsemeta out of scope
 end
 local function _Bottombar()
     return package.loaded["sui_bottombar"] or require("sui_bottombar")
@@ -141,9 +141,8 @@ local function _goHome(target_fm)
         home = Device.home_dir
     end
     if not home then return false end
-    local ok_fc_mod, FC_mod = pcall(require, "sui_foldercovers")
-    local in_virtual = ok_fc_mod and FC_mod.isInSeriesView and FC_mod.isInSeriesView(fc)
-    if in_virtual then FC_mod.exitSeriesView(fc) end
+    -- sui_foldercovers removed: out of scope for penjuru v1; series-view check skipped.
+    local in_virtual = false
     if fc.path == home and not in_virtual then
         target_fm._navbar_suppress_path_change = true
         pcall(function() fc:onGotoPage(1) end)

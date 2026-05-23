@@ -64,10 +64,9 @@ local function _QA()
     return package.loaded["sui_quickactions"] or require("sui_quickactions")
 end
 
--- Lazy reference to sui_browsemeta — avoids loading the module at startup when
--- the Browse by Authors/Series feature may not be in use.
+-- sui_browsemeta removed: out of scope for penjuru v1.
 local function _BM()
-    return package.loaded["sui_browsemeta"] or require("sui_browsemeta")
+    return nil  -- removed: sui_browsemeta out of scope
 end
 
 -- Action-only tabs: these fire a dialog/toggle without becoming the active tab.
@@ -1401,11 +1400,8 @@ function M.navigate(plugin, action_id, fm_self, tabs, force)
         -- so the fc.path == home check below would incorrectly treat a virtual
         -- folder whose parent is the home dir as "already at home" and call
         -- refreshPath(), which re-enters the virtual folder instead of closing it.
-        local ok_fc_mod, FC_mod = pcall(require, "sui_foldercovers")
-        local in_virtual = ok_fc_mod and FC_mod.isInSeriesView and FC_mod.isInSeriesView(fc)
-        if in_virtual then
-            FC_mod.exitSeriesView(fc)
-        end
+        -- sui_foldercovers removed: out of scope for penjuru v1; series-view check skipped.
+        local in_virtual = false
         if fc.path == home and not in_virtual then
             -- Already at home (and not in a virtual folder). Always go to
             -- page 1 and refresh — this mirrors the "Go to HOME folder" button

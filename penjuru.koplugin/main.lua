@@ -71,7 +71,8 @@ function SimpleUIPlugin:init()
                 local base = DataStorage:getSettingsDir() .. "/simpleui"
                 for _, sub in ipairs({
                     "", "/sui_icons", "/sui_icons/packs", "/sui_quotes",
-                    "/sui_wallpapers", "/sui_presets", "/sui_presets/sui_presets_export", "/sui_presets/sui_presets_import"
+                    "/sui_wallpapers"
+                    -- sui_presets removed: out of scope for penjuru v1
                 }) do
                     local path = base .. sub
                     if lfs_early.attributes(path, "mode") ~= "directory" then
@@ -751,178 +752,10 @@ function SimpleUIPlugin:init()
         -- -------------------------------------------------------------------
         if SUISettings:nilOrTrue("simpleui_enabled") then
             Patches.installAll(self)
-            -- Register the TBR button in the Library hold dialog (single book).
-            -- addFileDialogButtons is the official KOReader API for this.
-            -- The multi-selection button is injected via patchGetPlusDialogButtons
-            -- in sui_patches.lua → patchFileManagerClass.
-            UIManager:scheduleIn(0, function()
-                local ok_fm, FM = pcall(require, "apps/filemanager/filemanager")
-                if not (ok_fm and FM and FM.instance) then return end
-                local ok_tbr, TBR = pcall(require, "desktop_modules/module_tbr")
-                if not (ok_tbr and TBR) then return end
+            -- TBR button registration removed: module_tbr out of scope for penjuru v1.
+            -- (Plan B adds module_newly_catalogued as replacement.)
 
-                -- Shared button factory: generates the TBR button for a given file.
-                -- Used by both FM's showFileDialog (library browser) and
-                -- FileSearcher's onMenuHold (search results), so both surfaces
-                -- show the same "Add to To Be Read" option on long-press.
-                local function _makeTBRRow(file, is_file, _book_props, close_refresh_fn)
-                    if not is_file then return nil end
-                    local ok_dr, DR = pcall(require, "document/documentregistry")
-                    local ok_bl, BL = pcall(require, "ui/widget/booklist")
-                    local is_book = (ok_dr and DR and DR:hasProvider(file))
-                        or (ok_bl and BL and BL.hasBookBeenOpened(file))
-                    if not is_book then return nil end
-                    return { TBR.genTBRButton(file, close_refresh_fn) }
-                end
-
-                -- 1. Library browser (FileManager.showFileDialog).
-                -- After toggling TBR, close the dialog and refresh the file list,
-                -- matching the same behaviour as "On Hold", "Reading", etc.
-                -- Note: file_dialog is a property of file_chooser, not FM.instance.
-                FM.instance:addFileDialogButtons("sui_tbr", function(file, is_file, book_props)
-                    local close_refresh = function()
-                        local fc = FM.instance and FM.instance.file_chooser
-                        local dlg = fc and fc.file_dialog
-                        if dlg then UIManager:close(dlg) end
-                        if fc then fc:refreshPath() end
-                    end
-                    return _makeTBRRow(file, is_file, book_props, close_refresh)
-                end)
-
-                -- 2. Search results (FileSearcher.onMenuHold).
-                --
-                -- The problem: file_dialog_added_buttons row_funcs are called as
-                --   row_func(file, is_file, book_props)
-                -- with no reference to the dialog being built.  In the library
-                -- this is fine because close_refresh captures file_chooser by
-                -- closure.  In FileSearcher, self.file_dialog (the ButtonDialog)
-                -- is owned by booklist_menu — the `self` inside onMenuHold — and
-                -- that object is not reachable from a plain row_func closure.
-                --
-                -- Solution: monkey-patch FileSearcher.onMenuHold to wrap each
-                -- added row_func with a closure that captures `self` (booklist_menu)
-                -- and therefore can close `self.file_dialog` correctly, exactly
-                -- mirroring what close_dialog_callback does natively.
-                local ok_fs, FS = pcall(require, "apps/filemanager/filemanagerfilesearcher")
-                if ok_fs and FS and not FS._sui_onMenuHold_patched then
-                    FS._sui_onMenuHold_patched = true
-                    local orig_onMenuHold = FS.onMenuHold
-                    FS.onMenuHold = function(menu_self, item)
-                        -- Wrap every added row_func so it receives a close_cb
-                        -- that closes menu_self.file_dialog — same as the native
-                        -- close_dialog_callback defined inside orig_onMenuHold.
-                        local manager = menu_self._manager
-                        local orig_added = manager and manager.file_dialog_added_buttons
-                        local wrapped
-                        if orig_added then
-                            wrapped = { index = orig_added.index }
-                            for i, row_func in ipairs(orig_added) do
-                                wrapped[i] = function(file, is_file, book_props)
-                                    -- close_cb matches native close_dialog_callback:
-                                    -- UIManager:close(self.file_dialog) where self
-                                    -- is menu_self (the booklist_menu widget).
-                                    local close_cb = function()
-                                        UIManager:close(menu_self.file_dialog)
-                                    end
-                                    -- row_func signature: (file, is_file, book_props, close_cb)
-                                    -- _makeTBRRow uses the 4th arg as its close_refresh_fn.
-                                    return row_func(file, is_file, book_props, close_cb)
-                                end
-                            end
-                            manager.file_dialog_added_buttons = wrapped
-                        end
-                        local result = orig_onMenuHold(menu_self, item)
-                        -- Restore the original table so the next call gets
-                        -- unmodified row_funcs (not double-wrapped).
-                        if orig_added and manager then
-                            manager.file_dialog_added_buttons = orig_added
-                        end
-                        return result
-                    end
-
-                    -- Register the TBR row_func on the FileSearcher class.
-                    -- Note: row_func here accepts an optional 4th arg (close_cb)
-                    -- injected by the patched onMenuHold above.
-                    FS.file_dialog_added_buttons = FS.file_dialog_added_buttons or { index = {} }
-                    if FS.file_dialog_added_buttons.index["sui_tbr"] == nil then
-                        local row_func = function(file, is_file, book_props, close_cb)
-                            return _makeTBRRow(file, is_file, book_props, close_cb)
-                        end
-                        table.insert(FS.file_dialog_added_buttons, row_func)
-                        FS.file_dialog_added_buttons.index["sui_tbr"] =
-                            #FS.file_dialog_added_buttons
-                    end
-                end
-            end)
-
-            -- Register the "More by <Author>" button in the Library hold dialog.
-            -- Shown only when:
-            --   • the item is a book file
-            --   • Browse by Author/Series/Tags (BM) is enabled
-            --   • the book has author metadata
-            --   • there are ≥ 2 books by that author in the current folder tree
-            -- Tapping the button closes the dialog and navigates the FM directly
-            -- to the virtual author leaf, skipping the top-level Authors list.
-            UIManager:scheduleIn(0, function()
-                local ok_fm2, FM2 = pcall(require, "apps/filemanager/filemanager")
-                if not (ok_fm2 and FM2 and FM2.instance) then return end
-                local ok_bm, BM = pcall(require, "sui_browsemeta")
-                if not (ok_bm and BM) then return end
-
-                -- Shared factory: returns a button row or nil.
-                -- close_cb is injected by the caller (FM dialog or FS patch).
-                local function _makeAuthorRow(file, is_file, book_props, close_cb)
-                    if not is_file then return nil end
-                    if not BM.isEnabled() then return nil end
-
-                    local authors_raw = book_props and book_props.authors
-                    if not authors_raw or authors_raw == "" then return nil end
-                    -- Multi-author: newline-delimited.  Navigate to the first
-                    -- author only; a picker would be over-engineering for v1.
-                    local author = authors_raw:match("^([^\n]+)") or authors_raw
-                    author = author:match("^%s*(.-)%s*$") -- trim whitespace
-
-                    local fc2 = FM2.instance and FM2.instance.file_chooser
-                    local count = BM.getAuthorBookCount(fc2, author)
-                    if count < 2 then return nil end
-
-                    return {{
-                        text = string.format(_("More by %s (%d)"), author, count),
-                        callback = function()
-                            if close_cb then close_cb() end
-                            local fm2 = FM2.instance
-                            if fm2 then BM.navigateToAuthorLeaf(fm2, author, file) end
-                        end,
-                    }}
-                end
-
-                -- 1. Library browser (FileManager.showFileDialog).
-                FM2.instance:addFileDialogButtons("sui_browse_author", function(file, is_file, book_props)
-                    local close_nav = function()
-                        local fc2 = FM2.instance and FM2.instance.file_chooser
-                        local dlg = fc2 and fc2.file_dialog
-                        if dlg then UIManager:close(dlg) end
-                    end
-                    return _makeAuthorRow(file, is_file, book_props, close_nav)
-                end)
-
-                -- 2. Search results (FileSearcher.onMenuHold).
-                -- The existing TBR monkey-patch on FS.onMenuHold already wraps
-                -- every row_func with a close_cb as the 4th argument, so our
-                -- factory receives it without any further patching needed.
-                local ok_fs2, FS2 = pcall(require, "apps/filemanager/filemanagerfilesearcher")
-                if ok_fs2 and FS2 then
-                    FS2.file_dialog_added_buttons = FS2.file_dialog_added_buttons or { index = {} }
-                    if FS2.file_dialog_added_buttons.index["sui_browse_author"] == nil then
-                        local row_func = function(file, is_file, book_props, close_cb)
-                            return _makeAuthorRow(file, is_file, book_props, close_cb)
-                        end
-                        table.insert(FS2.file_dialog_added_buttons, row_func)
-                        FS2.file_dialog_added_buttons.index["sui_browse_author"] =
-                            #FS2.file_dialog_added_buttons
-                    end
-                end
-            end)
+            -- "More by <Author>" button removed: sui_browsemeta out of scope for penjuru v1.
 
             if SUISettings:nilOrTrue("simpleui_topbar_enabled") then
                 Topbar.scheduleRefresh(self, 0)
@@ -937,13 +770,7 @@ function SimpleUIPlugin:init()
                 local ok, reg = pcall(require, "desktop_modules/moduleregistry")
                 if ok and reg then pcall(reg.list) end
             end)
-            -- Silent automatic update check — 24 h throttle.
-            -- scheduleIn(3) ensures it runs after the first paint is stable
-            -- and does not compete with the module preload above.
-            UIManager:scheduleIn(3, function()
-                local ok, Updater = pcall(require, "sui_updater")
-                if ok and Updater then Updater.scheduleAutoCheck() end
-            end)
+            -- Auto-updater removed: sui_updater out of scope for penjuru v1.
             -- Patch ReaderStatistics:onSyncBookStats to close the SimpleUI
             -- stats connection before every sync, including syncs triggered
             -- from inside the Reader (where HomescreenWidget is not on the
@@ -1003,21 +830,22 @@ end
 local _PLUGIN_MODULES = {
     "sui_i18n", "sui_config", "sui_core", "sui_bottombar", "sui_topbar",
     "sui_patches", "sui_menu", "sui_titlebar", "sui_quickactions",
-    "sui_homescreen", "sui_foldercovers", "sui_browsemeta", "sui_updater",
-    "sui_store", "sui_presets", "sui_style",
+    "sui_homescreen",
+    -- removed: sui_foldercovers, sui_browsemeta, sui_updater, sui_presets (out of scope)
+    "sui_store", "sui_style",
     "desktop_modules/moduleregistry",
     "desktop_modules/module_books_shared",
     "desktop_modules/module_clock",
     "desktop_modules/module_collections",
     "desktop_modules/module_currently",
     "desktop_modules/module_quick_actions",
-    "desktop_modules/module_quote",
+    -- removed: module_quote (replaced by module_highlights in Plan B)
     "desktop_modules/module_reading_goals",
     "desktop_modules/module_reading_stats",
     "desktop_modules/module_stats_provider",
     "desktop_modules/module_recent",
-    "desktop_modules/module_tbr",
-    "desktop_modules/quotes",
+    -- removed: module_tbr (replaced by module_newly_catalogued in Plan B)
+    -- removed: desktop_modules/quotes (replaced by user-highlight quotes)
 }
 
 -- ---------------------------------------------------------------------------
@@ -1094,77 +922,13 @@ function SimpleUIPlugin:onTeardown()
     if mod_recent and type(mod_recent.reset) == "function" then
         pcall(mod_recent.reset)
     end
-    local mod_tbr = package.loaded["desktop_modules/module_tbr"]
-    if mod_tbr and type(mod_tbr.reset) == "function" then
-        pcall(mod_tbr.reset)
-    end
-    -- Remove the TBR button from the Library browser dialog and search results.
-    local FM = package.loaded["apps/filemanager/filemanager"]
-    if FM and FM.instance and FM.instance.removeFileDialogButtons then
-        pcall(function() FM.instance:removeFileDialogButtons("sui_tbr") end)
-    end
-    -- Remove the TBR button from the FileSearcher table and restore the original onMenuHold.
-    local FS = package.loaded["apps/filemanager/filemanagerfilesearcher"]
-    if FS then
-        -- Restore the original onMenuHold if it was replaced.
-        if FS._sui_onMenuHold_patched and FS._sui_orig_onMenuHold then
-            FS.onMenuHold = FS._sui_orig_onMenuHold
-            FS._sui_orig_onMenuHold = nil
-            FS._sui_onMenuHold_patched = nil
-        elseif FS._sui_onMenuHold_patched then
-            -- Patch was installed but orig was not saved separately
-            -- (captured in the closure); just clear the flag and TBR entry.
-            FS._sui_onMenuHold_patched = nil
-        end
-        if FS.file_dialog_added_buttons then
-            local idx = FS.file_dialog_added_buttons.index
-                and FS.file_dialog_added_buttons.index["sui_tbr"]
-            if idx then
-                pcall(function()
-                    table.remove(FS.file_dialog_added_buttons, idx)
-                    FS.file_dialog_added_buttons.index["sui_tbr"] = nil
-                    for id, i in pairs(FS.file_dialog_added_buttons.index) do
-                        if i > idx then
-                            FS.file_dialog_added_buttons.index[id] = i - 1
-                        end
-                    end
-                    if #FS.file_dialog_added_buttons == 0 then
-                        FS.file_dialog_added_buttons = nil
-                    end
-                end)
-            end
-        end
-    end
-    -- Remove the "More by <Author>" button from the Library browser and FileSearcher.
-    if FM and FM.instance and FM.instance.removeFileDialogButtons then
-        pcall(function() FM.instance:removeFileDialogButtons("sui_browse_author") end)
-    end
-    if FS and FS.file_dialog_added_buttons then
-        local idx2 = FS.file_dialog_added_buttons.index
-            and FS.file_dialog_added_buttons.index["sui_browse_author"]
-        if idx2 then
-            pcall(function()
-                table.remove(FS.file_dialog_added_buttons, idx2)
-                FS.file_dialog_added_buttons.index["sui_browse_author"] = nil
-                for id, i in pairs(FS.file_dialog_added_buttons.index) do
-                    if i > idx2 then
-                        FS.file_dialog_added_buttons.index[id] = i - 1
-                    end
-                end
-                if #FS.file_dialog_added_buttons == 0 then
-                    FS.file_dialog_added_buttons = nil
-                end
-            end)
-        end
-    end
+    -- module_tbr teardown removed: out of scope for penjuru v1
+    -- TBR/BrowseAuthor dialog button teardown removed: out of scope for penjuru v1
     local mod_rg = package.loaded["desktop_modules/module_reading_goals"]
     if mod_rg and type(mod_rg.reset) == "function" then
         pcall(mod_rg.reset)
     end
-    local mod_bm = package.loaded["sui_browsemeta"]
-    if mod_bm and type(mod_bm.reset) == "function" then
-        pcall(mod_bm.reset)
-    end
+    -- sui_browsemeta teardown removed: out of scope for penjuru v1
     -- Evict all plugin modules from the Lua module cache so that a hot update
     -- (files replaced on disk without restarting KOReader) picks up new code
     -- on the next plugin load, instead of reusing the old in-memory versions.
@@ -1512,31 +1276,25 @@ function SimpleUIPlugin:onCloseDocument()
     -- progress. Uses surgical invalidation to avoid re-opening every sidecar.
     local mod_cr = Registry.get("currently")
     currently_active = mod_cr and Registry.isEnabled(mod_cr, PFX) or false
-    -- Also check coverdeck here so we know whether its full discard will
-    -- supersede the surgical currently-reading invalidation below.
-    local mod_cd = Registry.get("coverdeck")
-    local coverdeck_active = mod_cd and Registry.isEnabled(mod_cd, PFX) or false
+    -- module_coverdeck removed: out of scope for penjuru v1
+    local coverdeck_active = false
     if currently_active then
         -- Surgical invalidation: drop only the closed book's entry so
         -- prefetchBooks() re-reads exactly one sidecar, cache-hitting the rest.
-        -- Skipped when coverdeck is also active — its block below will discard
-        -- _cached_books_state entirely, making the partial work redundant.
-        if not coverdeck_active then
-            local function _partial_invalidate(bs)
-                if not bs then return end
-                -- Drop the entry for the closed book so prefetchBooks() re-reads it.
-                if bs.prefetched_data and closed_fp then
-                    bs.prefetched_data[closed_fp] = nil
-                end
-                -- current_fp will be re-resolved by the next prefetchBooks() call.
-                -- Setting it to nil ensures Currently Reading does not paint
-                -- stale progress data before the refresh completes.
-                bs.current_fp = nil
+        local function _partial_invalidate(bs)
+            if not bs then return end
+            -- Drop the entry for the closed book so prefetchBooks() re-reads it.
+            if bs.prefetched_data and closed_fp then
+                bs.prefetched_data[closed_fp] = nil
             end
-            if HS._instance then
-                _partial_invalidate(HS._instance._cached_books_state)
-                _partial_invalidate(HS._cached_books_state)
-            end
+            -- current_fp will be re-resolved by the next prefetchBooks() call.
+            -- Setting it to nil ensures Currently Reading does not paint
+            -- stale progress data before the refresh completes.
+            bs.current_fp = nil
+        end
+        if HS._instance then
+            _partial_invalidate(HS._instance._cached_books_state)
+            _partial_invalidate(HS._cached_books_state)
         end
         -- When the homescreen is not visible (HS._instance == nil), the partially
         -- invalidated HS._cached_books_state (with current_fp=nil) would be passed
@@ -1553,37 +1311,7 @@ function SimpleUIPlugin:onCloseDocument()
         needs_refresh = true
     end
 
-    -- Cover Deck: invalidate book list and stats cache so the carousel
-    -- reflects the updated reading history immediately on return to the HS.
-    -- This is independent of Currently Reading — coverdeck may be active alone.
-    if coverdeck_active then
-        -- Surgically evict only the closed book's stats from the cache.
-        -- All other carousel entries are unaffected.
-        local MCD = package.loaded["desktop_modules/module_coverdeck"]
-        if MCD then
-            if closed_md5 and MCD.invalidateCacheForMd5 then
-                -- Fast path: only evict the one book that changed.
-                MCD.invalidateCacheForMd5(closed_md5)
-            elseif MCD.invalidateCache then
-                -- Fallback: md5 was not in prefetched_data (book outside the
-                -- top-5 window, or _cached_books_state was already nil).
-                -- Full flush is safe — fetchBookStats re-populates on demand.
-                MCD.invalidateCache()
-            end
-        end
-        -- Invalidate _cached_books_state so prefetchBooks() re-reads the
-        -- updated history order (closed book moves to position 1 = new centre).
-        -- Also reset the session index so the carousel returns to fps[1].
-        if HS._instance then
-            HS._instance._cached_books_state = nil
-            if HS._instance._ctx_cache then
-                HS._instance._ctx_cache.coverdeck_cur_idx = nil
-            end
-        else
-            HS._cached_books_state = nil
-        end
-        needs_refresh = true
-    end
+    -- coverdeck block removed: module_coverdeck out of scope for penjuru v1
 
     if not needs_refresh then return end
 

@@ -249,8 +249,7 @@ local function makeSlot(slot)
             return _has_fl
         end
         if id == "browse_authors" or id == "browse_series" then
-            local ok_bm, BM = pcall(require, "sui_browsemeta")
-            return ok_bm and BM and BM.isEnabled()
+            return false  -- removed: sui_browsemeta out of scope for penjuru v1
         end
         return true
     end
