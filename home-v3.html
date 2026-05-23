@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>penjuru pikiran · home v2</title>
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Syne+Mono&family=VT323&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; padding: 0; background: #d8d4cc; font-family: 'IBM Plex Mono', monospace; }
+  body { padding: 40px 20px; text-align: center; }
+  * { box-sizing: border-box; }
+
+  /* obvious version banner so we can tell if cache is bypassed */
+  .vbanner { background: #c0392b; color: #fff; padding: 6px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; border-radius: 3px; letter-spacing: 0.5px; display: inline-block; margin-bottom: 14px; }
+
+  .device { width: 1236px; margin: 0 auto; background: #fff; border: 1px solid #444; box-shadow: 0 10px 40px rgba(0,0,0,0.18); text-align: left; }
+
+  /* TOP STATUS BAR */
+  .top-bar { display: flex; justify-content: space-between; padding: 14px 28px; border-bottom: 2px solid #111; font-size: 24px; text-transform: lowercase; color: #222; }
+  .top-bar .left, .top-bar .right { display: flex; gap: 26px; }
+  .top-bar .pill::before { content: "· "; color: #777; }
+
+  .home { padding: 26px 36px 16px; }
+
+  .masthead { text-align: center; padding: 12px 0 14px; border-bottom: 2.5px dashed #111; }
+  .masthead .name { font-family: 'Syne Mono', monospace; font-size: 76px; letter-spacing: -1px; line-height: 1; }
+  .masthead .tagline { font-size: 20px; letter-spacing: 4.5px; color: #555; margin-top: 10px; text-transform: lowercase; }
+
+  .dateline { display: flex; justify-content: space-between; font-size: 20px; padding: 14px 0; border-bottom: 2px dotted #aaa; color: #444; text-transform: lowercase; }
+
+  .small-head { font-family: 'VT323', monospace; font-size: 36px; letter-spacing: 2.5px; border-bottom: 2.5px solid #111; padding-bottom: 4px; margin-bottom: 12px; color: #222; text-transform: lowercase; }
+
+  /* LEAD ROW (use table for bulletproof 2-column) */
+  .lead-table { width: 100%; border-collapse: collapse; padding: 18px 0; border-bottom: 2px dotted #aaa; margin: 18px 0; }
+  .lead-table td { vertical-align: top; padding: 0; }
+  .lead-table td.left { width: 60%; border-right: 2px dotted #aaa; padding-right: 30px; }
+  .lead-table td.right { padding-left: 30px; }
+
+  .headline { font-family: 'Syne Mono', monospace; font-size: 48px; line-height: 1.1; letter-spacing: -0.6px; text-transform: lowercase; }
+  .byline { font-size: 21px; font-style: italic; color: #555; margin: 10px 0; text-transform: lowercase; }
+  .pull { font-style: italic; font-size: 24px; line-height: 1.4; padding: 12px 20px; margin: 14px 0; border-left: 4px solid #111; color: #333; text-transform: lowercase; }
+  .body-copy { font-size: 22px; line-height: 1.45; padding-top: 8px; text-transform: lowercase; }
+  .body-copy::first-letter { font-family: 'Syne Mono', monospace; font-size: 66px; float: left; line-height: 0.9; padding: 4px 10px 0 0; }
+  .progress { font-size: 20px; color: #555; margin-top: 14px; display: flex; align-items: center; gap: 16px; text-transform: lowercase; }
+  .progress .bar { flex: 1; height: 9px; border: 2px solid #555; position: relative; }
+  .progress .bar > div { position: absolute; left: 0; top: 0; bottom: 0; width: 38%; background: repeating-linear-gradient(45deg, #333 0 2px, transparent 2px 5px); }
+
+  .stat-row { display: flex; justify-content: space-between; font-size: 22px; padding: 5px 0; border-bottom: 2px dotted #ccc; text-transform: lowercase; }
+  .stat-row b { font-family: 'VT323', monospace; font-size: 34px; font-weight: 400; }
+  .almanac-block { margin-top: 16px; }
+  .almanac { font-size: 21px; line-height: 1.45; color: #444; padding-top: 6px; text-transform: lowercase; }
+  .almanac .line { display: flex; justify-content: space-between; padding: 4px 0; }
+  .almanac .line b { font-family: 'VT323', monospace; font-size: 32px; color: #111; font-weight: 400; }
+  .moon { display: inline-block; width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(90deg, #111 50%, #fff 50%); border: 2px solid #111; vertical-align: -3px; margin-left: 7px; }
+
+  /* DESK ROW */
+  .desk-table { width: 100%; border-collapse: collapse; padding: 18px 0; border-bottom: 2px dotted #aaa; margin-bottom: 18px; }
+  .desk-table td { vertical-align: top; padding: 0; }
+  .desk-table td.left { width: 60%; border-right: 2px dotted #aaa; padding-right: 30px; }
+  .desk-table td.right { padding-left: 30px; }
+
+  .desk-grid { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr 1fr; gap: 11px; }
+  .desk-grid .item { display: flex; flex-direction: column; gap: 7px; }
+  .desk-grid .swatch-cover { width: 100%; aspect-ratio: 2/3; border: 2px solid #111; position: relative; overflow: hidden; }
+  .desk-grid .swatch-cover .pct { position: absolute; bottom: 0; left: 0; right: 0; background: rgba(0,0,0,0.78); color: #fff; font-family: 'VT323', monospace; font-size: 28px; text-align: center; padding: 5px 0; }
+  .desk-grid .cap { font-size: 18px; color: #555; text-align: center; height: 42px; overflow: hidden; text-transform: lowercase; }
+  .swatch-cover { background: #cdcdcd; }
+  .swatch-cover.dither { background: repeating-linear-gradient(45deg, #aaa 0 2px, #fff 2px 4px); }
+  .swatch-cover.light { background: repeating-linear-gradient(45deg, #ddd 0 2px, #fff 2px 5px); }
+  .swatch-cover.dense { background: repeating-linear-gradient(45deg, #555 0 2px, #ddd 2px 4px); }
+
+  .cat .row { padding: 16px 8px; border-bottom: 2px solid #eee; display: flex; justify-content: space-between; align-items: center; gap: 16px; min-height: 80px; }
+  .cat .row:last-child { border-bottom: none; }
+  .cat .row .meta { flex: 1; min-width: 0; }
+  .cat .row .title { font-family: 'Syne Mono', monospace; font-size: 28px; line-height: 1.1; text-transform: lowercase; }
+  .cat .row .author { font-size: 20px; color: #777; margin-top: 5px; text-transform: lowercase; }
+  .cat .row .age { font-family: 'VT323', monospace; font-size: 32px; color: #555; }
+  .cat .row .age::after { content: " →"; color: #aaa; font-family: 'IBM Plex Mono', monospace; font-size: 24px; }
+
+  /* HIGHLIGHTS */
+  .highlights { padding: 18px 0 12px; }
+  .highlights .item { padding: 12px 0; border-bottom: 2px dotted #ccc; }
+  .highlights .item:last-child { border-bottom: none; }
+  .highlights .q { font-family: 'Syne Mono', monospace; font-size: 29px; line-height: 1.3; padding-left: 32px; position: relative; text-transform: lowercase; }
+  .highlights .q::before { content: "\201C"; position: absolute; left: 0; top: -10px; font-size: 48px; color: #777; }
+  .highlights .src { font-size: 20px; color: #666; font-style: italic; margin-top: 7px; padding-left: 32px; display: flex; gap: 22px; text-transform: lowercase; }
+
+  /* BOTTOM NAV — TABLE based for bulletproof columns */
+  .bottom-wrap { border-top: 3.5px solid #111; }
+  .nav-meta { display: flex; justify-content: space-between; padding: 8px 28px; border-bottom: 2px dotted #aaa; font-size: 19px; color: #666; text-transform: lowercase; }
+  .nav-meta .dots { display: inline-flex; gap: 7px; align-items: center; }
+  .nav-meta .dot { width: 11px; height: 11px; border-radius: 50%; border: 2px solid #444; display: inline-block; }
+  .nav-meta .dot.on { background: #111; border-color: #111; }
+
+  .bottom-nav { display: flex; flex-direction: row; flex-wrap: nowrap; width: 100%; }
+  .bottom-nav > .tab { flex-grow: 16; flex-shrink: 1; flex-basis: 0; min-width: 0; box-sizing: border-box; border-right: 2px solid #111; text-align: center; padding: 22px 4px; font-size: 22px; text-transform: lowercase; color: #111; min-height: 170px; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 11px; position: relative; }
+  .bottom-nav .tab:last-child { border-right: none; }
+  .bottom-nav .tab svg { flex-shrink: 0; }
+  .bottom-nav .tab.active { box-shadow: inset 0 7px 0 #111; }
+  .bottom-nav .tab.disabled { color: #bbb; }
+  .bottom-nav .tab.disabled svg { stroke: #bbb !important; }
+  .bottom-nav .tab.chevron { background: #fafafa; flex: 10 1 0; }
+</style>
+</head>
+<body>
+
+<div class="vbanner">VERSION 3 · brand-new file · should show 7 tabs IN A ROW below</div>
+
+<div class="device">
+
+  <div class="top-bar">
+    <div class="left"><span>10:42</span><span class="pill">wi-fi</span><span class="pill">light 12</span></div>
+    <div class="right"><span class="pill">2.1 gb</span><span class="pill">84%</span></div>
+  </div>
+
+  <div class="home">
+
+    <div class="masthead">
+      <div class="name">penjuru pikiran</div>
+      <div class="tagline">a reader's almanac · mind-wide</div>
+    </div>
+
+    <div class="dateline">
+      <span>vol. i · no. 143</span>
+      <span>saturday · 23 may 2026</span>
+      <span>morning edition</span>
+    </div>
+
+    <table class="lead-table"><tr>
+      <td class="left">
+        <div class="small-head">currently reading</div>
+        <div class="headline">a reader settles into the 248th page of a vast 17th-century tome</div>
+        <div class="byline">— from the desk of r. burton, oxford · 1621</div>
+        <div class="pull">"i write of melancholy, by being busy to avoid melancholy."</div>
+        <div class="body-copy">a correspondent reports forty-two minutes of progress today, advancing through the second part. an estimated thirteen hours remain.</div>
+        <div class="progress"><span>p 248</span><div class="bar"><div></div></div><span>1392 · 38%</span></div>
+      </td>
+      <td class="right">
+        <div class="ledger">
+          <div class="small-head">today's ledger</div>
+          <div class="stat-row"><span>reading</span><b>42m</b></div>
+          <div class="stat-row"><span>pages</span><b>21</b></div>
+          <div class="stat-row"><span>streak</span><b>11d</b></div>
+          <div class="stat-row"><span>2026</span><b>17/40</b></div>
+        </div>
+        <div class="almanac-block">
+          <div class="small-head">the almanac</div>
+          <div class="almanac">
+            <div class="line"><span>day of year</span><b>143</b></div>
+            <div class="line"><span>week no.</span><b>21</b></div>
+            <div class="line"><span>sun rises</span><b>05:47</b></div>
+            <div class="line"><span>sun sets</span><b>18:02</b></div>
+            <div class="line"><span>moon</span><b>waxing <span class="moon"></span></b></div>
+          </div>
+        </div>
+      </td>
+    </tr></table>
+
+    <table class="desk-table"><tr>
+      <td class="left">
+        <div class="small-head">on the desk</div>
+        <div class="desk-grid">
+          <div class="item"><div class="swatch-cover light"><div class="pct">72%</div></div><div class="cap">labyrinths</div></div>
+          <div class="item"><div class="swatch-cover dither"><div class="pct">45%</div></div><div class="cap">austerlitz</div></div>
+          <div class="item"><div class="swatch-cover"><div class="pct">88%</div></div><div class="cap">rings of saturn</div></div>
+          <div class="item"><div class="swatch-cover dense"><div class="pct">12%</div></div><div class="cap">in our time</div></div>
+          <div class="item"><div class="swatch-cover dither"><div class="pct">61%</div></div><div class="cap">letters to a y. poet</div></div>
+        </div>
+      </td>
+      <td class="right">
+        <div class="small-head">newly catalogued</div>
+        <div class="cat">
+          <div class="row">
+            <div class="meta"><div class="title">the recognitions</div><div class="author">william gaddis</div></div>
+            <div class="age">2d</div>
+          </div>
+          <div class="row">
+            <div class="meta"><div class="title">the makioka sisters</div><div class="author">jun'ichirō tanizaki</div></div>
+            <div class="age">5d</div>
+          </div>
+          <div class="row">
+            <div class="meta"><div class="title">life: a user's manual</div><div class="author">georges perec</div></div>
+            <div class="age">1w</div>
+          </div>
+        </div>
+      </td>
+    </tr></table>
+
+    <div class="highlights">
+      <div class="small-head">recent highlights</div>
+      <div class="item">
+        <div class="q">sleep that knits up the ravelled sleave of care, the death of each day's life, sore labour's bath—</div>
+        <div class="src"><span>— macbeth, ii.2</span><span>p. 64 · 24 may</span></div>
+      </div>
+      <div class="item">
+        <div class="q">to live is so startling it leaves little time for anything else.</div>
+        <div class="src"><span>— emily dickinson, letters</span><span>l. 342 · 22 may</span></div>
+      </div>
+      <div class="item">
+        <div class="q">we shall not cease from exploration, and the end of all our exploring will be to arrive where we started.</div>
+        <div class="src"><span>— t.s. eliot, little gidding</span><span>l. 240 · 20 may</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-wrap">
+    <div class="nav-meta">
+      <span>navpager · page 1 / 2</span>
+      <span class="dots"><span class="dot on"></span><span class="dot"></span></span>
+      <span>hold any tab → settings</span>
+    </div>
+    <div class="bottom-nav">
+      <div class="tab chevron disabled">
+        <svg width="62" height="62" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 6 9 12 15 18"/></svg>
+        <span>prev</span>
+      </div>
+      <div class="tab">
+        <svg width="62" height="62" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="9"/><rect x="13" y="3" width="8" height="6"/><rect x="3" y="14" width="6" height="7"/><rect x="11" y="11" width="10" height="10"/></svg>
+        <span>manga</span>
+      </div>
+      <div class="tab">
+        <svg width="62" height="62" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="4" height="16"/><rect x="9" y="4" width="4" height="16"/><rect x="15" y="6" width="4" height="14"/><line x1="3" y1="9" x2="7" y2="9"/><line x1="9" y1="9" x2="13" y2="9"/></svg>
+        <span>books</span>
+      </div>
+      <div class="tab active">
+        <svg width="62" height="62" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 3 21 11"/><path d="M5 10v10h14V10"/><rect x="10" y="13" width="4" height="7"/></svg>
+        <span>home</span>
+      </div>
+      <div class="tab">
+        <svg width="62" height="62" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9c5-5 13-5 18 0"/><path d="M6 13c3-3 9-3 12 0"/><path d="M9 17c2-2 4-2 6 0"/><circle cx="12" cy="20" r="0.8" fill="#111"/></svg>
+        <span>wi-fi</span>
+      </div>
+      <div class="tab">
+        <svg width="62" height="62" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="11" rx="4"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="16" cy="11" r="1"/><circle cx="18.5" cy="13.5" r="1"/></svg>
+        <span>games</span>
+      </div>
+      <div class="tab chevron">
+        <svg width="62" height="62" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+        <span>next</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
