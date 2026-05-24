@@ -15,8 +15,8 @@ local function defaults()
         },
         year_goal = 40,
         almanac = {
-            lat = -6.2088,   -- Jakarta default
-            lon = 106.8456,
+            lat = -7.7167,   -- Sleman (Yogyakarta region, Indonesia)
+            lon = 110.3500,
             tz = 7,
         },
         newly = {

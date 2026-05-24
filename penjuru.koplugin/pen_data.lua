@@ -8,6 +8,17 @@ local logger = require("logger")
 
 local M = {}
 
+-- KOReader's per-book metadata stores `doc_props.authors` and `.title` as
+-- either a string OR a table (multiple authors → newline-joined string in
+-- newer KOReader, table in older). Title is usually a string but defensive
+-- coercion costs nothing. Falls back to "" so callers can safely concatenate.
+local function as_text(v)
+    if v == nil then return "" end
+    if type(v) == "string" then return v end
+    if type(v) == "table" then return table.concat(v, ", ") end
+    return tostring(v)
+end
+
 -- parse_lua_file(path) -> table | nil
 -- Loads a file expected to be `return { ... }`. Used for KOReader's
 -- history.lua and per-book .sdr/metadata.lua files. Errors during load
@@ -189,11 +200,15 @@ function M.read_lead_book()
     local doc_props = sdr.doc_props or {}
     local pages = sdr.doc_pages or (sdr.stats and sdr.stats.pages) or 0
     local percent = sdr.percent_finished or 0
+    local title = as_text(doc_props.title)
+    if title == "" then
+        title = top.file:match("([^/]+)%.[^.]+$") or "untitled"
+    end
     return {
         file = top.file,
-        title = doc_props.title or top.file:match("([^/]+)%.[^.]+$") or "untitled",
-        author = doc_props.authors or "",
-        year = doc_props.year or "",
+        title = title,
+        author = as_text(doc_props.authors),
+        year = as_text(doc_props.year),
         percent = percent,
         pages_total = pages,
         page_current = math.floor(percent * pages + 0.5),
@@ -234,9 +249,13 @@ function M.read_in_progress_books(exclude_path)
             local pct = sdr.percent_finished or 0
             if pct > 0 and pct < 1 then
                 local props = sdr.doc_props or {}
+                local t = as_text(props.title)
+                if t == "" then
+                    t = entry.file:match("([^/]+)%.[^.]+$") or "untitled"
+                end
                 table.insert(out, {
                     file = entry.file,
-                    title = props.title or entry.file:match("([^/]+)%.[^.]+$") or "untitled",
+                    title = t,
                     percent = pct,
                     last_read_ts = entry.time or 0,
                 })
@@ -308,13 +327,15 @@ function M.read_recent_highlights(limit)
             local props = sdr.doc_props or {}
             for _, bm in ipairs(sdr.bookmarks or {}) do
                 if bm.text and bm.text ~= "" then
+                    local bt = as_text(props.title)
+                    if bt == "" then bt = "untitled" end
                     table.insert(all, {
                         text = bm.text,
                         datetime = bm.datetime or "",
                         page = bm.page or 0,
                         book_file = entry.file,
-                        book_title = props.title or "untitled",
-                        book_author = props.authors or "",
+                        book_title = bt,
+                        book_author = as_text(props.authors),
                     })
                 end
             end

@@ -13,9 +13,11 @@ local Dates = require("pen_dates")
 
 local M = {}
 
--- Default location: Jakarta (close to user's region).
-local DEFAULT_LAT = -6.2088
-local DEFAULT_LON = 106.8456
+-- Default location: Sleman (Yogyakarta region, Indonesia).
+-- Kept in sync with pen_settings_defaults.lua so callers that bypass the
+-- settings table still get sensible coordinates.
+local DEFAULT_LAT = -7.7167
+local DEFAULT_LON = 110.3500
 local DEFAULT_TZ = 7
 
 local function user_location()

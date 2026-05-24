@@ -43,6 +43,7 @@ local Dates           = require("pen_dates")
 local InstallDate     = require("pen_install_date")
 local Almanac         = require("home_modules/module_almanac")
 local Ledger          = require("home_modules/module_ledger")
+local Currently       = require("home_modules/module_currently")
 
 local Homescreen = {
     _instance      = nil,
@@ -136,6 +137,11 @@ function MastheadWidget:init()
     -- falls back to zeros if the Statistics plugin isn't installed.
     local ledger_widget = Ledger.render(body_w)
 
+    -- v1.2.4 — currently-reading lead story (headline + byline + pull
+    -- quote + progress). Reads KOReader history.lua + per-book .sdr.
+    -- Renders a graceful "no entries today" placeholder when history empty.
+    local currently_widget = Currently.render(body_w)
+
     local stack = VerticalGroup:new{
         align = "center",
         name,
@@ -146,6 +152,8 @@ function MastheadWidget:init()
         VerticalSpan:new{ width = 12 },
         dateline_row,
         VerticalSpan:new{ width = 30 },
+        currently_widget,
+        VerticalSpan:new{ width = 22 },
         ledger_widget,
         VerticalSpan:new{ width = 22 },
         almanac_widget,
