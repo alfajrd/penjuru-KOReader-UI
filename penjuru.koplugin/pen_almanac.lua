@@ -72,4 +72,34 @@ function M.format_hhmm(mins)
     return string.format("%02d:%02d", math.floor(mins / 60) % 24, mins % 60)
 end
 
+-- Reference new moon: 2000-01-06 18:14 UTC.
+-- Julian day of this instant (approximating to noon): 2451550.26.
+local NEW_MOON_JD = 2451550.26
+local SYNODIC_DAYS = 29.530588853
+
+-- moon_phase(year, month, day) -> { name, fraction }
+-- fraction: 0 = new, 0.25 = first quarter, 0.5 = full, 0.75 = last quarter.
+function M.moon_phase(year, month, day)
+    local jd = M._julian_day(year, month, day) + 0.5  -- shift to noon for stability
+    local cycles = (jd - NEW_MOON_JD) / SYNODIC_DAYS
+    local fraction = cycles - math.floor(cycles)
+    if fraction < 0 then fraction = fraction + 1 end
+
+    -- Bucket into named phases. Boundaries are deliberately wide for
+    -- the "named" phases (new/quarter/full) so days adjacent to the
+    -- exact instant still read as that phase, which matches everyday
+    -- usage better than a strictly mathematical quartering.
+    local name
+    if fraction < 0.04 or fraction >= 0.96 then name = "new"
+    elseif fraction < 0.22 then name = "waxing"
+    elseif fraction < 0.29 then name = "first quarter"
+    elseif fraction < 0.46 then name = "waxing"
+    elseif fraction < 0.54 then name = "full"
+    elseif fraction < 0.71 then name = "waning"
+    elseif fraction < 0.79 then name = "last quarter"
+    else name = "waning" end
+
+    return { name = name, fraction = fraction }
+end
+
 return M
