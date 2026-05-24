@@ -74,8 +74,13 @@ local function user_book_dirs()
     return { home .. "/Developer/koreader/books" }
 end
 
+local function user_threshold()
+    local s = (rawget(_G, "G_reader_settings") and G_reader_settings:readSetting("penjuru")) or {}
+    return (s.newly and s.newly.threshold_days) or 30
+end
+
 function M.render(content_width)
-    local books = Data.read_newly_catalogued(user_book_dirs(), 30, 3)
+    local books = Data.read_newly_catalogued(user_book_dirs(), user_threshold(), 3)
     local out = { Widgets.section_head(content_width, "newly catalogued") }
     if #books == 0 then
         table.insert(out, TextWidget:new{
