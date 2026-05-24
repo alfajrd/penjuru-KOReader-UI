@@ -868,19 +868,30 @@ local _PLUGIN_MODULES = {
 -- ---------------------------------------------------------------------------
 
 -- Called when the user triggers the "Go to Homescreen" gesture.
--- When outside the Reader: equivalent to tapping the Homescreen tab.
--- NOTE (Plan D / D.0.1): reader-close path (Patches.closeReaderToHomescreen)
--- removed with pen_patches. Reader gestures fall through to FM-side navigate;
--- full reader-close routing to be re-implemented in D.3.1 (pen_book_open).
+-- v1.2.6: rewritten to drive the v1.1-safe penjuru home overlay directly
+-- via pen_homescreen.show(). The original handler called self:_navigate(),
+-- a legacy SimpleUI nav method that referenced bottom-bar tabs the new
+-- minimal home no longer renders, so the gesture closed the reader but
+-- never opened anything in its place.
+--
+-- From inside a book: close the reader, then schedule Homescreen.show()
+-- after a short tick so the show races AFTER the reader teardown finishes
+-- (otherwise the reader's onClose can tear down the home we just opened).
+-- From outside the reader: just open the home directly.
 function penjuruPlugin:onSimpleUIGoHomescreen()
+    local function open_home()
+        local ok, Home = pcall(require, "pen_homescreen")
+        if ok and Home and Home.show then pcall(Home.show) end
+    end
     local RUI = package.loaded["apps/reader/readerui"]
     if RUI and RUI.instance then
-        -- Patches.closeReaderToHomescreen removed (Plan D / D.0.1)
         self._closing_via_gesture = true
-        RUI.instance:onClose()
+        pcall(function() RUI.instance:onClose() end)
+        -- Reader teardown + FM re-paint take ~300ms; 0.5s is a safe budget.
+        UIManager:scheduleIn(0.5, open_home)
+    else
+        open_home()
     end
-    local tabs = Config.loadTabConfig()
-    self:_navigate("homescreen", self.ui, tabs, false)
     return true
 end
 
@@ -901,22 +912,29 @@ function penjuruPlugin:onSimpleUIGoLibrary()
 end
 
 -- Called when the user triggers the "Toggle Homescreen / Library" gesture.
--- If the Homescreen is currently open: navigates to the library (home_dir).
--- If inside the Reader: closes the reader then navigates to the Homescreen.
--- Otherwise (library or any other view): opens the Homescreen.
+-- v1.2.6: rewritten for the v1.1-safe home. "Library" in the minimal home
+-- model just means "the FileManager underneath" — toggling reduces to:
+--   • home open → close it (reveals whatever was underneath, FM or reader)
+--   • reader open → close reader + open home
+--   • otherwise (FM) → open home
 function penjuruPlugin:onSimpleUIToggleHomeLibrary()
     local HS = package.loaded["pen_homescreen"]
-    if HS and HS._instance then
-        self:_navigate("home", self.ui, Config.loadTabConfig(), false)
+    if HS and HS._instance and HS.close then
+        pcall(HS.close)
         return true
+    end
+    local function open_home()
+        local ok, Home = pcall(require, "pen_homescreen")
+        if ok and Home and Home.show then pcall(Home.show) end
     end
     local RUI = package.loaded["apps/reader/readerui"]
     if RUI and RUI.instance then
-        -- Patches.closeReaderToHomescreen removed (Plan D / D.0.1)
         self._closing_via_gesture = true
-        RUI.instance:onClose()
+        pcall(function() RUI.instance:onClose() end)
+        UIManager:scheduleIn(0.5, open_home)
+    else
+        open_home()
     end
-    self:_navigate("homescreen", self.ui, Config.loadTabConfig(), false)
     return true
 end
 
