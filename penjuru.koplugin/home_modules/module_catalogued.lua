@@ -31,12 +31,35 @@ local function book_row(w, book)
         face = Style.fonts.numerals(Style.size.cat_age),
         fgcolor = Style.colors.ink_soft,
     }
-    return VerticalGroup:new{
+    local content = VerticalGroup:new{
         align = "left",
         VerticalSpan:new{ width = 12 },
         Widgets.spaced_row(w, { title, age }),
         VerticalSpan:new{ width = 12 },
         Widgets.dotted_rule(w, Style.rules.minor, Style.colors.rule_soft),
+    }
+
+    local content_h = content:getSize().h
+    local InputContainer = require("ui/widget/container/inputcontainer")
+    local GestureRange = require("ui/gesturerange")
+    local Geom = require("ui/geometry")
+    return InputContainer:new{
+        dimen = Geom:new{ x = 0, y = 0, w = w, h = content_h },
+        content,
+        ges_events = {
+            Tap = {
+                GestureRange:new{
+                    ges = "tap",
+                    range = Geom:new{ x = 0, y = 0, w = w, h = content_h },
+                },
+                handler = function()
+                    if not book.file then return end
+                    local ok, ReaderUI = pcall(require, "apps/reader/readerui")
+                    if not ok or not ReaderUI then return end
+                    pcall(ReaderUI.showReader, ReaderUI, book.file)
+                end,
+            },
+        },
     }
 end
 
