@@ -41,6 +41,7 @@ local Screen          = Device.screen
 local Style           = require("pen_style")
 local Dates           = require("pen_dates")
 local InstallDate     = require("pen_install_date")
+local Almanac         = require("home_modules/module_almanac")
 
 local Homescreen = {
     _instance      = nil,
@@ -126,6 +127,11 @@ function MastheadWidget:init()
         fgcolor = Style.colors.ink_faint,
     }
 
+    -- v1.2.2 — almanac module (pure-math, no I/O). day-of-year, week,
+    -- sunrise/sunset (NOAA), moon phase. Defaults to Jakarta location;
+    -- user can override via G_reader_settings.penjuru.almanac{lat,lon,tz}.
+    local almanac_widget = Almanac.render(body_w)
+
     local stack = VerticalGroup:new{
         align = "center",
         name,
@@ -135,7 +141,9 @@ function MastheadWidget:init()
         masthead_rule,
         VerticalSpan:new{ width = 12 },
         dateline_row,
-        VerticalSpan:new{ width = 60 },
+        VerticalSpan:new{ width = 30 },
+        almanac_widget,
+        VerticalSpan:new{ width = 40 },
         exit_hint,
     }
 
