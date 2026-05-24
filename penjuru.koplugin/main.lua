@@ -685,22 +685,11 @@ function penjuruPlugin:init()
         -- the critical startup path.
         -- -------------------------------------------------------------------
         do
-            -- Pre-bootstrap buildTabItems: installed now so setUpdateItemTable
-            -- always finds a callable.  On first call it loads sui_menu (which
-            -- replaces this function with the real cached version) and
-            -- delegates immediately to the real implementation.
+            -- buildTabItems: supplies the items array for the penjuru settings
+            -- tab injected into the FileManager menu. D.0.2: returns empty list;
+            -- D.1.1 will populate it from pen_menu.get_menu_items().
             if not rawget(penjuruPlugin, "buildTabItems") then
-                penjuruPlugin.buildTabItems = function(plugin_self)
-                    -- Trigger the full sui_menu load + installer.
-                    -- addToMainMenu is the bootstrap stub; calling it with a
-                    -- dummy table runs the installer, which replaces both
-                    -- addToMainMenu and buildTabItems on penjuruPlugin.
-                    plugin_self:addToMainMenu({})
-                    -- Delegate to the real buildTabItems now installed.
-                    local real = rawget(penjuruPlugin, "buildTabItems")
-                    if type(real) == "function" then
-                        return real(plugin_self)
-                    end
+                penjuruPlugin.buildTabItems = function(_plugin_self)
                     return {}
                 end
             end
@@ -934,9 +923,8 @@ function penjuruPlugin:onTeardown()
     -- Evict all plugin modules from the Lua module cache so that a hot update
     -- (files replaced on disk without restarting KOReader) picks up new code
     -- on the next plugin load, instead of reusing the old in-memory versions.
-    _menu_installer = nil
-    -- Nil buildTabItems so its upvalue cache (_tab_items_cache) is released,
-    -- and the patch can rebuild fresh on next plugin load.
+    -- Nil buildTabItems so its upvalue cache is released and the patch can
+    -- rebuild fresh on next plugin load.
     penjuruPlugin.buildTabItems = nil
     -- Clear the tab-injection flag so the patch can be re-applied if the
     -- plugin is reloaded within the same KOReader session.
@@ -1480,34 +1468,21 @@ end
 function penjuruPlugin:_updateFMHomeIcon() end
 
 -- ---------------------------------------------------------------------------
--- Main menu entry (sui_menu is lazy-loaded on first access)
+-- Main menu entry
 -- ---------------------------------------------------------------------------
-
-local _menu_installer = nil
 
 function penjuruPlugin:addToMainMenu(menu_items)
     local _ = require("pen_i18n").translate
-    if not _menu_installer then
-        local ok, result = pcall(require, "pen_menu")
-        if not ok then
-            logger.err("penjuru: pen_menu failed to load: " .. tostring(result))
-            menu_items.penjuru = { sorting_hint = "tools", text = _("penjuru"), sub_item_table = {} }
-            return
-        end
-        _menu_installer = result
-        -- Capture the bootstrap stub before installing so we can detect replacement.
-        local bootstrap_fn = rawget(penjuruPlugin, "addToMainMenu")
-        _menu_installer(penjuruPlugin)
-        -- The installer replaces addToMainMenu on the class; call the real one now.
-        local real_fn = rawget(penjuruPlugin, "addToMainMenu")
-        if type(real_fn) == "function" and real_fn ~= bootstrap_fn then
-            real_fn(self, menu_items)
-        else
-            logger.err("penjuru: pen_menu installer did not replace addToMainMenu")
-            menu_items.penjuru = { sorting_hint = "tools", text = _("penjuru"), sub_item_table = {} }
-        end
-        return
+    local ok, PenMenu = pcall(require, "pen_menu")
+    local sub_items = (ok and PenMenu.get_menu_items()) or {}
+    if not ok then
+        logger.err("penjuru: pen_menu failed to load: " .. tostring(PenMenu))
     end
+    menu_items.penjuru = {
+        text = _("penjuru"),
+        sorting_hint = "tools",
+        sub_item_table = sub_items,
+    }
 end
 
 return penjuruPlugin
