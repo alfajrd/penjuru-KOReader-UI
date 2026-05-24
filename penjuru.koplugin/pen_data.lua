@@ -169,4 +169,49 @@ function M.read_today_stats()
     }
 end
 
+-- read_lead_book() -> table | nil
+-- Returns metadata for the most recently opened book, or nil if history empty.
+function M.read_lead_book()
+    local history = M.read_history()
+    if #history == 0 then return nil end
+    local top = history[1]
+    if not top or not top.file then return nil end
+
+    local sdr = M.read_sdr_metadata(top.file) or {}
+    local doc_props = sdr.doc_props or {}
+    local pages = sdr.doc_pages or (sdr.stats and sdr.stats.pages) or 0
+    local percent = sdr.percent_finished or 0
+    return {
+        file = top.file,
+        title = doc_props.title or top.file:match("([^/]+)%.[^.]+$") or "untitled",
+        author = doc_props.authors or "",
+        year = doc_props.year or "",
+        percent = percent,
+        pages_total = pages,
+        page_current = math.floor(percent * pages + 0.5),
+        last_read_ts = top.time or 0,
+    }
+end
+
+-- read_book_highlights(book_path, limit) -> array of { text, datetime, page }
+function M.read_book_highlights(book_path, limit)
+    limit = limit or 1
+    local sdr = M.read_sdr_metadata(book_path)
+    if not sdr or not sdr.bookmarks then return {} end
+    local hs = {}
+    for _, bm in ipairs(sdr.bookmarks) do
+        if bm.text and bm.text ~= "" then
+            table.insert(hs, {
+                text = bm.text,
+                datetime = bm.datetime or "",
+                page = bm.page or 0,
+            })
+        end
+    end
+    table.sort(hs, function(a, b) return a.datetime > b.datetime end)
+    local out = {}
+    for i = 1, math.min(limit, #hs) do out[i] = hs[i] end
+    return out
+end
+
 return M

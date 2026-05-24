@@ -84,4 +84,32 @@ describe("pen_data", function()
             assert.is_true(s.year_finished >= 0)
         end)
     end)
+
+    describe("read_lead_book", function()
+        it("returns a table with file field when history is non-empty, or nil if empty", function()
+            local b = Data.read_lead_book()
+            if b then
+                assert.is_string(b.file)
+                assert.is_string(b.title)
+                assert.is_number(b.percent)
+            end
+        end)
+    end)
+
+    describe("read_book_highlights", function()
+        it("returns empty array for a non-existent book", function()
+            local hs = Data.read_book_highlights("/nonexistent.epub", 5)
+            assert.is_table(hs)
+            assert.equals(0, #hs)
+        end)
+        it("returns highlights sorted by datetime descending", function()
+            -- Use the real test data: Macbeth has 3 dated highlights
+            local hs = Data.read_book_highlights(
+                "/Users/penjurupikiran/Developer/koreader/books/shakespeare-macbeth.epub",
+                10)
+            if #hs >= 2 then
+                assert.is_true(hs[1].datetime >= hs[2].datetime)
+            end
+        end)
+    end)
 end)
