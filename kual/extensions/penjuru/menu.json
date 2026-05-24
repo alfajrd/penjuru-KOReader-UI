@@ -1,10 +1,5 @@
 {
-  "items": [
-    {
-      "name": "penjuru",
-      "priority": 0,
-      "action": "./run.sh",
-      "params": ""
-    }
-  ]
+    "items": [
+        {"name": "penjuru", "priority": 0, "action": "./run.sh", "exitmenu": true}
+    ]
 }
