@@ -58,6 +58,27 @@ or any installed KOReader plugin.
   the riso textures of penjurupikiran.com
 - **Voice:** lowercase everywhere, em-dash bylines, intimate
 
+## Acknowledgments
+
+penjuru is a fork of
+[simpleui.koplugin](https://github.com/doctorhetfield-cmd/simpleui.koplugin)
+by **Doctor Hetfield**, the original author of the KOReader UI plugin this
+project is built on. SimpleUI solved the hard problems of injecting custom
+chrome into KOReader and providing a modular home-screen system; penjuru
+forks those foundations and replaces the visual layer with a monospace
+newspaper aesthetic. Thank you Doctor Hetfield — without your work
+penjuru would not exist.
+
+Additional thanks to:
+
+- The [KOReader](https://github.com/koreader/koreader) team for the
+  open, hackable e-reader platform this all runs on.
+- [IBM Plex Mono](https://github.com/IBM/plex),
+  [Syne Mono](https://gitlab.com/bonjour-monde/fonderie/syne-typeface), and
+  [VT323](https://github.com/phoikoi/VT323) — the three typefaces bundled
+  with the plugin, all under the SIL Open Font License v1.1.
+
 ## License
 
-MIT (planned, when the code lands).
+MIT — see [`penjuru.koplugin/LICENSE`](penjuru.koplugin/LICENSE) for full
+text. Portions Copyright © 2024–2026 Doctor Hetfield (simpleui.koplugin).
