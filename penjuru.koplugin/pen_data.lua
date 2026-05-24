@@ -95,4 +95,78 @@ function M.list_books_in(dir)
     return out
 end
 
+-- read_today_stats() -> { reading_minutes, pages, streak_days, year_finished }
+-- Reads KOReader's statistics.sqlite3. Returns sensible zeros if the db
+-- is absent (e.g. user hasn't enabled the Statistics plugin yet).
+function M.read_today_stats()
+    local default = {
+        reading_minutes = 0, pages = 0, streak_days = 0, year_finished = 0,
+    }
+    local DataStorage = require("datastorage")
+    local path = DataStorage:getSettingsDir() .. "/statistics.sqlite3"
+    local stat = lfs.attributes(path)
+    if not stat then return default end
+
+    local ok_sql, SQ3 = pcall(require, "lua-ljsqlite3/init")
+    if not ok_sql then return default end
+    local ok_db, db = pcall(SQ3.open, path)
+    if not ok_db or not db then return default end
+
+    local function scalar(sql)
+        local ok, stmt = pcall(db.prepare, db, sql)
+        if not ok or not stmt then return nil end
+        local row_ok, row = pcall(stmt.step, stmt)
+        local v = (row_ok and row) and row[1] or nil
+        pcall(stmt.close, stmt)
+        return v
+    end
+
+    -- "today" = local-time start-of-day to start-of-tomorrow.
+    local now = os.date("*t")
+    local day_start = os.time{ year = now.year, month = now.month, day = now.day, hour = 0 }
+    local day_end = day_start + 86400
+
+    local reading_seconds = scalar(string.format(
+        "SELECT IFNULL(SUM(duration), 0) FROM page_stat_data WHERE start_time >= %d AND start_time < %d",
+        day_start, day_end)) or 0
+    local pages_today = scalar(string.format(
+        "SELECT COUNT(DISTINCT id_book || ':' || page) FROM page_stat_data WHERE start_time >= %d AND start_time < %d",
+        day_start, day_end)) or 0
+
+    -- Streak: walk backwards day by day until we find a past day with
+    -- no rows. Today itself can be empty (no penalty).
+    local streak = 0
+    local cursor = day_start
+    while true do
+        local n = scalar(string.format(
+            "SELECT COUNT(*) FROM page_stat_data WHERE start_time >= %d AND start_time < %d",
+            cursor, cursor + 86400)) or 0
+        if n > 0 then
+            streak = streak + 1
+            cursor = cursor - 86400
+        else
+            if cursor == day_start then
+                cursor = cursor - 86400  -- skip empty today, keep checking
+            else
+                break
+            end
+        end
+        if streak > 365 then break end  -- safety
+    end
+
+    -- Books finished this year: total_read_pages >= pages, last_open in year.
+    local year_start = os.time{ year = now.year, month = 1, day = 1, hour = 0 }
+    local year_finished = scalar(string.format(
+        "SELECT COUNT(*) FROM book WHERE total_read_pages >= pages AND pages > 0 AND last_open >= %d",
+        year_start)) or 0
+
+    pcall(db.close, db)
+    return {
+        reading_minutes = math.floor((reading_seconds or 0) / 60),
+        pages = pages_today,
+        streak_days = streak,
+        year_finished = year_finished,
+    }
+end
+
 return M
