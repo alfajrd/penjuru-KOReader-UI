@@ -144,6 +144,8 @@ function MastheadWidget:init()
     -- quote + progress). Reads KOReader history.lua + per-book .sdr.
     -- Renders a graceful "no entries today" placeholder when history empty.
     local currently_widget = Currently.render(body_w)
+    -- v1.2.9 debug: stash on self so onTapClose can show its dimen on tap.
+    self._dbg_currently = currently_widget
 
     -- v1.2.8 — final three home modules:
     --   desk: 5 cover thumbnails of other in-progress books (excludes lead)
@@ -218,7 +220,26 @@ function MastheadWidget:init()
     end
 end
 
-function MastheadWidget:onTapClose()
+function MastheadWidget:onTapClose(arg, ges)
+    -- v1.2.9 debug: if a child TappableArea should have caught this tap
+    -- but didn't, surface the geometry so we can see why range:contains failed.
+    -- Comparing tap.pos to currently_widget.dimen tells us whether the
+    -- tap was outside the card's dimen (geometry bug) or inside it (range
+    -- match logic / dispatch bug).
+    local cw = self._dbg_currently
+    if cw and cw.dimen and ges and ges.pos then
+        local d = cw.dimen
+        local inside = (ges.pos.x >= d.x and ges.pos.x <= d.x + d.w
+                    and ges.pos.y >= d.y and ges.pos.y <= d.y + d.h)
+        local InfoMessage = require("ui/widget/infomessage")
+        UIManager:show(InfoMessage:new{
+            text = string.format(
+                "TAP at (%d, %d)\nCARD dimen: x=%d y=%d w=%d h=%d\nINSIDE = %s",
+                ges.pos.x, ges.pos.y, d.x, d.y, d.w, d.h, tostring(inside)),
+            timeout = 6,
+        })
+        return true  -- don't close, so user can read the message
+    end
     UIManager:close(self)
     return true
 end
