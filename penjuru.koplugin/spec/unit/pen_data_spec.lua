@@ -1,0 +1,67 @@
+require("commonrequire")
+
+describe("pen_data", function()
+    local Data
+    setup(function()
+        -- Add plugin dir to package.path so bare require("pen_data") works.
+        -- The plugin is symlinked into the emulator at plugins/penjuru.koplugin/
+        local plugin_dir = require("lfs").currentdir() .. "/plugins/penjuru.koplugin"
+        package.path = plugin_dir .. "/?.lua;" .. package.path
+        Data = require("pen_data")
+    end)
+
+    describe("read_history", function()
+        it("returns a table (possibly empty)", function()
+            local h = Data.read_history()
+            assert.is_table(h)
+        end)
+    end)
+
+    describe("read_sdr_metadata", function()
+        it("returns nil for a non-existent path", function()
+            local m = Data.read_sdr_metadata("/nonexistent/book.epub")
+            assert.is_nil(m)
+        end)
+    end)
+
+    describe("sdr_path_for", function()
+        it("returns nil for nil input", function()
+            assert.is_nil(Data.sdr_path_for(nil))
+        end)
+        it("returns nil for empty string", function()
+            assert.is_nil(Data.sdr_path_for(""))
+        end)
+        it("computes the standard .sdr/metadata path for an epub", function()
+            local p = Data.sdr_path_for("/foo/bar/book.epub")
+            assert.equals("/foo/bar/book.sdr/metadata.epub.lua", p)
+        end)
+        it("lowercases the extension in the metadata filename", function()
+            local p = Data.sdr_path_for("/foo/bar/book.EPUB")
+            assert.equals("/foo/bar/book.sdr/metadata.epub.lua", p)
+        end)
+    end)
+
+    describe("parse_lua_file", function()
+        it("returns nil for a non-existent file", function()
+            assert.is_nil(Data.parse_lua_file("/nonexistent/file.lua"))
+        end)
+        it("returns the table when the file is a valid `return { ... }`", function()
+            local tmp = os.tmpname() .. ".lua"
+            local f = io.open(tmp, "w")
+            f:write([[return { hello = "world", n = 42 }]])
+            f:close()
+            local r = Data.parse_lua_file(tmp)
+            assert.equals("world", r.hello)
+            assert.equals(42, r.n)
+            os.remove(tmp)
+        end)
+        it("returns nil for a file that errors on load", function()
+            local tmp = os.tmpname() .. ".lua"
+            local f = io.open(tmp, "w")
+            f:write("this is not valid lua syntax !@#")
+            f:close()
+            assert.is_nil(Data.parse_lua_file(tmp))
+            os.remove(tmp)
+        end)
+    end)
+end)
