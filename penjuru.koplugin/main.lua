@@ -17,7 +17,7 @@ local Config       = require("pen_config")
 local UI           = require("pen_core")
 local Bottombar    = require("pen_bottombar")
 local Topbar       = require("pen_topbar")
-local Patches      = require("pen_patches")
+-- pen_patches removed: legacy SimpleUI chrome injection (Plan D / D.0.1)
 local PENSettings  = require("pen_store")
 
 local penjuruPlugin = WidgetContainer:new{
@@ -751,15 +751,16 @@ function penjuruPlugin:init()
         end
         -- -------------------------------------------------------------------
         if PENSettings:nilOrTrue("penjuru_enabled") then
-            Patches.installAll(self)
+            -- Patches.installAll removed (Plan D / D.0.1): legacy SimpleUI chrome injection
+            -- caused TOTAL_H / scheduleRefresh errors on old singletons; chrome now lives
+            -- in pen_homescreen.lua and needs no monkey-patches.
             -- TBR button registration removed: module_tbr out of scope for penjuru v1.
             -- (Plan B adds module_newly_catalogued as replacement.)
 
             -- "More by <Author>" button removed: sui_browsemeta out of scope for penjuru v1.
 
-            if PENSettings:nilOrTrue("penjuru_topbar_enabled") then
-                Topbar.scheduleRefresh(self, 0)
-            end
+            -- Topbar.scheduleRefresh removed (Plan D / D.0.1): new pen_topbar is a pure
+            -- render function; topbar refreshes via pen_homescreen on each open/resume.
             -- Pre-load ALL desktop modules during boot idle time so the first
             -- Homescreen open has no perceptible freeze. scheduleIn(2) runs
             -- after the FileManager UI is fully painted and stable.
@@ -829,7 +830,8 @@ end
 -- ---------------------------------------------------------------------------
 local _PLUGIN_MODULES = {
     "pen_i18n", "pen_config", "pen_core", "pen_bottombar", "pen_topbar",
-    "pen_patches", "pen_menu", "pen_titlebar", "pen_quickactions",
+    -- "pen_patches" removed (Plan D / D.0.1): stashed as pen_patches.lua.old_simpleui
+    "pen_menu", "pen_titlebar", "pen_quickactions",
     "pen_homescreen",
     -- removed: sui_foldercovers, sui_browsemeta, sui_updater, sui_presets (out of scope)
     "pen_store", "pen_style",
@@ -853,16 +855,16 @@ local _PLUGIN_MODULES = {
 -- ---------------------------------------------------------------------------
 
 -- Called when the user triggers the "Go to Homescreen" gesture.
--- When inside the Reader: closes the reader and opens the Homescreen using
--- the exact same path as the native "Start with Homescreen" setting
--- (sui_patches._hs_pending_after_reader), regardless of whether that
--- setting is actually enabled.
 -- When outside the Reader: equivalent to tapping the Homescreen tab.
+-- NOTE (Plan D / D.0.1): reader-close path (Patches.closeReaderToHomescreen)
+-- removed with pen_patches. Reader gestures fall through to FM-side navigate;
+-- full reader-close routing to be re-implemented in D.3.1 (pen_book_open).
 function penjuruPlugin:onSimpleUIGoHomescreen()
     local RUI = package.loaded["apps/reader/readerui"]
     if RUI and RUI.instance then
-        Patches.closeReaderToHomescreen(self)
-        return true
+        -- Patches.closeReaderToHomescreen removed (Plan D / D.0.1)
+        self._closing_via_gesture = true
+        RUI.instance:onClose()
     end
     local tabs = Config.loadTabConfig()
     self:_navigate("homescreen", self.ui, tabs, false)
@@ -870,15 +872,15 @@ function penjuruPlugin:onSimpleUIGoHomescreen()
 end
 
 -- Called when the user triggers the "Go to Library" gesture.
--- When inside the Reader: closes the reader and returns to the Library
--- (home_dir) without showing the Homescreen, as if "return to book folder"
--- were disabled — the FM file browser becomes the top widget.
 -- When outside the Reader: equivalent to tapping the Library tab.
+-- NOTE (Plan D / D.0.1): reader-close path (Patches.closeReaderToLibrary)
+-- removed with pen_patches. Reader gestures fall through to FM-side navigate.
 function penjuruPlugin:onSimpleUIGoLibrary()
     local RUI = package.loaded["apps/reader/readerui"]
     if RUI and RUI.instance then
-        Patches.closeReaderToLibrary(self)
-        return true
+        -- Patches.closeReaderToLibrary removed (Plan D / D.0.1)
+        self._closing_via_gesture = true
+        RUI.instance:onClose()
     end
     local tabs = Config.loadTabConfig()
     self:_navigate("home", self.ui, tabs, false)
@@ -887,8 +889,7 @@ end
 
 -- Called when the user triggers the "Toggle Homescreen / Library" gesture.
 -- If the Homescreen is currently open: navigates to the library (home_dir).
--- If inside the Reader: closes the reader and opens the Homescreen (same
--- path as GoHomescreen above).
+-- If inside the Reader: closes the reader then navigates to the Homescreen.
 -- Otherwise (library or any other view): opens the Homescreen.
 function penjuruPlugin:onSimpleUIToggleHomeLibrary()
     local HS = package.loaded["pen_homescreen"]
@@ -898,8 +899,9 @@ function penjuruPlugin:onSimpleUIToggleHomeLibrary()
     end
     local RUI = package.loaded["apps/reader/readerui"]
     if RUI and RUI.instance then
-        Patches.closeReaderToHomescreen(self)
-        return true
+        -- Patches.closeReaderToHomescreen removed (Plan D / D.0.1)
+        self._closing_via_gesture = true
+        RUI.instance:onClose()
     end
     self:_navigate("homescreen", self.ui, Config.loadTabConfig(), false)
     return true
@@ -913,7 +915,7 @@ function penjuruPlugin:onTeardown()
         UIManager:unschedule(self._topbar_timer)
         self._topbar_timer = nil
     end
-    Patches.teardownAll(self)
+    -- Patches.teardownAll removed (Plan D / D.0.1): no monkey-patches to reverse
     I18n.uninstall()
     -- Give modules with internal upvalue caches a chance to nil them before
     -- their package.loaded entry is cleared — ensures the GC can collect the
@@ -1038,12 +1040,8 @@ end
 
 function penjuruPlugin:onResume()
     self._penjuru_suspended = false
-    if PENSettings:nilOrTrue("penjuru_topbar_enabled") then
-        -- Small delay to let the wakeup transition finish before refreshing
-        -- the topbar. Avoids a race with HomescreenWidget:onResume() and
-        -- prevents the timer firing while the device is still mid-wakeup.
-        Topbar.scheduleRefresh(self, 0.5)
-    end
+    -- Topbar.scheduleRefresh removed (Plan D / D.0.1): topbar refreshes via
+    -- pen_homescreen on each open; no standalone refresh timer in new arch.
     -- Use the snapshot captured in onSuspend rather than checking RUI.instance
     -- live. On some Kobo builds the autosuspend timer fires close to a reader
     -- teardown, leaving RUI.instance nil even though the user was reading —
@@ -1072,10 +1070,10 @@ function penjuruPlugin:onResume()
             end
             HS.refresh(true)
         end
-        -- Re-open the Homescreen on wakeup when \"Start with Homescreen\" is set.
-        if PENSettings:nilOrTrue("penjuru_enabled") then
-            Patches.showHSAfterResume(self)
-        end
+        -- Re-open the Homescreen on wakeup when "Start with Homescreen" is set.
+        -- Patches.showHSAfterResume removed (Plan D / D.0.1): wakeup-HS logic
+        -- was part of pen_patches chrome injection; will be re-implemented
+        -- without monkey-patches in a later Plan D task.
     end
 end
 
@@ -1145,9 +1143,7 @@ function penjuruPlugin:onCloseDocument()
     -- there is nothing further to do — the next Homescreen.show() will rebuild
     -- from scratch. Avoids loading the Registry and all module pcalls.
     if not HS._instance and HS._stats_need_refresh then
-        if PENSettings:nilOrTrue("penjuru_topbar_enabled") then
-            Topbar.scheduleRefresh(self, 0)
-        end
+        -- Topbar.scheduleRefresh removed (Plan D / D.0.1)
         return
     end
 
@@ -1341,15 +1337,8 @@ function penjuruPlugin:onCloseDocument()
         HS._stats_need_refresh = true
     end
 
-    -- Restart the topbar clock chain. While the reader was open, shouldRunTimer()
-    -- returned false (RUI.instance present) so the chain stopped naturally.
-    -- Without this, the topbar is frozen until the next hardware event (frontlight,
-    -- charge) — wifi state changes that happened during reading would not be
-    -- reflected for up to 60 s. scheduleRefresh guards against suspend internally
-    -- via shouldRunTimer, so this is safe to call unconditionally here.
-    if PENSettings:nilOrTrue("penjuru_topbar_enabled") then
-        Topbar.scheduleRefresh(self, 0)
-    end
+    -- Topbar.scheduleRefresh removed (Plan D / D.0.1): topbar clock refresh
+    -- was a legacy pen_patches timer chain; new arch refreshes via pen_homescreen.
 end
 
 -- ---------------------------------------------------------------------------
@@ -1399,38 +1388,34 @@ function penjuruPlugin:onBookMetadataChanged(_prop_updated)
 end
 
 function penjuruPlugin:onFrontlightStateChanged()
-    if self._penjuru_suspended then return end
-    if not PENSettings:nilOrTrue("penjuru_topbar_enabled") then return end
-    Topbar.scheduleRefresh(self, 0)
+    -- Topbar.scheduleRefresh removed (Plan D / D.0.1)
 end
 
 function penjuruPlugin:onCharging()
-    if self._penjuru_suspended then return end
-    if not PENSettings:nilOrTrue("penjuru_topbar_enabled") then return end
-    Topbar.scheduleRefresh(self, 0)
+    -- Topbar.scheduleRefresh removed (Plan D / D.0.1)
 end
 
 function penjuruPlugin:onNotCharging()
-    if self._penjuru_suspended then return end
-    if not PENSettings:nilOrTrue("penjuru_topbar_enabled") then return end
-    Topbar.scheduleRefresh(self, 0)
+    -- Topbar.scheduleRefresh removed (Plan D / D.0.1)
 end
 
 -- ---------------------------------------------------------------------------
--- Topbar delegation
+-- Topbar delegation (Plan D / D.0.1: scheduleRefresh / registerTouchZones
+-- removed — new pen_topbar is a pure render function; no timer chain or
+-- touch-zone registration needed; topbar refreshes via pen_homescreen)
 -- ---------------------------------------------------------------------------
 
 function penjuruPlugin:_registerTouchZones(fm_self)
-    Bottombar.registerTouchZones(self, fm_self)
-    Topbar.registerTouchZones(self, fm_self)
+    -- Bottombar.registerTouchZones removed (Plan D / D.0.1)
+    -- Topbar.registerTouchZones removed (Plan D / D.0.1)
 end
 
 function penjuruPlugin:_scheduleTopbarRefresh(delay)
-    Topbar.scheduleRefresh(self, delay)
+    -- Topbar.scheduleRefresh removed (Plan D / D.0.1)
 end
 
 function penjuruPlugin:_refreshTopbar()
-    Topbar.refresh(self)
+    -- Topbar.refresh removed (Plan D / D.0.1)
 end
 
 -- ---------------------------------------------------------------------------
