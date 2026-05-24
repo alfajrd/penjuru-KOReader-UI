@@ -79,4 +79,17 @@ Style.gap = {
     xl = 26,
 }
 
+-- LEGACY-API SHIM
+-- Files inherited from SimpleUI (pen_titlebar, pen_bottombar, pen_menu, etc.)
+-- still call methods that lived on the old style module (getIcon, etc.).
+-- They'll be rewritten in Plans B/C/D, but until then we silently no-op any
+-- unknown method/field call so the plugin keeps loading without crashing.
+-- Reads return a stub function returning nil; this lets patterns like
+-- `(_ss and _ss.getIcon("...")) or fallback` fall through to their fallback.
+local function _stub() return nil end
+setmetatable(Style, {
+    __index = function(_, _key) return _stub end,
+    __call  = function(t) return t end,  -- SUIStyle() pattern: returns the module table
+})
+
 return Style
