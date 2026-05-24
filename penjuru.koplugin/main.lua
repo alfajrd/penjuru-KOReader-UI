@@ -868,30 +868,19 @@ local _PLUGIN_MODULES = {
 -- ---------------------------------------------------------------------------
 
 -- Called when the user triggers the "Go to Homescreen" gesture.
--- v1.2.6: rewritten to drive the v1.1-safe penjuru home overlay directly
--- via pen_homescreen.show(). The original handler called self:_navigate(),
--- a legacy SimpleUI nav method that referenced bottom-bar tabs the new
--- minimal home no longer renders, so the gesture closed the reader but
--- never opened anything in its place.
+-- v1.2.7: pure-overlay model. The penjuru home is a fullscreen
+-- InputContainer (covers_fullscreen=true) — pushing it onto the
+-- UIManager stack paints over whatever's beneath without disturbing it.
+-- Tap-to-dismiss closes the overlay and reveals the original view.
 --
--- From inside a book: close the reader, then schedule Homescreen.show()
--- after a short tick so the show races AFTER the reader teardown finishes
--- (otherwise the reader's onClose can tear down the home we just opened).
--- From outside the reader: just open the home directly.
+-- v1.2.6 closed RUI.instance before showing the home, which made the
+-- gesture exit KOReader entirely on devices where the reader was the
+-- only widget on the stack (e.g. KUAL-launched, start_with=last_file):
+-- onClose() had nothing to fall back to and dropped the user at the
+-- Kindle home screen (KUAL).
 function penjuruPlugin:onSimpleUIGoHomescreen()
-    local function open_home()
-        local ok, Home = pcall(require, "pen_homescreen")
-        if ok and Home and Home.show then pcall(Home.show) end
-    end
-    local RUI = package.loaded["apps/reader/readerui"]
-    if RUI and RUI.instance then
-        self._closing_via_gesture = true
-        pcall(function() RUI.instance:onClose() end)
-        -- Reader teardown + FM re-paint take ~300ms; 0.5s is a safe budget.
-        UIManager:scheduleIn(0.5, open_home)
-    else
-        open_home()
-    end
+    local ok, Home = pcall(require, "pen_homescreen")
+    if ok and Home and Home.show then pcall(Home.show) end
     return true
 end
 
@@ -912,29 +901,16 @@ function penjuruPlugin:onSimpleUIGoLibrary()
 end
 
 -- Called when the user triggers the "Toggle Homescreen / Library" gesture.
--- v1.2.6: rewritten for the v1.1-safe home. "Library" in the minimal home
--- model just means "the FileManager underneath" — toggling reduces to:
---   • home open → close it (reveals whatever was underneath, FM or reader)
---   • reader open → close reader + open home
---   • otherwise (FM) → open home
+-- v1.2.7: same overlay model — toggling reduces to "if home is visible,
+-- dismiss it; otherwise overlay it on top of whatever's there."
 function penjuruPlugin:onSimpleUIToggleHomeLibrary()
     local HS = package.loaded["pen_homescreen"]
     if HS and HS._instance and HS.close then
         pcall(HS.close)
         return true
     end
-    local function open_home()
-        local ok, Home = pcall(require, "pen_homescreen")
-        if ok and Home and Home.show then pcall(Home.show) end
-    end
-    local RUI = package.loaded["apps/reader/readerui"]
-    if RUI and RUI.instance then
-        self._closing_via_gesture = true
-        pcall(function() RUI.instance:onClose() end)
-        UIManager:scheduleIn(0.5, open_home)
-    else
-        open_home()
-    end
+    local ok, Home = pcall(require, "pen_homescreen")
+    if ok and Home and Home.show then pcall(Home.show) end
     return true
 end
 
