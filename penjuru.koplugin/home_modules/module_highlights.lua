@@ -31,7 +31,7 @@ local function highlight_block(w, h)
         face = Style.fonts.italic(Style.size.highlight_src),
         fgcolor = Style.colors.ink_dim,
     }
-    return VerticalGroup:new{
+    local content = VerticalGroup:new{
         align = "left",
         quote,
         VerticalSpan:new{ width = 6 },
@@ -39,6 +39,33 @@ local function highlight_block(w, h)
         VerticalSpan:new{ width = 10 },
         Widgets.dotted_rule(w, Style.rules.minor, Style.colors.rule_soft),
         VerticalSpan:new{ width = 10 },
+    }
+
+    local content_h = content:getSize().h
+    local InputContainer = require("ui/widget/container/inputcontainer")
+    local GestureRange = require("ui/gesturerange")
+    local Geom = require("ui/geometry")
+    return InputContainer:new{
+        dimen = Geom:new{ x = 0, y = 0, w = w, h = content_h },
+        content,
+        ges_events = {
+            Tap = {
+                GestureRange:new{
+                    ges = "tap",
+                    range = Geom:new{ x = 0, y = 0, w = w, h = content_h },
+                },
+                handler = function()
+                    if not h.book_file then return end
+                    local ok, ReaderUI = pcall(require, "apps/reader/readerui")
+                    if not ok or not ReaderUI then return end
+                    pcall(ReaderUI.showReader, ReaderUI, h.book_file)
+                    -- Note: jumping to the highlighted page requires opening
+                    -- the reader first then issuing a goto; we open to the
+                    -- book and let the user navigate. Page-jump deferred
+                    -- to Plan D enhancement.
+                end,
+            },
+        },
     }
 end
 
