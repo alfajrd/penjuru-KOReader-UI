@@ -28,7 +28,10 @@ local CenterContainer = require("ui/widget/container/centercontainer")
 local FrameContainer  = require("ui/widget/container/framecontainer")
 local Geom            = require("ui/geometry")
 local GestureRange    = require("ui/gesturerange")
+local HorizontalGroup = require("ui/widget/horizontalgroup")
+local HorizontalSpan  = require("ui/widget/horizontalspan")
 local InputContainer  = require("ui/widget/container/inputcontainer")
+local LineWidget      = require("ui/widget/linewidget")
 local TextWidget      = require("ui/widget/textwidget")
 local UIManager       = require("ui/uimanager")
 local VerticalGroup   = require("ui/widget/verticalgroup")
@@ -36,6 +39,8 @@ local VerticalSpan    = require("ui/widget/verticalspan")
 local Device          = require("device")
 local Screen          = Device.screen
 local Style           = require("pen_style")
+local Dates           = require("pen_dates")
+local InstallDate     = require("pen_install_date")
 
 local Homescreen = {
     _instance      = nil,
@@ -53,8 +58,12 @@ local MastheadWidget = InputContainer:extend{
 function MastheadWidget:init()
     local screen_w = Screen:getWidth()
     local screen_h = Screen:getHeight()
+    -- Body content width (the bars + masthead span screen; the dateline row
+    -- gets the same content area as future modules will).
+    local body_pad_x = 60
+    local body_w = screen_w - 2 * body_pad_x
 
-    -- Masthead stack (centered on screen).
+    -- Masthead stack (centered).
     local name = TextWidget:new{
         text    = "penjuru pikiran",
         face    = Style.fonts.headline(Style.size.masthead_name),
@@ -65,6 +74,52 @@ function MastheadWidget:init()
         face    = Style.fonts.body(Style.size.masthead_tagline),
         fgcolor = Style.colors.ink_soft,
     }
+
+    -- v1.2.1 — dateline row, three cells laid out with space-between.
+    -- Pure-data; uses pen_install_date + pen_dates which are spec-tested.
+    local install_ts = InstallDate.get_install_ts(
+        rawget(_G, "G_reader_settings"), os.time())
+    local vn = InstallDate.vol_and_no_for(install_ts, os.time())
+    local d = os.date("*t")
+    local vol_w = TextWidget:new{
+        text    = "vol. " .. InstallDate.roman(vn.vol) .. " · no. " .. vn.no,
+        face    = Style.fonts.body(Style.size.dateline),
+        fgcolor = Style.colors.ink_2,
+    }
+    local date_w = TextWidget:new{
+        text    = Dates.format_long(os.time()),
+        face    = Style.fonts.body(Style.size.dateline),
+        fgcolor = Style.colors.ink_2,
+    }
+    local edition_w = TextWidget:new{
+        text    = Dates.edition_for_hour(d.hour) .. " edition",
+        face    = Style.fonts.body(Style.size.dateline),
+        fgcolor = Style.colors.ink_2,
+    }
+    -- Space-between layout: insert two HorizontalSpans sized to fill.
+    local left_w = vol_w:getSize().w
+    local mid_w = date_w:getSize().w
+    local right_w = edition_w:getSize().w
+    local total_text = left_w + mid_w + right_w
+    local gap = math.max(0, math.floor((body_w - total_text) / 2))
+    local dateline_row = HorizontalGroup:new{
+        align = "center",
+        vol_w,
+        HorizontalSpan:new{ width = gap },
+        date_w,
+        HorizontalSpan:new{ width = gap },
+        edition_w,
+    }
+
+    -- Dashed rule under masthead (between masthead/tagline and dateline).
+    local masthead_rule = LineWidget:new{
+        dimen = { w = body_w, h = 2 },
+        background = Style.colors.ink,
+        style = "dashed",
+        dash_length = 8,
+        gap_length = 4,
+    }
+
     local exit_hint = TextWidget:new{
         text    = "tap anywhere to exit",
         face    = Style.fonts.italic(Style.size.byline),
@@ -74,9 +129,13 @@ function MastheadWidget:init()
     local stack = VerticalGroup:new{
         align = "center",
         name,
-        VerticalSpan:new{ width = 16 },
+        VerticalSpan:new{ width = 8 },
         tagline,
-        VerticalSpan:new{ width = 80 },
+        VerticalSpan:new{ width = 14 },
+        masthead_rule,
+        VerticalSpan:new{ width = 12 },
+        dateline_row,
+        VerticalSpan:new{ width = 60 },
         exit_hint,
     }
 
