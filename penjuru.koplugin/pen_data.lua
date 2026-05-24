@@ -288,4 +288,34 @@ function M.read_newly_catalogued(dirs, age_days, limit)
     return out
 end
 
+-- read_recent_highlights(limit) -> array of { text, book_title, book_author, page, datetime, book_file }
+-- Aggregates highlights from every book in history, sorts by datetime desc.
+function M.read_recent_highlights(limit)
+    limit = limit or 3
+    local history = M.read_history()
+    local all = {}
+    for _, entry in ipairs(history) do
+        if entry.file then
+            local sdr = M.read_sdr_metadata(entry.file) or {}
+            local props = sdr.doc_props or {}
+            for _, bm in ipairs(sdr.bookmarks or {}) do
+                if bm.text and bm.text ~= "" then
+                    table.insert(all, {
+                        text = bm.text,
+                        datetime = bm.datetime or "",
+                        page = bm.page or 0,
+                        book_file = entry.file,
+                        book_title = props.title or "untitled",
+                        book_author = props.authors or "",
+                    })
+                end
+            end
+        end
+    end
+    table.sort(all, function(a, b) return a.datetime > b.datetime end)
+    local out = {}
+    for i = 1, math.min(limit, #all) do out[i] = all[i] end
+    return out
+end
+
 return M

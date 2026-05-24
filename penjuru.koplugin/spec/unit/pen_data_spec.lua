@@ -151,4 +151,23 @@ describe("pen_data", function()
             end
         end)
     end)
+
+    describe("read_recent_highlights", function()
+        it("returns a table", function()
+            local hs = Data.read_recent_highlights(3)
+            assert.is_table(hs)
+        end)
+        it("returns at most `limit` entries", function()
+            local hs = Data.read_recent_highlights(2)
+            assert.is_true(#hs <= 2)
+        end)
+        it("returns entries sorted by datetime descending", function()
+            local hs = Data.read_recent_highlights(10)
+            if #hs >= 2 then
+                for i = 2, #hs do
+                    assert.is_true(hs[i-1].datetime >= hs[i].datetime)
+                end
+            end
+        end)
+    end)
 end)
