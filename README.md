@@ -9,19 +9,30 @@ Carries the voice of [penjurupikiran.com](https://penjurupikiran.com) onto
 e-ink — lowercase everywhere, triple-monospace type system (Syne Mono · IBM
 Plex Mono · VT323), small quiet archive mood.
 
+<p align="center">
+  <img src="docs/screenshots/home.png" alt="penjuru home screen — masthead, dateline, currently reading lead with pull quote, today's ledger, the almanac, on the desk grid, newly catalogued rows, recent highlights, and the 7-cell paginated bottom nav" width="380">
+</p>
+
 ## Status
 
-**Design phase.** No code yet. The repo currently contains:
+**v1.0.0 — shipped.** Install zip and changelog at the
+[v1.0.0 release](https://github.com/alfajrd/penjuru-KOReader-UI/releases/tag/v1.0.0).
+End-user setup steps in [INSTALL.md](INSTALL.md).
 
+What's in the repo:
+
+- [`penjuru.koplugin/`](penjuru.koplugin) — the plugin itself
+- [`INSTALL.md`](INSTALL.md) — end-user install guide for Kindle
+- [`build.sh`](build.sh) — packages plugin as `dist/penjuru.koplugin.zip`
 - [`docs/superpowers/specs/2026-05-23-koreader-ui-design.md`](docs/superpowers/specs/2026-05-23-koreader-ui-design.md) — the full design spec
-- [`home-v3.html`](home-v3.html) — a browser mockup of the home screen at the
+- [`docs/superpowers/plans/`](docs/superpowers/plans/) — Plans A / B / C / D and their DONE snapshots
+- [`home-v3.html`](home-v3.html) — a browser-renderable mockup at the
   Kindle Paperwhite's native resolution (1236 × 1648). Open in any browser to
-  preview.
+  preview the design.
 
-Implementation will fork [simpleui.koplugin](https://github.com/doctorhetfield-cmd/simpleui.koplugin)
-as a starting point — it already solves the hard problems (monkey-patching
-KOReader's chrome to insert persistent bars, module registry, settings menu,
-icon-pack hot-swap) — then heavily reskin and rebuild the home screen, bottom
+Forked from [simpleui.koplugin](https://github.com/doctorhetfield-cmd/simpleui.koplugin),
+which solved the hard problems (KOReader chrome injection, module registry,
+icon-pack hot-swap). penjuru reskins and rebuilds the home screen, bottom
 nav, and typography layer.
 
 ## What's in the design
@@ -49,6 +60,8 @@ nav, and typography layer.
 Each tab can target a built-in screen, a custom folder shortcut, a
 [KUAL](https://www.mobileread.com/forums/showthread.php?t=225030) launcher,
 or any installed KOReader plugin.
+
+![Bottom nav — page 1 (content shortcuts: prev / manga / books / home / wi-fi / games / next) and page 2 (utilities: prev / stats / brightness / power / search / library / next), with a table of what each tab targets](docs/screenshots/bottom-nav-pages.png)
 
 ## Visual system
 
