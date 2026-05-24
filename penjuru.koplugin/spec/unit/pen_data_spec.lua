@@ -112,4 +112,25 @@ describe("pen_data", function()
             end
         end)
     end)
+
+    describe("read_in_progress_books", function()
+        it("returns a table (possibly empty)", function()
+            local books = Data.read_in_progress_books(nil)
+            assert.is_table(books)
+        end)
+        it("excludes a path passed in exclude argument", function()
+            local exclude = "/Users/penjurupikiran/Developer/koreader/books/shakespeare-macbeth.epub"
+            local books = Data.read_in_progress_books(exclude)
+            for _, b in ipairs(books) do
+                assert.is_not.equals(exclude, b.file)
+            end
+        end)
+        it("returns books with 0 < percent < 1", function()
+            local books = Data.read_in_progress_books(nil)
+            for _, b in ipairs(books) do
+                assert.is_true(b.percent > 0)
+                assert.is_true(b.percent < 1)
+            end
+        end)
+    end)
 end)

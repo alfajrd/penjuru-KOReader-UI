@@ -214,4 +214,45 @@ function M.read_book_highlights(book_path, limit)
     return out
 end
 
+-- read_in_progress_books(exclude_path) -> array of { file, title, percent, last_read_ts }
+-- Books from history with 0 < percent_finished < 1, sorted by last_read_ts desc.
+function M.read_in_progress_books(exclude_path)
+    local history = M.read_history()
+    local seen, out = {}, {}
+    for _, entry in ipairs(history) do
+        if entry.file and entry.file ~= exclude_path and not seen[entry.file] then
+            seen[entry.file] = true
+            local sdr = M.read_sdr_metadata(entry.file) or {}
+            local pct = sdr.percent_finished or 0
+            if pct > 0 and pct < 1 then
+                local props = sdr.doc_props or {}
+                table.insert(out, {
+                    file = entry.file,
+                    title = props.title or entry.file:match("([^/]+)%.[^.]+$") or "untitled",
+                    percent = pct,
+                    last_read_ts = entry.time or 0,
+                })
+            end
+        end
+    end
+    table.sort(out, function(a, b) return a.last_read_ts > b.last_read_ts end)
+    return out
+end
+
+-- read_book_cover(book_path, target_w, target_h) -> BlitBuffer | nil
+-- Returns a scaled cover image, or nil if the file can't be read.
+function M.read_book_cover(book_path, target_w, target_h)
+    local ok, DocumentRegistry = pcall(require, "document/documentregistry")
+    if not ok then return nil end
+    local doc = DocumentRegistry:openDocument(book_path)
+    if not doc then return nil end
+    local cover_bb = doc:getCoverPageImage()
+    pcall(doc.close, doc)
+    if not cover_bb then return nil end
+    if cover_bb.scale then
+        return cover_bb:scale(target_w, target_h)
+    end
+    return cover_bb
+end
+
 return M
