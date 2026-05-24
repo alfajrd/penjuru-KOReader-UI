@@ -64,12 +64,20 @@ local function book_row(w, book)
 end
 
 -- user_book_dirs() -> array of dirs to scan
--- Pulls from G_reader_settings.penjuru.catalogue_dirs; defaults to the
--- emulator's books dir (real-Kindle install will override via settings).
+-- Pulls from G_reader_settings.penjuru.catalogue_dirs. Defaults are
+-- environment-aware: on a real Kindle, scan /mnt/us/books + /mnt/us/manga
+-- (typical Kindle layout). On the macOS emulator, scan the dev books dir.
+-- v1.1 onboarding will detect these or let the user pick.
 local function user_book_dirs()
     local s = (rawget(_G, "G_reader_settings") and G_reader_settings:readSetting("penjuru")) or {}
     if s.catalogue_dirs and #s.catalogue_dirs > 0 then return s.catalogue_dirs end
-    -- Sensible default for the macOS emulator setup
+    local ok, lfs = pcall(require, "libs/libkoreader-lfs")
+    if ok and lfs.attributes("/mnt/us/books") then
+        local dirs = { "/mnt/us/books" }
+        if lfs.attributes("/mnt/us/manga") then table.insert(dirs, "/mnt/us/manga") end
+        return dirs
+    end
+    -- Fallback for the macOS emulator
     local home = os.getenv("HOME") or ""
     return { home .. "/Developer/koreader/books" }
 end

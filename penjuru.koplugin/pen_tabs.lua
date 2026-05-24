@@ -16,12 +16,14 @@ local DEFAULT_TABS = {
     power      = { id="power",      label="power",      icon="tab-power",      action="power_menu" },
     search     = { id="search",     label="search",     icon="tab-search",     action="search" },
     stats      = { id="stats",      label="stats",      icon="tab-stats",      action="stats" },
-    -- Folder shortcuts and KUAL: need target paths; defaults below match
-    -- a typical Kindle install. User can override via settings (Plan D).
+    -- Folder shortcuts and KUAL: need target paths; defaults match the
+    -- typical Kindle layout (books and manga at /mnt/us/ root, not under
+    -- /mnt/us/koreader/). Users can override via settings; v1.1 will add a
+    -- first-run onboarding flow to detect/pick these paths.
     manga      = { id="manga", label="manga", icon="tab-manga",
-                   action = { type="folder", target="/mnt/us/koreader/mangas" } },
+                   action = { type="folder", target="/mnt/us/manga" } },
     books      = { id="books", label="books", icon="tab-books",
-                   action = { type="folder", target="/mnt/us/koreader/books" } },
+                   action = { type="folder", target="/mnt/us/books" } },
     games      = { id="games", label="games", icon="tab-games",
                    action = { type="kual" } },
 }
