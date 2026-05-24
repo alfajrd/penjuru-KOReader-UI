@@ -165,9 +165,18 @@ function M.render(content_width, action_dispatch)
             if action_dispatch then action_dispatch(_tab) end
         end
         local on_hold = function()
+            local pages_text = "tab roster (read-only)\n\n"
+            for i, p in ipairs(Tabs.user_pages()) do
+                pages_text = pages_text .. "page " .. i .. ":\n"
+                for _, t in ipairs(p) do
+                    pages_text = pages_text .. "  · " .. t.label .. "  (" .. t.id .. ")\n"
+                end
+                pages_text = pages_text .. "\n"
+            end
+            pages_text = pages_text .. "edit via G_reader_settings.penjuru.bottombar.pages\n(gui editing in v1.1)"
             UIManager:show(InfoMessage:new{
-                text = "tab settings — coming in plan d",
-                timeout = 2,
+                text = pages_text,
+                timeout = 8,
             })
         end
         local is_active = (tab.id == M._active_id)
