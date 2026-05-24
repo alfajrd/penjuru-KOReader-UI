@@ -1,0 +1,10 @@
+{
+  "items": [
+    {
+      "name": "penjuru",
+      "priority": 1,
+      "action": "./run.sh",
+      "params": ""
+    }
+  ]
+}

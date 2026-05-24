@@ -32,10 +32,28 @@ zip -r "$ZIP" penjuru.koplugin \
 
 SIZE=$(du -h "$ZIP" | awk '{print $1}')
 echo "Built: $ZIP ($SIZE)"
+
+# Also build a KUAL-extension zip so users can launch penjuru directly
+# from the Kindle home (KUAL) without going through KOReader's menu.
+KUAL_ZIP="dist/penjuru-kual.zip"
+rm -f "$KUAL_ZIP"
+if [ -d kual ]; then
+    (cd kual && zip -r "../$KUAL_ZIP" extensions \
+        --exclude '*.DS_Store' \
+        > /dev/null)
+    echo "Built: $KUAL_ZIP ($(du -h "$KUAL_ZIP" | awk '{print $1}'))"
+fi
+
 echo
-echo "To install on Kindle:"
-echo "  1. Unzip into /mnt/us/koreader/plugins/"
-echo "     The result must be /mnt/us/koreader/plugins/penjuru.koplugin/"
+echo "Plugin install on Kindle:"
+echo "  1. Unzip penjuru.koplugin.zip into /mnt/us/koreader/plugins/"
+echo "     Result must be /mnt/us/koreader/plugins/penjuru.koplugin/"
 echo "  2. Restart KOReader"
 echo "  3. Enable: Menu → Tools → Plugin management → penjuru"
 echo "  4. Open: Menu → Tools → penjuru → Open home"
+echo
+echo "KUAL launcher (optional — opens penjuru directly from Kindle home):"
+echo "  1. Unzip penjuru-kual.zip into /mnt/us/"
+echo "     Result: /mnt/us/extensions/penjuru/{menu.json,run.sh}"
+echo "  2. Refresh KUAL (drop into KUAL once for it to scan)"
+echo "  3. Tap 'penjuru' in KUAL → KOReader boots straight into the home"

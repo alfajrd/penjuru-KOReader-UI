@@ -59,9 +59,32 @@ running on it.
    - Restart KOReader when prompted.
 
 7. **Open the home screen.** Menu → Tools → penjuru → Open home.
-   You should see the masthead, the dateline, the currently-reading lead,
-   the on-the-desk grid, the newly-catalogued rows, recent highlights, and
-   the 7-cell paginated nav at the bottom.
+   You should see the masthead and tagline. *(v1.1 is intentionally
+   minimal — modules and bottom nav are returning one at a time in
+   v1.2.)*
+
+8. **Exit the home** by tapping, holding, or swiping anywhere on the
+   screen — closes back to the file browser.
+
+## Optional: KUAL launcher (recommended)
+
+Skip the three taps through KOReader's menu — tap **penjuru** directly
+from your Kindle home (KUAL) and KOReader will boot straight into the
+penjuru home.
+
+1. Download `penjuru-kual.zip` from the release alongside
+   `penjuru.koplugin.zip`.
+2. Unzip into your Kindle's root (`/mnt/us/`). After unzipping you
+   should have:
+   ```
+   /mnt/us/extensions/penjuru/
+     ├── menu.json
+     └── run.sh
+   ```
+3. Eject + unplug.
+4. Open KUAL. It should auto-scan and show **penjuru** in the menu.
+5. Tap it. KOReader launches and immediately drops you into the
+   penjuru home.
 
 ## First-run configuration
 

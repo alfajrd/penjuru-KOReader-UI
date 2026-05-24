@@ -810,6 +810,30 @@ function penjuruPlugin:init()
         end
     end)
     if not ok then logger.err("simpleui: init failed:", tostring(err)) end
+
+    -- KUAL auto-open: if /mnt/us/extensions/penjuru/run.sh launched
+    -- KOReader, it dropped a flag file in the settings dir. Open the
+    -- home overlay immediately after KOReader finishes initializing.
+    -- The flag is consumed (deleted) so a normal restart doesn't fire.
+    do
+        local ok_ds, DataStorage = pcall(require, "datastorage")
+        local ok_lfs, lfs = pcall(require, "libs/libkoreader-lfs")
+        if ok_ds and ok_lfs then
+            local flag_path = DataStorage:getSettingsDir() .. "/penjuru-autoopen.flag"
+            if lfs.attributes(flag_path) then
+                os.remove(flag_path)
+                local ok_uim, UIManager = pcall(require, "ui/uimanager")
+                if ok_uim then
+                    UIManager:scheduleIn(1.0, function()
+                        local ok_hs, Home = pcall(require, "pen_homescreen")
+                        if ok_hs and Home and Home.show then
+                            pcall(Home.show)
+                        end
+                    end)
+                end
+            end
+        end
+    end
 end
 
 -- ---------------------------------------------------------------------------
