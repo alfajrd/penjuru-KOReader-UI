@@ -31,8 +31,12 @@ local CHEVRON_FLEX = 10
 local CONTENT_FLEX = 16
 local TOTAL_FLEX = CHEVRON_FLEX * 2 + CONTENT_FLEX * 5
 
-local NAV_HEIGHT = 170
-local ICON_SIZE = 62
+-- On the Kindle PW (1648px tall) the home body already takes ~1300px;
+-- giving the nav a tall 170px cell pushed everything past the screen
+-- and KOReader's HorizontalGroup wrapped manga/books into a second row.
+-- Smaller cells fit cleanly and still hit the 44pt+ touch target minimum.
+local NAV_HEIGHT = 110
+local ICON_SIZE = 44
 
 -- Build one cell. cell_w is the cell's pixel width.
 local function make_cell(cell_w, icon_name, label, is_active, is_disabled, on_tap, on_hold)

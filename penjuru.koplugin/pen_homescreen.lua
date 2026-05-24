@@ -286,14 +286,25 @@ function MastheadWidget:init()
     -- Give the widget its own bounding box so UIManager can paint it.
     self.dimen = Geom:new{ x = 0, y = 0, w = screen_w, h = screen_h }
 
-    -- SAFETY ESCAPE: long-press anywhere closes the home overlay.
-    -- This prevents the user from getting stuck if the bottom nav fails
-    -- to render (e.g. font scaling pushes it off-screen). Without this,
-    -- the only escape is a hardware restart of the Kindle.
+    -- SAFETY ESCAPE: any tap or long-press closes the home overlay.
+    -- KOReader InputContainer matches ges_events table keys against the
+    -- gesture name, so the key MUST be "Hold" / "Tap" / "Swipe" — not
+    -- arbitrary. v1.0.1 used "HoldToClose" which silently did nothing.
+    -- Without working escape, the only way out is a Kindle hard-reset.
     self.ges_events = self.ges_events or {}
-    self.ges_events.HoldToClose = {
+    self.ges_events.Hold = {
         GestureRange:new{
             ges = "hold",
+            range = self.dimen,
+        },
+        handler = function()
+            UIManager:close(self)
+            return true
+        end,
+    }
+    self.ges_events.Swipe = {
+        GestureRange:new{
+            ges = "swipe",
             range = self.dimen,
         },
         handler = function()
