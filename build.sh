@@ -7,6 +7,13 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
+# Defensive: a self-referential symlink inside penjuru.koplugin/
+# bloats the zip to multi-GB. Refuse to build until it's removed.
+if find penjuru.koplugin -type l -name 'penjuru.koplugin' | grep -q .; then
+    echo "ERROR: recursive symlink penjuru.koplugin/penjuru.koplugin detected — remove it before building" >&2
+    exit 1
+fi
+
 if [[ "${1:-}" == "--clean" ]]; then
     rm -rf dist
 fi
