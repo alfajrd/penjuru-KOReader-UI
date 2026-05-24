@@ -56,13 +56,8 @@ local function highlight_block(w, h)
                 },
                 handler = function()
                     if not h.book_file then return end
-                    local ok, ReaderUI = pcall(require, "apps/reader/readerui")
-                    if not ok or not ReaderUI then return end
-                    pcall(ReaderUI.showReader, ReaderUI, h.book_file)
-                    -- Note: jumping to the highlighted page requires opening
-                    -- the reader first then issuing a goto; we open to the
-                    -- book and let the user navigate. Page-jump deferred
-                    -- to Plan D enhancement.
+                    local BookOpen = require("pen_book_open")
+                    BookOpen.open(h.book_file, h.page)
                 end,
             },
         },
