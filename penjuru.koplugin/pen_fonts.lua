@@ -35,7 +35,12 @@ function M:get(role, size)
     local key = role .. "@" .. tostring(size)
     if not self._cache[key] then
         local path = font_dir .. file
-        local px = Screen:scaleBySize(size)
+        -- IMPORTANT: do NOT pass `size` through Screen:scaleBySize() here.
+        -- Our design tokens (pen_style.size.*) are already specified in
+        -- target-DPI pixels matching the Kindle Paperwhite's native
+        -- 1236×1648 resolution. Scaling again on a 300-DPI screen
+        -- produced glyphs ~1.8× too big and clipped the masthead off-screen.
+        local px = size
         local ftsize = Freetype.newFaceSize(path, px)
         local face_obj = {
             orig_font   = role,

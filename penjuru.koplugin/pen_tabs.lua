@@ -21,7 +21,7 @@ local DEFAULT_TABS = {
     -- /mnt/us/koreader/). Users can override via settings; v1.1 will add a
     -- first-run onboarding flow to detect/pick these paths.
     manga      = { id="manga", label="manga", icon="tab-manga",
-                   action = { type="folder", target="/mnt/us/manga" } },
+                   action = { type="folder", target="/mnt/us/mangas" } },
     books      = { id="books", label="books", icon="tab-books",
                    action = { type="folder", target="/mnt/us/books" } },
     games      = { id="games", label="games", icon="tab-games",

@@ -74,7 +74,7 @@ local function user_book_dirs()
     local ok, lfs = pcall(require, "libs/libkoreader-lfs")
     if ok and lfs.attributes("/mnt/us/books") then
         local dirs = { "/mnt/us/books" }
-        if lfs.attributes("/mnt/us/manga") then table.insert(dirs, "/mnt/us/manga") end
+        if lfs.attributes("/mnt/us/mangas") then table.insert(dirs, "/mnt/us/mangas") end
         return dirs
     end
     -- Fallback for the macOS emulator

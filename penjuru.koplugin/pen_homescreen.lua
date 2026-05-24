@@ -14,6 +14,7 @@
 --   Homescreen._current_page                   -- page cursor (always 1 here)
 
 local InputContainer  = require("ui/widget/container/inputcontainer")
+local GestureRange    = require("ui/gesturerange")
 local CenterContainer = require("ui/widget/container/centercontainer")
 local FrameContainer  = require("ui/widget/container/framecontainer")
 local TextWidget      = require("ui/widget/textwidget")
@@ -103,7 +104,7 @@ function MastheadWidget:init()
         local gap = (#items > 1)
             and math.floor((w - total_text_w) / (#items - 1))
             or 0
-        local row = HorizontalGroup:new{ align = "baseline" }
+        local row = HorizontalGroup:new{ align = "center" }
         for i, item in ipairs(items) do
             table.insert(row, item)
             if i < #items then
@@ -284,6 +285,22 @@ function MastheadWidget:init()
     }
     -- Give the widget its own bounding box so UIManager can paint it.
     self.dimen = Geom:new{ x = 0, y = 0, w = screen_w, h = screen_h }
+
+    -- SAFETY ESCAPE: long-press anywhere closes the home overlay.
+    -- This prevents the user from getting stuck if the bottom nav fails
+    -- to render (e.g. font scaling pushes it off-screen). Without this,
+    -- the only escape is a hardware restart of the Kindle.
+    self.ges_events = self.ges_events or {}
+    self.ges_events.HoldToClose = {
+        GestureRange:new{
+            ges = "hold",
+            range = self.dimen,
+        },
+        handler = function()
+            UIManager:close(self)
+            return true
+        end,
+    }
 end
 
 -- Tapping anywhere closes the homescreen (returns to FM).

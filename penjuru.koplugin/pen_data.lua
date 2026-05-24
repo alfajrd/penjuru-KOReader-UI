@@ -29,13 +29,19 @@ function M.parse_lua_file(path)
 end
 
 -- read_history() -> table
--- KOReader's history.lua is at <settings>/history.lua. Returns its
--- parsed table (a numbered list of { file = "...", time = N }, most
--- recent first), or empty table if absent.
+-- KOReader's history.lua lives at the data dir ROOT (e.g.
+-- /mnt/us/koreader/history.lua), NOT inside settings/. Verified on a
+-- real Kindle Paperwhite running KOReader 2026.x. Returns the parsed
+-- table (a numbered list of { file = "...", time = N }, most-recent
+-- first), or empty table if absent. We try the data dir first, fall
+-- back to settings/ for compatibility with older KOReader layouts.
 function M.read_history()
     local DataStorage = require("datastorage")
-    local path = DataStorage:getSettingsDir() .. "/history.lua"
-    return M.parse_lua_file(path) or {}
+    local data_path = DataStorage:getDataDir() .. "/history.lua"
+    local result = M.parse_lua_file(data_path)
+    if result then return result end
+    local settings_path = DataStorage:getSettingsDir() .. "/history.lua"
+    return M.parse_lua_file(settings_path) or {}
 end
 
 -- sdr_path_for(book_path) -> string | nil

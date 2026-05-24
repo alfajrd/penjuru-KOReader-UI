@@ -44,7 +44,7 @@ local function pill(text, with_dot)
 end
 
 local function cluster(items, want_separator)
-    local g = HorizontalGroup:new{ align = "baseline" }
+    local g = HorizontalGroup:new{ align = "center" }
     local first = true
     for _, key in ipairs(items) do
         local fn = LABEL_FOR[key]
@@ -68,7 +68,7 @@ function M.render(content_width)
     local left_w = left:getSize().w
     local right_w = right:getSize().w
     local fill = math.max(0, content_width - left_w - right_w)
-    local row = HorizontalGroup:new{ align = "baseline" }
+    local row = HorizontalGroup:new{ align = "center" }
     table.insert(row, left)
     table.insert(row, HorizontalSpan:new{ width = fill })
     table.insert(row, right)

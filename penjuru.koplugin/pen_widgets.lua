@@ -89,7 +89,7 @@ function M.spaced_row(w, items)
     local total_text_w = 0
     for _, item in ipairs(items) do total_text_w = total_text_w + item:getSize().w end
     local gap = (#items > 1) and math.floor((w - total_text_w) / (#items - 1)) or 0
-    local row = HorizontalGroup:new{ align = "baseline" }
+    local row = HorizontalGroup:new{ align = "center" }
     for i, item in ipairs(items) do
         table.insert(row, item)
         if i < #items then table.insert(row, HorizontalSpan:new{ width = gap }) end
