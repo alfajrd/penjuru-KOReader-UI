@@ -64,20 +64,22 @@ HANDLERS.power_menu = function()
 end
 
 HANDLERS.search = function()
-    local InfoMessage = require("ui/widget/infomessage")
-    UIManager:show(InfoMessage:new{
-        text = "search — open library then tap the search icon",
-        timeout = 2,
-    })
+    -- File search lives in the file manager. Open it then trigger search.
+    local ok, FM = pcall(require, "apps/filemanager/filemanager")
+    if not ok or not FM then return false end
+    if not FM.instance then
+        pcall(FM.showFiles, FM)
+    end
+    local Event = require("ui/event")
+    UIManager:broadcastEvent(Event:new("ShowFileSearch"))
     return true
 end
 
 HANDLERS.stats = function()
-    local InfoMessage = require("ui/widget/infomessage")
-    UIManager:show(InfoMessage:new{
-        text = "stats — wire to ReadingStatistics in plan d",
-        timeout = 2,
-    })
+    -- Statistics plugin listens for ShowReaderStatistics event.
+    local ok, Event = pcall(require, "ui/event")
+    if not ok or not Event then return false end
+    UIManager:broadcastEvent(Event:new("ShowReaderStatistics"))
     return true
 end
 
