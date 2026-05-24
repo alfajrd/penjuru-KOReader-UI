@@ -1,6 +1,6 @@
 -- penjuru/pen_homescreen
--- v0.1: masthead + dashed rule + dateline row + dotted rule + body placeholder.
--- Sets the visual skeleton so Plan B can fill in the body modules.
+-- v0.2: full body composition — six Phase 1-6 modules in two-column layout.
+-- Replaces the Plan A italic placeholder with the real module tree.
 --
 -- API contract preserved from the SimpleUI-derived original so that all
 -- existing callers (pen_quickactions, pen_bottombar, main.lua, pen_menu)
@@ -27,6 +27,12 @@ local UIManager       = require("ui/uimanager")
 local Geom            = require("ui/geometry")
 local Dates           = require("pen_dates")
 local InstallDate     = require("pen_install_date")
+local Currently       = require("home_modules/module_currently")
+local Ledger          = require("home_modules/module_ledger")
+local Almanac         = require("home_modules/module_almanac")
+local Desk            = require("home_modules/module_desk")
+local Catalogued      = require("home_modules/module_catalogued")
+local Highlights      = require("home_modules/module_highlights")
 
 -- Lazy-load Style so that any early requires (before pen_style is ready) do
 -- not crash the whole plugin.  Each call will succeed because by the time
@@ -167,13 +173,36 @@ function MastheadWidget:init()
     local dateline_rule = rule(content_w, S.rules.minor, S.colors.rule, "solid")
 
     -- -----------------------------------------------------------------------
-    -- 5. Body placeholder — italic, ink_faint
+    -- 5. Body — two-column module composition
+    --    Columns: 1.5fr (left) / 1fr (right), 30px gap between them.
     -- -----------------------------------------------------------------------
-    local placeholder_widget = TextWidget:new{
-        text    = "[ plan b \xe2\x80\x94 home modules land here ]",
-        face    = S.fonts.italic(S.size.body),
-        fgcolor = S.colors.ink_faint,
+    local col_gap = 30
+    local left_w  = math.floor((content_w - col_gap) * 0.6)
+    local right_w = content_w - col_gap - left_w
+
+    -- Row 1: currently-reading (left) | ledger + almanac stacked (right)
+    local body_row1 = HorizontalGroup:new{
+        align = "top",
+        Currently.render(left_w),
+        HorizontalSpan:new{ width = col_gap },
+        VerticalGroup:new{
+            align = "left",
+            Ledger.render(right_w),
+            VerticalSpan:new{ width = 18 },
+            Almanac.render(right_w),
+        },
     }
+
+    -- Row 2: on the desk (left) | newly catalogued (right)
+    local body_row2 = HorizontalGroup:new{
+        align = "top",
+        Desk.render(left_w),
+        HorizontalSpan:new{ width = col_gap },
+        Catalogued.render(right_w),
+    }
+
+    -- Row 3: recent highlights — full width
+    local body_row3 = Highlights.render(content_w)
 
     -- -----------------------------------------------------------------------
     -- Compose into a VerticalGroup, centered on screen.
@@ -194,8 +223,12 @@ function MastheadWidget:init()
         -- solid rule under dateline (dotted fallback)
         dateline_rule,
         VerticalSpan:new{ width = S.gap.xl },
-        -- body placeholder
-        placeholder_widget,
+        -- body modules
+        body_row1,
+        VerticalSpan:new{ width = 18 },
+        body_row2,
+        VerticalSpan:new{ width = 18 },
+        body_row3,
     }
 
     self[1] = FrameContainer:new{

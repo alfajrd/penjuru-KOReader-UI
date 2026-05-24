@@ -126,21 +126,23 @@ function M.read_today_stats()
     local day_start = os.time{ year = now.year, month = now.month, day = now.day, hour = 0 }
     local day_end = day_start + 86400
 
-    local reading_seconds = scalar(string.format(
+    -- ljsqlite3 returns LuaJIT cdata integers; tonumber() converts to plain Lua
+    -- numbers so that math.floor / arithmetic work without type errors.
+    local reading_seconds = tonumber(scalar(string.format(
         "SELECT IFNULL(SUM(duration), 0) FROM page_stat_data WHERE start_time >= %d AND start_time < %d",
-        day_start, day_end)) or 0
-    local pages_today = scalar(string.format(
+        day_start, day_end))) or 0
+    local pages_today = tonumber(scalar(string.format(
         "SELECT COUNT(DISTINCT id_book || ':' || page) FROM page_stat_data WHERE start_time >= %d AND start_time < %d",
-        day_start, day_end)) or 0
+        day_start, day_end))) or 0
 
     -- Streak: walk backwards day by day until we find a past day with
     -- no rows. Today itself can be empty (no penalty).
     local streak = 0
     local cursor = day_start
     while true do
-        local n = scalar(string.format(
+        local n = tonumber(scalar(string.format(
             "SELECT COUNT(*) FROM page_stat_data WHERE start_time >= %d AND start_time < %d",
-            cursor, cursor + 86400)) or 0
+            cursor, cursor + 86400))) or 0
         if n > 0 then
             streak = streak + 1
             cursor = cursor - 86400
@@ -156,9 +158,9 @@ function M.read_today_stats()
 
     -- Books finished this year: total_read_pages >= pages, last_open in year.
     local year_start = os.time{ year = now.year, month = 1, day = 1, hour = 0 }
-    local year_finished = scalar(string.format(
+    local year_finished = tonumber(scalar(string.format(
         "SELECT COUNT(*) FROM book WHERE total_read_pages >= pages AND pages > 0 AND last_open >= %d",
-        year_start)) or 0
+        year_start))) or 0
 
     pcall(db.close, db)
     return {
