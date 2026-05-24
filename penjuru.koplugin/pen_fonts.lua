@@ -7,8 +7,9 @@
 -- ftsize object that Font:getFace wraps.
 
 local Freetype = require("ffi/freetype")
-local Screen = require("device").screen
-local logger = require("logger")
+local Font    = require("ui/font")
+local Screen  = require("device").screen
+local logger  = require("logger")
 
 -- Resolve our plugin's font directory regardless of where KOReader is run from.
 local plugin_dir = debug.getinfo(1, "S").source:sub(2):match("(.*/)")
@@ -36,14 +37,28 @@ function M:get(role, size)
         local path = font_dir .. file
         local px = Screen:scaleBySize(size)
         local ftsize = Freetype.newFaceSize(path, px)
-        self._cache[key] = {
-            orig_font  = role,
-            realname   = file,
-            size       = px,
-            orig_size  = size,
-            ftsize     = ftsize,
-            hash       = file .. px,
+        local face_obj = {
+            orig_font   = role,
+            realname    = file,
+            size        = px,
+            orig_size   = size,
+            ftsize      = ftsize,
+            hash        = file .. px,
+            -- Feature hints for HarfBuzz (same defaults as Font:getFace())
+            hb_features = { "+kern", "+liga" },
         }
+        -- TextWidget uses xtext, which calls face.getFallbackFont(num) to get
+        -- Freetype-instantiated fallback faces for glyphs our bundled TTFs
+        -- don't cover.  Delegate to Font's built-in NotoSans fallback chain.
+        face_obj.getFallbackFont = function(num)
+            if not num or num == 0 then return face_obj end
+            local fb = Font:getFace("NotoSans", face_obj.orig_size)
+            if fb and type(fb.getFallbackFont) == "function" then
+                return fb.getFallbackFont(num)
+            end
+            return false
+        end
+        self._cache[key] = face_obj
         logger.dbg("pen_fonts: loaded", role, size, path)
     end
     return self._cache[key]
