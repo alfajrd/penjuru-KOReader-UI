@@ -2,7 +2,7 @@
   "items": [
     {
       "name": "penjuru",
-      "priority": 1,
+      "priority": 0,
       "action": "./run.sh",
       "params": ""
     }
