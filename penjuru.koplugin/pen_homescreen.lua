@@ -26,6 +26,7 @@ local Screen          = require("device").screen
 local UIManager       = require("ui/uimanager")
 local Geom            = require("ui/geometry")
 local Dates           = require("pen_dates")
+local InstallDate     = require("pen_install_date")
 
 -- Lazy-load Style so that any early requires (before pen_style is ready) do
 -- not crash the whole plugin.  Each call will succeed because by the time
@@ -124,7 +125,7 @@ function MastheadWidget:init()
 
     -- -----------------------------------------------------------------------
     -- 3. Dateline row — three cells with space-between layout
-    --    Left  : "vol. i · no. 1"   (placeholder until Plan B adds install date)
+    --    Left  : "vol. <roman> · no. <day>"  (computed from install date)
     --    Center: full long date via Dates.format_long
     --    Right : "<edition> edition"
     -- -----------------------------------------------------------------------
@@ -133,8 +134,12 @@ function MastheadWidget:init()
     local date_face = S.fonts.body(S.size.dateline)
     local date_color = S.colors.ink_2
 
+    local install_ts = InstallDate.get_install_ts(
+        rawget(_G, "G_reader_settings"), now)
+    local vn = InstallDate.vol_and_no_for(install_ts, now)
+    local vol_text = "vol. " .. InstallDate.roman(vn.vol) .. " \xc2\xb7 no. " .. vn.no
     local vol_widget = TextWidget:new{
-        text    = "vol. i \xc2\xb7 no. 1",
+        text    = vol_text,
         face    = date_face,
         fgcolor = date_color,
     }
