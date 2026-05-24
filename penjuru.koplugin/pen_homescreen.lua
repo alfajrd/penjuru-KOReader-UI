@@ -25,6 +25,9 @@ local LineWidget      = require("ui/widget/linewidget")
 local Screen          = require("device").screen
 local UIManager       = require("ui/uimanager")
 local Geom            = require("ui/geometry")
+local TopBar          = require("pen_topbar")
+local BottomBar       = require("pen_bottombar")
+local Actions         = require("pen_actions")
 local Dates           = require("pen_dates")
 local InstallDate     = require("pen_install_date")
 local Currently       = require("home_modules/module_currently")
@@ -231,6 +234,45 @@ function MastheadWidget:init()
         body_row3,
     }
 
+    -- -------------------------------------------------------------------
+    -- Chrome: top bar (full width) + padded body + bottom bar (full width)
+    -- -------------------------------------------------------------------
+    local top_bar = TopBar.render(screen_w)
+
+    BottomBar.set_active("home")
+    BottomBar.set_page(1)
+    BottomBar.set_on_paginate(function()
+        local HS = package.loaded["pen_homescreen"]
+        if HS and HS.refresh then pcall(HS.refresh) end
+    end)
+    local bottom_bar = BottomBar.render(screen_w, function(tab)
+        Actions.dispatch(tab)
+    end)
+
+    -- Wrap the body content in a padded FrameContainer so it keeps its
+    -- existing horizontal indent.  Width is screen_w; the FrameContainer
+    -- handles the left/right PAD internally via padding_left/padding_right.
+    local inner = FrameContainer:new{
+        background    = S.colors.paper,
+        bordersize    = 0,
+        padding_left  = PAD,
+        padding_right = PAD,
+        padding_top   = 0,
+        padding_bottom = 0,
+        margin        = 0,
+        width         = screen_w,
+        body,
+    }
+
+    -- Outer VerticalGroup: top bar, padded body, bottom bar — all left-aligned
+    -- so each child starts at x=0 (full screen width).
+    local outer = VerticalGroup:new{
+        align = "left",
+        top_bar,
+        inner,
+        bottom_bar,
+    }
+
     self[1] = FrameContainer:new{
         background = S.colors.paper,
         bordersize = 0,
@@ -238,10 +280,7 @@ function MastheadWidget:init()
         margin     = 0,
         width      = screen_w,
         height     = screen_h,
-        CenterContainer:new{
-            dimen  = Geom:new{ w = screen_w, h = screen_h },
-            body,
-        },
+        outer,
     }
     -- Give the widget its own bounding box so UIManager can paint it.
     self.dimen = Geom:new{ x = 0, y = 0, w = screen_w, h = screen_h }
