@@ -1,6 +1,6 @@
 -- penjuru/pen_homescreen
--- v0: masthead-only placeholder so we can verify typography end-to-end
--- before building the full module set in Plan B.
+-- v0.1: masthead + dashed rule + dateline row + dotted rule + body placeholder.
+-- Sets the visual skeleton so Plan B can fill in the body modules.
 --
 -- API contract preserved from the SimpleUI-derived original so that all
 -- existing callers (pen_quickactions, pen_bottombar, main.lua, pen_menu)
@@ -13,14 +13,19 @@
 --   Homescreen._instance                       -- live widget or nil
 --   Homescreen._current_page                   -- page cursor (always 1 here)
 
-local InputContainer = require("ui/widget/container/inputcontainer")
+local InputContainer  = require("ui/widget/container/inputcontainer")
 local CenterContainer = require("ui/widget/container/centercontainer")
-local FrameContainer = require("ui/widget/container/framecontainer")
-local TextWidget = require("ui/widget/textwidget")
-local VerticalGroup = require("ui/widget/verticalgroup")
-local Screen = require("device").screen
-local UIManager = require("ui/uimanager")
-local Geom = require("ui/geometry")
+local FrameContainer  = require("ui/widget/container/framecontainer")
+local TextWidget      = require("ui/widget/textwidget")
+local VerticalGroup   = require("ui/widget/verticalgroup")
+local HorizontalGroup = require("ui/widget/horizontalgroup")
+local HorizontalSpan  = require("ui/widget/horizontalspan")
+local VerticalSpan    = require("ui/widget/verticalspan")
+local LineWidget      = require("ui/widget/linewidget")
+local Screen          = require("device").screen
+local UIManager       = require("ui/uimanager")
+local Geom            = require("ui/geometry")
+local Dates           = require("pen_dates")
 
 -- Lazy-load Style so that any early requires (before pen_style is ready) do
 -- not crash the whole plugin.  Each call will succeed because by the time
@@ -52,10 +57,55 @@ local MastheadWidget = InputContainer:extend{
 }
 
 function MastheadWidget:init()
-    local S          = _style()
-    local screen_w   = Screen:getWidth()
-    local screen_h   = Screen:getHeight()
+    local S        = _style()
+    local screen_w = Screen:getWidth()
+    local screen_h = Screen:getHeight()
 
+    -- Horizontal padding on each side; content width = screen_w - 2 * PAD.
+    local PAD      = 36
+    local content_w = screen_w - 2 * PAD
+
+    -- -----------------------------------------------------------------------
+    -- Helper: build a horizontal rule line.
+    -- NOTE: LineWidget supports style = "solid" and style = "dashed" only.
+    -- "dotted" is NOT supported — the dateline rule falls back to solid with
+    -- a lighter color (Style.colors.rule_soft) to visually distinguish it from
+    -- the masthead dashed rule.  A proper dotted LineWidget can be added in
+    -- Plan B if the visual difference is needed on-device.
+    -- -----------------------------------------------------------------------
+    local function rule(w, weight, color, style)
+        return LineWidget:new{
+            dimen      = Geom:new{ w = w, h = math.max(1, math.floor(weight)) },
+            background = color,
+            style      = style or "solid",
+        }
+    end
+
+    -- -----------------------------------------------------------------------
+    -- Helper: three-cell space-between row.
+    -- items: array of TextWidgets laid out with equal gaps between them.
+    -- -----------------------------------------------------------------------
+    local function spaced_row(w, items)
+        local total_text_w = 0
+        for _, item in ipairs(items) do
+            total_text_w = total_text_w + item:getSize().w
+        end
+        local gap = (#items > 1)
+            and math.floor((w - total_text_w) / (#items - 1))
+            or 0
+        local row = HorizontalGroup:new{ align = "baseline" }
+        for i, item in ipairs(items) do
+            table.insert(row, item)
+            if i < #items then
+                table.insert(row, HorizontalSpan:new{ width = gap })
+            end
+        end
+        return row
+    end
+
+    -- -----------------------------------------------------------------------
+    -- 1. Masthead: name + tagline
+    -- -----------------------------------------------------------------------
     local name_widget = TextWidget:new{
         text    = "penjuru pikiran",
         face    = S.fonts.headline(S.size.masthead_name),
@@ -67,22 +117,92 @@ function MastheadWidget:init()
         fgcolor = S.colors.ink_soft,
     }
 
-    local masthead = VerticalGroup:new{
+    -- -----------------------------------------------------------------------
+    -- 2. Masthead dashed rule  (Style.rules.masthead = 2.5 → 2px, dashed)
+    -- -----------------------------------------------------------------------
+    local masthead_rule = rule(content_w, S.rules.masthead, S.colors.ink, "dashed")
+
+    -- -----------------------------------------------------------------------
+    -- 3. Dateline row — three cells with space-between layout
+    --    Left  : "vol. i · no. 1"   (placeholder until Plan B adds install date)
+    --    Center: full long date via Dates.format_long
+    --    Right : "<edition> edition"
+    -- -----------------------------------------------------------------------
+    local now       = os.time()
+    local d         = os.date("*t", now)
+    local date_face = S.fonts.body(S.size.dateline)
+    local date_color = S.colors.ink_2
+
+    local vol_widget = TextWidget:new{
+        text    = "vol. i \xc2\xb7 no. 1",
+        face    = date_face,
+        fgcolor = date_color,
+    }
+    local date_widget = TextWidget:new{
+        text    = Dates.format_long(now),
+        face    = date_face,
+        fgcolor = date_color,
+    }
+    local edition_widget = TextWidget:new{
+        text    = Dates.edition_for_hour(d.hour) .. " edition",
+        face    = date_face,
+        fgcolor = date_color,
+    }
+
+    local dateline_row = spaced_row(content_w, {
+        vol_widget,
+        date_widget,
+        edition_widget,
+    })
+
+    -- -----------------------------------------------------------------------
+    -- 4. Dateline dotted rule  (Style.rules.minor = 1.5 → 1px, solid #aaa)
+    --    Dotted style is unsupported by LineWidget; using solid + rule color.
+    -- -----------------------------------------------------------------------
+    local dateline_rule = rule(content_w, S.rules.minor, S.colors.rule, "solid")
+
+    -- -----------------------------------------------------------------------
+    -- 5. Body placeholder — italic, ink_faint
+    -- -----------------------------------------------------------------------
+    local placeholder_widget = TextWidget:new{
+        text    = "[ plan b \xe2\x80\x94 home modules land here ]",
+        face    = S.fonts.italic(S.size.body),
+        fgcolor = S.colors.ink_faint,
+    }
+
+    -- -----------------------------------------------------------------------
+    -- Compose into a VerticalGroup, centered on screen.
+    -- -----------------------------------------------------------------------
+    local body = VerticalGroup:new{
         align = "center",
+        -- masthead block
         name_widget,
+        VerticalSpan:new{ width = S.gap.sm },
         tagline_widget,
+        VerticalSpan:new{ width = S.gap.lg },
+        -- dashed rule under masthead
+        masthead_rule,
+        VerticalSpan:new{ width = S.gap.sm },
+        -- dateline row
+        dateline_row,
+        VerticalSpan:new{ width = S.gap.sm },
+        -- solid rule under dateline (dotted fallback)
+        dateline_rule,
+        VerticalSpan:new{ width = S.gap.xl },
+        -- body placeholder
+        placeholder_widget,
     }
 
     self[1] = FrameContainer:new{
-        background  = S.colors.paper,
-        bordersize  = 0,
-        padding     = 0,
-        margin      = 0,
-        width       = screen_w,
-        height      = screen_h,
+        background = S.colors.paper,
+        bordersize = 0,
+        padding    = 0,
+        margin     = 0,
+        width      = screen_w,
+        height     = screen_h,
         CenterContainer:new{
-            dimen   = Geom:new{ w = screen_w, h = screen_h },
-            masthead,
+            dimen  = Geom:new{ w = screen_w, h = screen_h },
+            body,
         },
     }
     -- Give the widget its own bounding box so UIManager can paint it.
