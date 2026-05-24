@@ -1,3 +1,6 @@
 .superpowers/
 .DS_Store
 *.log
+
+# Build output
+dist/
