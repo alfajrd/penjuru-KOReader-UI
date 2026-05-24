@@ -44,6 +44,9 @@ local InstallDate     = require("pen_install_date")
 local Almanac         = require("home_modules/module_almanac")
 local Ledger          = require("home_modules/module_ledger")
 local Currently       = require("home_modules/module_currently")
+local Desk            = require("home_modules/module_desk")
+local Catalogued      = require("home_modules/module_catalogued")
+local Highlights      = require("home_modules/module_highlights")
 
 local Homescreen = {
     _instance      = nil,
@@ -142,6 +145,16 @@ function MastheadWidget:init()
     -- Renders a graceful "no entries today" placeholder when history empty.
     local currently_widget = Currently.render(body_w)
 
+    -- v1.2.8 — final three home modules:
+    --   desk: 5 cover thumbnails of other in-progress books (excludes lead)
+    --   catalogued: 3 most-recently-added unstarted books (tap → open)
+    --   highlights: 3 most recent annotations across all books (tap →
+    --               open book at that page)
+    -- Each module degrades gracefully when its data source is empty.
+    local desk_widget       = Desk.render(body_w)
+    local catalogued_widget = Catalogued.render(body_w)
+    local highlights_widget = Highlights.render(body_w)
+
     local stack = VerticalGroup:new{
         align = "center",
         name,
@@ -154,9 +167,15 @@ function MastheadWidget:init()
         VerticalSpan:new{ width = 30 },
         currently_widget,
         VerticalSpan:new{ width = 22 },
+        desk_widget,
+        VerticalSpan:new{ width = 22 },
         ledger_widget,
         VerticalSpan:new{ width = 22 },
         almanac_widget,
+        VerticalSpan:new{ width = 22 },
+        catalogued_widget,
+        VerticalSpan:new{ width = 22 },
+        highlights_widget,
         VerticalSpan:new{ width = 40 },
         exit_hint,
     }

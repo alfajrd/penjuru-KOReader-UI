@@ -39,28 +39,18 @@ local function book_row(w, book)
         Widgets.dotted_rule(w, Style.rules.minor, Style.colors.rule_soft),
     }
 
+    -- Tap-to-open: close the home overlay first, then open the book via
+    -- pen_book_open (handles ReaderUI:showReader + scheduling). Uses the
+    -- shared Widgets.tappable wrapper so the broken handler= antipattern
+    -- never reappears here (see pen_widgets for design notes).
     local content_h = content:getSize().h
-    local InputContainer = require("ui/widget/container/inputcontainer")
-    local GestureRange = require("ui/gesturerange")
-    local Geom = require("ui/geometry")
-    return InputContainer:new{
-        dimen = Geom:new{ x = 0, y = 0, w = w, h = content_h },
-        content,
-        ges_events = {
-            Tap = {
-                GestureRange:new{
-                    ges = "tap",
-                    range = Geom:new{ x = 0, y = 0, w = w, h = content_h },
-                },
-                handler = function()
-                    if not book.file then return end
-                    local ok, ReaderUI = pcall(require, "apps/reader/readerui")
-                    if not ok or not ReaderUI then return end
-                    pcall(ReaderUI.showReader, ReaderUI, book.file)
-                end,
-            },
-        },
-    }
+    return Widgets.tappable(content, w, content_h, function()
+        if not book.file then return end
+        local Homescreen = require("pen_homescreen")
+        if Homescreen and Homescreen.close then pcall(Homescreen.close) end
+        local BookOpen = require("pen_book_open")
+        BookOpen.open(book.file)
+    end)
 end
 
 -- user_book_dirs() -> array of dirs to scan

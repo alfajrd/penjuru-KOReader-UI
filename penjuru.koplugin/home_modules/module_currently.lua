@@ -5,47 +5,16 @@
 
 local HorizontalGroup = require("ui/widget/horizontalgroup")
 local HorizontalSpan = require("ui/widget/horizontalspan")
-local InputContainer = require("ui/widget/container/inputcontainer")
 local LineWidget = require("ui/widget/linewidget")
 local TextBoxWidget = require("ui/widget/textboxwidget")
 local TextWidget = require("ui/widget/textwidget")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local VerticalSpan = require("ui/widget/verticalspan")
-local Geom = require("ui/geometry")
-local GestureRange = require("ui/gesturerange")
 local Style = require("pen_style")
 local Widgets = require("pen_widgets")
 local Data = require("pen_data")
 
 local M = {}
-
--- Tappable wrapper for the lead-story card.
---
--- HARD-WON LESSON (see penjuru-plan-a-state.md): KOReader's InputContainer
--- dispatches gestures by METHOD NAME derived from the ges_events key, NOT
--- by a `handler` field in the table. ges_events.TapBook → :onTapBook().
--- The v1.0 home used `handler = function()...end` and the user got stuck
--- on their Kindle three times because gestures fired into the void.
---
--- Range note: self.dimen is the SAME Geom table referenced by the gesture
--- range. WidgetContainer:paintTo() mutates dimen.x/.y to absolute screen
--- coords during paint, so the range tracks the widget's painted position
--- without any per-frame wiring.
-local TappableCard = InputContainer:extend{
-    on_tap_cb = nil,
-}
-function TappableCard:init()
-    if not self.dimen then
-        self.dimen = Geom:new{ x = 0, y = 0, w = 0, h = 0 }
-    end
-    self.ges_events.TapBook = {
-        GestureRange:new{ ges = "tap", range = self.dimen },
-    }
-end
-function TappableCard:onTapBook()
-    if self.on_tap_cb then self.on_tap_cb() end
-    return true
-end
 
 local function pull_quote(w, text)
     local quote = TextBoxWidget:new{
@@ -140,18 +109,14 @@ function M.render(content_width)
     -- happens inside the callback (not at module load) to avoid the circular
     -- import problem — pen_homescreen requires this module at load time.
     local card_size = card:getSize()
-    return TappableCard:new{
-        dimen = Geom:new{ x = 0, y = 0, w = card_size.w, h = card_size.h },
-        card,
-        on_tap_cb = function()
-            local Homescreen = require("pen_homescreen")
-            if Homescreen and Homescreen.close then
-                pcall(Homescreen.close)
-            end
-            local BookOpen = require("pen_book_open")
-            BookOpen.open(b.file)
-        end,
-    }
+    return Widgets.tappable(card, card_size.w, card_size.h, function()
+        local Homescreen = require("pen_homescreen")
+        if Homescreen and Homescreen.close then
+            pcall(Homescreen.close)
+        end
+        local BookOpen = require("pen_book_open")
+        BookOpen.open(b.file)
+    end)
 end
 
 return M

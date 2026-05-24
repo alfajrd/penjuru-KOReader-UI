@@ -41,27 +41,17 @@ local function highlight_block(w, h)
         VerticalSpan:new{ width = 10 },
     }
 
+    -- Tap-to-open at the highlighted page. Uses the shared Widgets.tappable
+    -- wrapper (correct method-name dispatch) and closes the home before
+    -- opening the reader so the user lands directly on the page.
     local content_h = content:getSize().h
-    local InputContainer = require("ui/widget/container/inputcontainer")
-    local GestureRange = require("ui/gesturerange")
-    local Geom = require("ui/geometry")
-    return InputContainer:new{
-        dimen = Geom:new{ x = 0, y = 0, w = w, h = content_h },
-        content,
-        ges_events = {
-            Tap = {
-                GestureRange:new{
-                    ges = "tap",
-                    range = Geom:new{ x = 0, y = 0, w = w, h = content_h },
-                },
-                handler = function()
-                    if not h.book_file then return end
-                    local BookOpen = require("pen_book_open")
-                    BookOpen.open(h.book_file, h.page)
-                end,
-            },
-        },
-    }
+    return Widgets.tappable(content, w, content_h, function()
+        if not h.book_file then return end
+        local Homescreen = require("pen_homescreen")
+        if Homescreen and Homescreen.close then pcall(Homescreen.close) end
+        local BookOpen = require("pen_book_open")
+        BookOpen.open(h.book_file, h.page)
+    end)
 end
 
 function M.render(content_width)
