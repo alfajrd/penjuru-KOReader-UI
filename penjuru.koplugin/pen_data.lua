@@ -74,9 +74,9 @@ local SUPPORTED_EXTS = {
 function M.list_books_in(dir)
     local out = {}
     local function walk(d)
-        local ok, iter = pcall(lfs.dir, d)
-        if not ok then return end
-        for entry in iter do
+        local ok, iter, dir_obj = pcall(lfs.dir, d)
+        if not ok or not iter then return end
+        for entry in iter, dir_obj do
             if entry:sub(1,1) ~= "." then
                 local full = d .. "/" .. entry
                 local attr = lfs.attributes(full)
@@ -253,6 +253,39 @@ function M.read_book_cover(book_path, target_w, target_h)
         return cover_bb:scale(target_w, target_h)
     end
     return cover_bb
+end
+
+-- read_newly_catalogued(dirs, age_days, limit) -> array of { file, title, author, age_days, mtime }
+-- Files in `dirs` whose mtime is within `age_days` AND have no .sdr
+-- sidecar (i.e. never opened). Sorted by mtime desc, capped at `limit`.
+function M.read_newly_catalogued(dirs, age_days, limit)
+    age_days = age_days or 30
+    limit = limit or 3
+    local cutoff = os.time() - age_days * 86400
+    local candidates = {}
+    for _, dir in ipairs(dirs or {}) do
+        for _, path in ipairs(M.list_books_in(dir)) do
+            local mt = M.file_mtime(path)
+            if mt and mt >= cutoff then
+                local sdr_path = M.sdr_path_for(path)
+                local has_sdr = sdr_path and lfs.attributes(sdr_path) ~= nil
+                if not has_sdr then
+                    local name = path:match("([^/]+)%.[^.]+$") or path
+                    table.insert(candidates, {
+                        file = path,
+                        title = name,
+                        author = "",  -- no .sdr means we can't get author cheaply
+                        age_days = math.floor((os.time() - mt) / 86400),
+                        mtime = mt,
+                    })
+                end
+            end
+        end
+    end
+    table.sort(candidates, function(a, b) return a.mtime > b.mtime end)
+    local out = {}
+    for i = 1, math.min(limit, #candidates) do out[i] = candidates[i] end
+    return out
 end
 
 return M

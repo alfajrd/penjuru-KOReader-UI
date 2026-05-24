@@ -133,4 +133,22 @@ describe("pen_data", function()
             end
         end)
     end)
+
+    describe("read_newly_catalogued", function()
+        it("returns a table (possibly empty) when given a non-existent dir", function()
+            local books = Data.read_newly_catalogued({"/nonexistent_dir"}, 30, 3)
+            assert.is_table(books)
+        end)
+        it("returns a table for the real test books dir", function()
+            local books = Data.read_newly_catalogued(
+                {"/Users/penjurupikiran/Developer/koreader/books"}, 30, 5)
+            assert.is_table(books)
+            -- Should include Austen and Lovecraft (no .sdr) but not the
+            -- 3 that have .sdr (Macbeth/Walden/Moby Dick).
+            for _, b in ipairs(books) do
+                assert.is_string(b.file)
+                assert.is_number(b.age_days)
+            end
+        end)
+    end)
 end)
