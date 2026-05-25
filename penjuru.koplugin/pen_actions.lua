@@ -54,12 +54,14 @@ HANDLERS.brightness = function()
 end
 
 HANDLERS.power_menu = function()
-    local ok, ConfirmBox = pcall(require, "ui/widget/confirmbox")
-    if not ok or not ConfirmBox then return false end
-    UIManager:show(ConfirmBox:new{
-        text = "exit koreader?",
-        ok_callback = function() UIManager:quit() end,
-    })
+    -- v1.2.14.4: power tab now puts the device to sleep (screen off)
+    -- instead of confirming a KOReader exit. The "× exit" pill in the
+    -- topbar handles exits; this slot is more useful as a one-tap
+    -- "I'm done reading, turn off the screen" action. Same event
+    -- KOReader's Dispatcher fires for the bound "Sleep" action.
+    local ok, Event = pcall(require, "ui/event")
+    if not ok or not Event then return false end
+    UIManager:broadcastEvent(Event:new("RequestSuspend"))
     return true
 end
 
