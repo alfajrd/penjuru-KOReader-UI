@@ -14,8 +14,11 @@ function M.battery_pct()
     local ok, Device = pcall(require, "device")
     if not ok or not Device then return nil end
     local p = Device:getPowerDevice()
-    if not p or not p.capacity then return nil end
-    local ok2, pct = pcall(p.capacity, p)
+    -- v1.2.13.4: public API is :getCapacity(), not .capacity. The old
+    -- p.capacity field doesn't exist on Kindle's PowerD, so the call
+    -- silently returned nil and the topbar rendered "--%".
+    if not p or not p.getCapacity then return nil end
+    local ok2, pct = pcall(p.getCapacity, p)
     if not ok2 then return nil end
     return pct
 end
@@ -45,17 +48,20 @@ function M.frontlight_label()
 end
 
 function M.disk_label()
-    -- Free space on the settings volume. macOS emulator: ~/Developer/koreader.
+    -- v1.2.13.4: util.getFilesystemInfo doesn't exist in KOReader. The
+    -- right call is util.diskUsage(path) → table with .available,
+    -- .used, .total (in bytes). Same function the calibre plugin uses
+    -- for free-space checks.
     local ok, DataStorage = pcall(require, "datastorage")
     if not ok then return "" end
-    local path = DataStorage:getSettingsDir()
+    local path = DataStorage:getDataDir()
     local ok2, util = pcall(require, "util")
-    if not ok2 or not util or not util.getFilesystemInfo then
-        return ""  -- older KOReader; skip
+    if not ok2 or not util or not util.diskUsage then
+        return ""
     end
-    local ok3, info = pcall(util.getFilesystemInfo, path)
-    if not ok3 or not info or not info.free then return "" end
-    local gb = info.free / (1024 * 1024 * 1024)
+    local ok3, info = pcall(util.diskUsage, path)
+    if not ok3 or not info or not info.available then return "" end
+    local gb = tonumber(info.available) / (1024 * 1024 * 1024)
     if gb >= 10 then return string.format("%d gb", math.floor(gb)) end
     return string.format("%.1f gb", gb)
 end
