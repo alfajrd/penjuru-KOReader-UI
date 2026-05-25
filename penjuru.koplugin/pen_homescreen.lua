@@ -47,6 +47,8 @@ local Ledger          = require("home_modules/module_ledger")
 -- lead slot. v1.2.12: module_catalogued is also dropped from the home.
 local Desk            = require("home_modules/module_desk")
 local Highlights      = require("home_modules/module_highlights")
+-- v1.2.13: persistent top status row (clock · wi-fi · disk · battery).
+local Topbar          = require("pen_topbar")
 
 local Homescreen = {
     _instance      = nil,
@@ -170,10 +172,17 @@ function MastheadWidget:init()
         almanac_widget,
     }
 
+    -- v1.2.13: persistent status row sits above the masthead — pure
+    -- render, no gestures. Refreshes whenever the home opens.
+    local topbar_widget = Topbar.render(body_w)
+
     -- v1.2.11: currently-reading card retired. v1.2.12: newly-catalogued
     -- dropped; ledger + almanac paired side-by-side per user sketch.
+    -- v1.2.13: top status bar prepended above the masthead.
     local stack = VerticalGroup:new{
         align = "center",
+        topbar_widget,
+        VerticalSpan:new{ width = 20 },
         name,
         VerticalSpan:new{ width = 8 },
         tagline,

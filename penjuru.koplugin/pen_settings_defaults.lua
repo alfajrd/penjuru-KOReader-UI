@@ -25,7 +25,8 @@ local function defaults()
         },
         topbar = {
             layout = {
-                left = { "clock", "wifi", "light" },
+                -- v1.2.13: light intentionally omitted per user spec.
+                left = { "clock", "wifi" },
                 right = { "disk", "battery" },
             },
         },
