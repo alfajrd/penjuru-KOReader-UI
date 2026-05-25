@@ -55,13 +55,25 @@ local function cover_cell(cell_w, book)
         fgcolor = Style.colors.ink_soft,
     }
 
-    return VerticalGroup:new{
+    local cell = VerticalGroup:new{
         align = "center",
         cover_widget,
         pct_band,
         VerticalSpan:new{ width = 4 },
         caption,
     }
+
+    -- v1.2.10: each cover is its own tap target. Tap → close home →
+    -- open the book at its last-known position. cell_w / cell_size.h
+    -- bound the tap exactly to the cover stack (image + % band + caption).
+    local cell_size = cell:getSize()
+    if not book.file then return cell end
+    return Widgets.tappable(cell, cell_size.w, cell_size.h, function()
+        local Homescreen = require("pen_homescreen")
+        if Homescreen and Homescreen.close then pcall(Homescreen.close) end
+        local BookOpen = require("pen_book_open")
+        BookOpen.open(book.file)
+    end)
 end
 
 function M.render(content_width)

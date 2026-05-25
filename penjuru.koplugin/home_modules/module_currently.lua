@@ -110,21 +110,6 @@ function M.render(content_width)
     -- import problem — pen_homescreen requires this module at load time.
     local card_size = card:getSize()
     return Widgets.tappable(card, card_size.w, card_size.h, function()
-        -- v1.2.9 debug: surface a toast so we can tell whether the tap is
-        -- being detected at all (vs. the BookOpen call failing silently).
-        -- Remove the InfoMessage block once tap-to-open is confirmed working.
-        do
-            local ok_im, InfoMessage = pcall(require, "ui/widget/infomessage")
-            local ok_uim, UIManager = pcall(require, "ui/uimanager")
-            if ok_im and ok_uim then
-                pcall(function()
-                    UIManager:show(InfoMessage:new{
-                        text = "penjuru: opening " .. tostring(b.title or b.file),
-                        timeout = 2,
-                    })
-                end)
-            end
-        end
         local Homescreen = require("pen_homescreen")
         if Homescreen and Homescreen.close then
             pcall(Homescreen.close)
