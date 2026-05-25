@@ -99,11 +99,19 @@ local function dispatch_folder(target)
     end
     local ok, FM = pcall(require, "apps/filemanager/filemanager")
     if not ok or not FM then return false end
+    -- v1.2.14.5: handle both "FM is already the underlying view" and
+    -- "reader is the underlying view" cases. The latter is common when
+    -- KOReader was launched via KUAL with start_with=last_file — there's
+    -- no FileManager instance at all, so file_chooser.changeToPath
+    -- can't be called. FileManager:showFiles(target) spins up a new FM
+    -- at the requested path (it handles closing any reader for us).
     if FM.instance and FM.instance.file_chooser then
-        pcall(FM.instance.file_chooser.changeToPath, FM.instance.file_chooser, target)
-        return true
+        local ok2 = pcall(FM.instance.file_chooser.changeToPath,
+                          FM.instance.file_chooser, target)
+        return ok2
     end
-    return false
+    local ok3 = pcall(FM.showFiles, FM, target)
+    return ok3
 end
 
 local function dispatch_kual()

@@ -20,7 +20,7 @@ local DEFAULT_TABS = {
     -- typical Kindle layout (books and manga at /mnt/us/ root, not under
     -- /mnt/us/koreader/). Users can override via settings; v1.1 will add a
     -- first-run onboarding flow to detect/pick these paths.
-    manga      = { id="manga", label="manga", icon="tab-manga",
+    manga      = { id="manga", label="mangas", icon="tab-manga",
                    action = { type="folder", target="/mnt/us/mangas" } },
     books      = { id="books", label="books", icon="tab-books",
                    action = { type="folder", target="/mnt/us/books" } },

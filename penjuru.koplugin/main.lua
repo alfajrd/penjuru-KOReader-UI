@@ -811,6 +811,23 @@ function penjuruPlugin:init()
     end)
     if not ok then logger.err("simpleui: init failed:", tostring(err)) end
 
+    -- v1.2.14.5: opt into KOReader's screensaver. The user wanted the
+    -- KOReader screensaver (book cover) instead of Kindle's default
+    -- "choose something to read…" screensaver. KOReader's default for
+    -- screensaver_type is "disable"; when disabled, the device falls
+    -- through to its native screensaver on suspend. We flip it to
+    -- "cover" once on first install (marked by our own flag) so we
+    -- don't keep overriding the user's explicit later changes.
+    if not G_reader_settings:isTrue("penjuru_screensaver_initialized") then
+        pcall(function()
+            local current = G_reader_settings:readSetting("screensaver_type")
+            if current == nil or current == "disable" then
+                G_reader_settings:saveSetting("screensaver_type", "cover")
+            end
+            G_reader_settings:saveSetting("penjuru_screensaver_initialized", true)
+        end)
+    end
+
     -- KUAL auto-open: if /mnt/us/extensions/penjuru/run.sh launched
     -- KOReader, it dropped a flag file in the settings dir. Open the
     -- home overlay immediately after KOReader finishes initializing.
