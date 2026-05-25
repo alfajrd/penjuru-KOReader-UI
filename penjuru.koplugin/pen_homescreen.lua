@@ -43,10 +43,9 @@ local Dates           = require("pen_dates")
 local InstallDate     = require("pen_install_date")
 local Almanac         = require("home_modules/module_almanac")
 local Ledger          = require("home_modules/module_ledger")
--- v1.2.11: module_currently is retired. The lead book now lives as the
--- first cover in module_desk so the home fits on a single screen.
+-- v1.2.11: module_currently is retired — recent highlights occupies its
+-- lead slot. v1.2.12: module_catalogued is also dropped from the home.
 local Desk            = require("home_modules/module_desk")
-local Catalogued      = require("home_modules/module_catalogued")
 local Highlights      = require("home_modules/module_highlights")
 
 local Homescreen = {
@@ -141,19 +140,38 @@ function MastheadWidget:init()
     -- falls back to zeros if the Statistics plugin isn't installed.
     local ledger_widget = Ledger.render(body_w)
 
-    -- v1.2.8 — home modules:
-    --   desk: 5 cover thumbnails of other in-progress books (excludes lead)
-    --   catalogued: 3 most-recently-added unstarted books (tap → open)
-    --   highlights: 3 most recent annotations across all books (tap →
-    --               open book at that page)
+    -- v1.2.12 — home modules:
+    --   highlights: 3 most recent annotations across all books (lead slot,
+    --               tap → open book at that page)
+    --   desk:       5 cover thumbnails of in-progress books (tap → open)
+    --   ledger + almanac: side-by-side bottom row, each gets ~half body_w
     -- Each module degrades gracefully when its data source is empty.
-    local desk_widget       = Desk.render(body_w)
-    local catalogued_widget = Catalogued.render(body_w)
     local highlights_widget = Highlights.render(body_w)
+    local desk_widget       = Desk.render(body_w)
 
-    -- v1.2.11: currently-reading card retired. recent highlights moves into
-    -- its lead slot (right after the dateline) so the home loses one big
-    -- module without any other layout changes. Old gaps preserved.
+    -- Side-by-side stats: split the body into two columns with a small gap
+    -- and a thin vertical rule between them. Matches the user's sketch:
+    --   today's ledger  |  the almanac
+    local col_gap = 30
+    local col_w = math.floor((body_w - col_gap) / 2)
+    local ledger_widget  = Ledger.render(col_w)
+    local almanac_widget = Almanac.render(col_w)
+    local stats_row_h = math.max(
+        ledger_widget:getSize().h, almanac_widget:getSize().h)
+    local stats_row = HorizontalGroup:new{
+        align = "top",
+        ledger_widget,
+        HorizontalSpan:new{ width = math.floor(col_gap / 2) },
+        LineWidget:new{
+            dimen = { w = 2, h = stats_row_h },
+            background = Style.colors.ink_dim or Style.colors.ink,
+        },
+        HorizontalSpan:new{ width = math.floor(col_gap / 2) },
+        almanac_widget,
+    }
+
+    -- v1.2.11: currently-reading card retired. v1.2.12: newly-catalogued
+    -- dropped; ledger + almanac paired side-by-side per user sketch.
     local stack = VerticalGroup:new{
         align = "center",
         name,
@@ -168,11 +186,7 @@ function MastheadWidget:init()
         VerticalSpan:new{ width = 22 },
         desk_widget,
         VerticalSpan:new{ width = 22 },
-        ledger_widget,
-        VerticalSpan:new{ width = 22 },
-        almanac_widget,
-        VerticalSpan:new{ width = 22 },
-        catalogued_widget,
+        stats_row,
         VerticalSpan:new{ width = 40 },
         exit_hint,
     }
