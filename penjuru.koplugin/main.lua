@@ -839,6 +839,31 @@ function penjuruPlugin:init()
         end)
     end
 
+    -- v1.2.14.7: one-time warning for ad-supported Kindles. KOReader's
+    -- Kindle:supportsScreensaver() returns false when ad_screensaver
+    -- is loaded, so our screensaver_type/_delay settings never take
+    -- effect — Amazon's bookshelf wins. Explain once so the user
+    -- doesn't think it's a penjuru bug.
+    if not G_reader_settings:isTrue("penjuru_special_offers_warned") then
+        pcall(function()
+            local ok_dev, Device = pcall(require, "device")
+            if ok_dev and Device and Device.isSpecialOffers then
+                UIManager:scheduleIn(3, function()
+                    local InfoMessage = require("ui/widget/infomessage")
+                    UIManager:show(InfoMessage:new{
+                        text = "penjuru: your kindle has special offers (ads),\n"
+                            .. "so amazon's bookshelf screensaver overrides koreader's.\n\n"
+                            .. "to use koreader's cover screensaver instead, install\n"
+                            .. "the mobileread \"screensaver hack\" for your model.\n\n"
+                            .. "(this notice shows once.)",
+                        timeout = 10,
+                    })
+                end)
+            end
+            G_reader_settings:saveSetting("penjuru_special_offers_warned", true)
+        end)
+    end
+
     -- KUAL auto-open: if /mnt/us/extensions/penjuru/run.sh launched
     -- KOReader, it dropped a flag file in the settings dir. Open the
     -- home overlay immediately after KOReader finishes initializing.
