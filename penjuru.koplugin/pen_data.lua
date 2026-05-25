@@ -217,17 +217,26 @@ function M.read_lead_book()
 end
 
 -- read_book_highlights(book_path, limit) -> array of { text, datetime, page }
+--
+-- Schema note (v1.2.13 fix): KOReader's per-book annotation storage moved
+-- from `bookmarks` → `annotations` a couple years back. In the new format,
+-- the highlighted TEXT is in `.notes` (yes, confusingly named — `.text`
+-- holds the user's optional COMMENT). Legacy bookmarks kept the highlighted
+-- text in `.text`. We try both fields so highlights surface on any vintage
+-- of .sdr file.
 function M.read_book_highlights(book_path, limit)
     limit = limit or 1
     local sdr = M.read_sdr_metadata(book_path)
-    if not sdr or not sdr.bookmarks then return {} end
+    if not sdr then return {} end
+    local items = sdr.annotations or sdr.bookmarks or {}
     local hs = {}
-    for _, bm in ipairs(sdr.bookmarks) do
-        if bm.text and bm.text ~= "" then
+    for _, item in ipairs(items) do
+        local text = item.notes or item.text
+        if text and text ~= "" then
             table.insert(hs, {
-                text = bm.text,
-                datetime = bm.datetime or "",
-                page = bm.page or 0,
+                text = text,
+                datetime = item.datetime or "",
+                page = item.page or 0,
             })
         end
     end
@@ -317,6 +326,8 @@ end
 
 -- read_recent_highlights(limit) -> array of { text, book_title, book_author, page, datetime, book_file }
 -- Aggregates highlights from every book in history, sorts by datetime desc.
+-- Reads both `annotations` (new KOReader) and `bookmarks` (legacy) per-book;
+-- see read_book_highlights above for the schema rationale.
 function M.read_recent_highlights(limit)
     limit = limit or 3
     local history = M.read_history()
@@ -325,14 +336,16 @@ function M.read_recent_highlights(limit)
         if entry.file then
             local sdr = M.read_sdr_metadata(entry.file) or {}
             local props = sdr.doc_props or {}
-            for _, bm in ipairs(sdr.bookmarks or {}) do
-                if bm.text and bm.text ~= "" then
+            local items = sdr.annotations or sdr.bookmarks or {}
+            for _, item in ipairs(items) do
+                local text = item.notes or item.text
+                if text and text ~= "" then
                     local bt = as_text(props.title)
                     if bt == "" then bt = "untitled" end
                     table.insert(all, {
-                        text = bm.text,
-                        datetime = bm.datetime or "",
-                        page = bm.page or 0,
+                        text = text,
+                        datetime = item.datetime or "",
+                        page = item.page or 0,
                         book_file = entry.file,
                         book_title = bt,
                         book_author = as_text(props.authors),
