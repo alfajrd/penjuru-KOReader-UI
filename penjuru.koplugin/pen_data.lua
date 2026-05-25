@@ -265,6 +265,7 @@ function M.read_in_progress_books(exclude_path)
                 table.insert(out, {
                     file = entry.file,
                     title = t,
+                    author = as_text(props.authors),  -- v1.2.13.3: for cover placeholder
                     percent = pct,
                     last_read_ts = entry.time or 0,
                 })

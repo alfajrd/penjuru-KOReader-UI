@@ -30,18 +30,43 @@ local function cover_cell(cell_w, book)
     if cover_bb then
         cover_widget = ImageWidget:new{ image = cover_bb, width = cell_w, height = cell_h }
     else
-        -- v1.2.13.1: empty cover slot — render a properly-sized bordered
-        -- box with the book title centred inside, so the slot is visible
-        -- (was a 0px-wide thin line because VerticalSpan has no width).
-        local title_text = string.lower(book.title or "")
-        if #title_text > 22 then title_text = title_text:sub(1, 21) .. "…" end
-        local title_lbl = TextBoxWidget:new{
-            text     = title_text,
-            face     = Style.fonts.body(Style.size.caption - 4),
-            fgcolor  = Style.colors.ink_2,
-            width    = cell_w - 16,
+        -- v1.2.13.3: cover-less placeholder. CreDocument formats
+        -- (MOBI/EPUB/FB2) without an embedded cover in their OPF
+        -- metadata can't be rendered without subprocess-booting the
+        -- crengine — out of scope. Instead, render an intentional
+        -- "designed nothing" card: title centered, author below it in
+        -- italic, hairline rule between them.
+        local title_text = string.lower(book.title or "untitled")
+        if #title_text > 24 then title_text = title_text:sub(1, 23) .. "…" end
+        local author_text = string.lower(book.author or "")
+        if #author_text > 20 then author_text = author_text:sub(1, 19) .. "…" end
+
+        local stack_children = {}
+        table.insert(stack_children, TextBoxWidget:new{
+            text      = title_text,
+            face      = Style.fonts.headline(Style.size.caption - 2),
+            fgcolor   = Style.colors.ink,
+            width     = cell_w - 20,
             alignment = "center",
+        })
+        if author_text ~= "" then
+            table.insert(stack_children, VerticalSpan:new{ width = 6 })
+            table.insert(stack_children, Widgets.dotted_rule(
+                math.floor(cell_w * 0.5), Style.rules.minor, Style.colors.rule_soft))
+            table.insert(stack_children, VerticalSpan:new{ width = 6 })
+            table.insert(stack_children, TextBoxWidget:new{
+                text      = author_text,
+                face      = Style.fonts.italic(Style.size.caption - 6),
+                fgcolor   = Style.colors.ink_2,
+                width     = cell_w - 20,
+                alignment = "center",
+            })
+        end
+        local stack = VerticalGroup:new{
+            align = "center",
+            table.unpack(stack_children),
         }
+
         cover_widget = FrameContainer:new{
             background = Style.colors.paper,
             color      = Style.colors.ink_dim,
@@ -52,7 +77,7 @@ local function cover_cell(cell_w, book)
             height     = cell_h,
             CenterContainer:new{
                 dimen = Geom:new{ w = cell_w, h = cell_h },
-                title_lbl,
+                stack,
             },
         }
     end
