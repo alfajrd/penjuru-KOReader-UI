@@ -277,14 +277,43 @@ end
 
 -- read_book_cover(book_path, target_w, target_h) -> BlitBuffer | nil
 -- Returns a scaled cover image, or nil if the file can't be read.
+--
+-- v1.2.13.1: defer to KOReader's official FileManagerBookInfo.getCoverImage
+-- when available — it handles three things the raw DocumentRegistry call
+-- missed:
+--   1. Custom cover sidecars (`<book>.sdr/cover.<ext>`) take precedence.
+--   2. CreDocument (EPUB / FB2) needs loadDocument(false) before
+--      getCoverPageImage to populate metadata.
+--   3. The flow is the same one CoverBrowser uses, so anything that
+--      renders in your file browser will render here too — including
+--      CBZ/CBR mangas where the koptinterface renders page 1 as the cover.
 function M.read_book_cover(book_path, target_w, target_h)
-    local ok, DocumentRegistry = pcall(require, "document/documentregistry")
-    if not ok then return nil end
-    local doc = DocumentRegistry:openDocument(book_path)
-    if not doc then return nil end
-    local cover_bb = doc:getCoverPageImage()
-    pcall(doc.close, doc)
-    if not cover_bb then return nil end
+    if not book_path or book_path == "" then return nil end
+    local cover_bb
+    local ok_bi, BookInfo = pcall(require, "apps/filemanager/filemanagerbookinfo")
+    if ok_bi and BookInfo and BookInfo.getCoverImage then
+        -- getCoverImage uses `:` syntax but never reads self; nil is fine.
+        local ok_call, bb = pcall(BookInfo.getCoverImage, nil, nil, book_path, false)
+        if ok_call then cover_bb = bb end
+    end
+    -- Last-ditch fallback: the original raw path, in case BookInfo isn't
+    -- available (e.g. very old KOReader build).
+    if not cover_bb then
+        local ok, DocumentRegistry = pcall(require, "document/documentregistry")
+        if not ok then return nil end
+        local doc = DocumentRegistry:openDocument(book_path)
+        if not doc then
+            logger.warn("pen_data: openDocument failed for", book_path)
+            return nil
+        end
+        if doc.loadDocument then pcall(doc.loadDocument, doc, false) end
+        cover_bb = doc:getCoverPageImage()
+        pcall(doc.close, doc)
+    end
+    if not cover_bb then
+        logger.warn("pen_data: no cover image returned for", book_path)
+        return nil
+    end
     if cover_bb.scale then
         return cover_bb:scale(target_w, target_h)
     end

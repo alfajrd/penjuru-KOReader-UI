@@ -3,10 +3,13 @@
 -- band below each cover. Excludes the lead book.
 
 local Blitbuffer = require("ffi/blitbuffer")
+local CenterContainer = require("ui/widget/container/centercontainer")
 local FrameContainer = require("ui/widget/container/framecontainer")
+local Geom = require("ui/geometry")
 local HorizontalGroup = require("ui/widget/horizontalgroup")
 local HorizontalSpan = require("ui/widget/horizontalspan")
 local ImageWidget = require("ui/widget/imagewidget")
+local TextBoxWidget = require("ui/widget/textboxwidget")
 local TextWidget = require("ui/widget/textwidget")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local VerticalSpan = require("ui/widget/verticalspan")
@@ -27,11 +30,30 @@ local function cover_cell(cell_w, book)
     if cover_bb then
         cover_widget = ImageWidget:new{ image = cover_bb, width = cell_w, height = cell_h }
     else
+        -- v1.2.13.1: empty cover slot — render a properly-sized bordered
+        -- box with the book title centred inside, so the slot is visible
+        -- (was a 0px-wide thin line because VerticalSpan has no width).
+        local title_text = string.lower(book.title or "")
+        if #title_text > 22 then title_text = title_text:sub(1, 21) .. "…" end
+        local title_lbl = TextBoxWidget:new{
+            text     = title_text,
+            face     = Style.fonts.body(Style.size.caption - 4),
+            fgcolor  = Style.colors.ink_2,
+            width    = cell_w - 16,
+            alignment = "center",
+        }
         cover_widget = FrameContainer:new{
-            background = Style.colors.rule_dim,
+            background = Style.colors.paper,
+            color      = Style.colors.ink_dim,
             bordersize = 2,
-            margin = 0, padding = 0,
-            VerticalSpan:new{ width = cell_h },
+            margin     = 0,
+            padding    = 0,
+            width      = cell_w,
+            height     = cell_h,
+            CenterContainer:new{
+                dimen = Geom:new{ w = cell_w, h = cell_h },
+                title_lbl,
+            },
         }
     end
 
