@@ -5,10 +5,7 @@
 -- Hold any tab: opens placeholder InfoMessage (Plan D wires real settings).
 
 local FrameContainer = require("ui/widget/container/framecontainer")
-local GestureRange = require("ui/gesturerange")
-local Geom = require("ui/geometry")
 local HorizontalGroup = require("ui/widget/horizontalgroup")
-local InputContainer = require("ui/widget/container/inputcontainer")
 local InfoMessage = require("ui/widget/infomessage")
 local TextWidget = require("ui/widget/textwidget")
 local UIManager = require("ui/uimanager")
@@ -82,30 +79,13 @@ local function make_cell(cell_w, icon_name, label, is_active, is_disabled, on_ta
         return wrap
     end
 
-    local ic = InputContainer:new{
-        dimen = Geom:new{ x = 0, y = 0, w = cell_w, h = NAV_HEIGHT },
-        wrap,
-        ges_events = {},
-    }
-    if on_tap then
-        ic.ges_events.Tap = {
-            GestureRange:new{
-                ges = "tap",
-                range = Geom:new{ x = 0, y = 0, w = cell_w, h = NAV_HEIGHT },
-            },
-            handler = on_tap,
-        }
-    end
-    if on_hold then
-        ic.ges_events.Hold = {
-            GestureRange:new{
-                ges = "hold",
-                range = Geom:new{ x = 0, y = 0, w = cell_w, h = NAV_HEIGHT },
-            },
-            handler = on_hold,
-        }
-    end
-    return ic
+    -- v1.2.14: replaced the broken `handler = function()...end` antipattern
+    -- with Widgets.tappable. KOReader dispatches gestures by method name
+    -- (TapArea → :onTapArea, HoldArea → :onHoldArea), not by reading a
+    -- handler field — the field is silently ignored. The original wiring
+    -- locked the Kindle three times in v1.0 because cells never responded
+    -- to taps; only a hard reset got the user back to the file manager.
+    return Widgets.tappable(wrap, cell_w, NAV_HEIGHT, on_tap, on_hold)
 end
 
 -- render(content_width, action_dispatch) -> widget

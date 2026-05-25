@@ -49,6 +49,11 @@ local Desk            = require("home_modules/module_desk")
 local Highlights      = require("home_modules/module_highlights")
 -- v1.2.13: persistent top status row (clock · wi-fi · disk · battery).
 local Topbar          = require("pen_topbar")
+-- v1.2.14: persistent 7-tab paginated bottom nav (the v1.0 lock-up
+-- widget). Mounted only after the bottombar's broken handler= antipattern
+-- was refactored onto Widgets.tappable (see pen_bottombar_tap_spec).
+local Bottombar       = require("pen_bottombar")
+local Actions         = require("pen_actions")
 
 local Homescreen = {
     _instance      = nil,
@@ -176,9 +181,22 @@ function MastheadWidget:init()
     -- render, no gestures. Refreshes whenever the home opens.
     local topbar_widget = Topbar.render(body_w)
 
+    -- v1.2.14: persistent paginated bottom nav. Tap a tab → dispatch via
+    -- pen_actions (folder jumps, wifi toggle, etc.). Tap a chevron →
+    -- bottombar updates its _current_page and calls on_paginate, which
+    -- re-renders the entire home so the new page's cells appear.
+    Bottombar.set_on_paginate(function() Homescreen.refresh() end)
+    Bottombar.set_active("home")
+    local bottombar_widget = Bottombar.render(body_w, function(tab)
+        Actions.dispatch(tab)
+    end)
+
     -- v1.2.11: currently-reading card retired. v1.2.12: newly-catalogued
     -- dropped; ledger + almanac paired side-by-side per user sketch.
     -- v1.2.13: top status bar prepended above the masthead.
+    -- v1.2.14: bottom nav appended below the stats row, replacing the
+    -- "tap anywhere to exit" hint (the nav itself has a hold-for-settings
+    -- hint baked into its meta row).
     local stack = VerticalGroup:new{
         align = "center",
         topbar_widget,
@@ -196,8 +214,8 @@ function MastheadWidget:init()
         desk_widget,
         VerticalSpan:new{ width = 22 },
         stats_row,
-        VerticalSpan:new{ width = 40 },
-        exit_hint,
+        VerticalSpan:new{ width = 24 },
+        bottombar_widget,
     }
 
     self[1] = FrameContainer:new{

@@ -18,8 +18,9 @@ local Style = require("pen_style")
 
 local M = {}
 
--- TappableArea — generic tap-target wrapper used by home modules to make
--- a region clickable. CRITICAL design notes (see penjuru-plan-a-state.md):
+-- TappableArea — generic tap/hold-target wrapper used by home modules and
+-- the bottom nav to make a region clickable. CRITICAL design notes (see
+-- penjuru-plan-a-state.md):
 --
 --   1. KOReader dispatches gestures by METHOD NAME derived from the key
 --      in ges_events. Key "TapArea" → method ":onTapArea()". The
@@ -31,8 +32,12 @@ local M = {}
 --      range. WidgetContainer:paintTo() mutates dimen.x/.y to absolute
 --      screen coords during paint, so the range tracks the widget's
 --      painted position automatically — no per-frame wiring needed.
+--
+--   3. HoldArea is only registered when on_hold is set, so a tap-only
+--      wrapper doesn't accidentally consume hold gestures.
 local TappableArea = InputContainer:extend{
     on_tap = nil,  -- callback set per-instance
+    on_hold = nil, -- optional second callback set per-instance
 }
 function TappableArea:init()
     if not self.dimen then
@@ -41,19 +46,30 @@ function TappableArea:init()
     self.ges_events.TapArea = {
         GestureRange:new{ ges = "tap", range = self.dimen },
     }
+    if self.on_hold then
+        self.ges_events.HoldArea = {
+            GestureRange:new{ ges = "hold", range = self.dimen },
+        }
+    end
 end
 function TappableArea:onTapArea()
     if self.on_tap then self.on_tap() end
     return true
 end
+function TappableArea:onHoldArea()
+    if self.on_hold then self.on_hold() end
+    return true
+end
 
--- tappable(child, width, height, on_tap) -> InputContainer
--- Wraps `child` in a tap-target sized w×h. `on_tap` fires on tap.
-function M.tappable(child, w, h, on_tap)
+-- tappable(child, width, height, on_tap, on_hold?) -> InputContainer
+-- Wraps `child` in a tap-target sized w×h. `on_tap` fires on tap;
+-- optional `on_hold` fires on long-press.
+function M.tappable(child, w, h, on_tap, on_hold)
     return TappableArea:new{
         dimen = Geom:new{ x = 0, y = 0, w = w, h = h },
         child,
         on_tap = on_tap,
+        on_hold = on_hold,
     }
 end
 
