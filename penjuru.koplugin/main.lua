@@ -811,20 +811,31 @@ function penjuruPlugin:init()
     end)
     if not ok then logger.err("simpleui: init failed:", tostring(err)) end
 
-    -- v1.2.14.5: opt into KOReader's screensaver. The user wanted the
-    -- KOReader screensaver (book cover) instead of Kindle's default
-    -- "choose something to read…" screensaver. KOReader's default for
-    -- screensaver_type is "disable"; when disabled, the device falls
-    -- through to its native screensaver on suspend. We flip it to
-    -- "cover" once on first install (marked by our own flag) so we
-    -- don't keep overriding the user's explicit later changes.
-    if not G_reader_settings:isTrue("penjuru_screensaver_initialized") then
+    -- v1.2.14.5 / v1.2.14.6: opt into KOReader's screensaver. The user
+    -- wanted KOReader's screensaver (book cover) on suspend instead of
+    -- Kindle's "choose something to read…" default. Two settings need
+    -- to flip together:
+    --   screensaver_type  — what KOReader draws (we choose "cover")
+    --   screensaver_delay — how long KOReader's screensaver stays up.
+    --     Default is "disable" → KOReader paints, then closes itself
+    --     immediately so the device falls through to its native
+    --     screensaver. We set it to "gesture" so KOReader's screensaver
+    --     STAYS until the user taps to wake — that's the only mode
+    --     that actually overrides Kindle's bookshelf on a Kindle.
+    -- One-time flip, marked by penjuru_screensaver_initialized_v2 (v2
+    -- because v1 only flipped screensaver_type, not _delay). A later
+    -- explicit user change isn't overridden.
+    if not G_reader_settings:isTrue("penjuru_screensaver_initialized_v2") then
         pcall(function()
-            local current = G_reader_settings:readSetting("screensaver_type")
-            if current == nil or current == "disable" then
+            local cur_type = G_reader_settings:readSetting("screensaver_type")
+            if cur_type == nil or cur_type == "disable" then
                 G_reader_settings:saveSetting("screensaver_type", "cover")
             end
-            G_reader_settings:saveSetting("penjuru_screensaver_initialized", true)
+            local cur_delay = G_reader_settings:readSetting("screensaver_delay")
+            if cur_delay == nil or cur_delay == "disable" then
+                G_reader_settings:saveSetting("screensaver_delay", "gesture")
+            end
+            G_reader_settings:saveSetting("penjuru_screensaver_initialized_v2", true)
         end)
     end
 
