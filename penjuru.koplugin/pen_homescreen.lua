@@ -142,7 +142,7 @@ function MastheadWidget:init()
     local ledger_widget = Ledger.render(body_w)
 
     -- v1.2.8 — home modules:
-    --   desk: 5 cover thumbnails of in-progress books (lead first since v1.2.11)
+    --   desk: 5 cover thumbnails of other in-progress books (excludes lead)
     --   catalogued: 3 most-recently-added unstarted books (tap → open)
     --   highlights: 3 most recent annotations across all books (tap →
     --               open book at that page)
@@ -151,29 +151,29 @@ function MastheadWidget:init()
     local catalogued_widget = Catalogued.render(body_w)
     local highlights_widget = Highlights.render(body_w)
 
-    -- v1.2.11: vertical rhythm tightened across the board so all six
-    -- visible modules + masthead + dateline + exit hint fit on one
-    -- Paperwhite screen (1648px) without scrolling.
+    -- v1.2.11: currently-reading card retired. recent highlights moves into
+    -- its lead slot (right after the dateline) so the home loses one big
+    -- module without any other layout changes. Old gaps preserved.
     local stack = VerticalGroup:new{
         align = "center",
         name,
-        VerticalSpan:new{ width = 6 },
-        tagline,
-        VerticalSpan:new{ width = 10 },
-        masthead_rule,
         VerticalSpan:new{ width = 8 },
+        tagline,
+        VerticalSpan:new{ width = 14 },
+        masthead_rule,
+        VerticalSpan:new{ width = 12 },
         dateline_row,
-        VerticalSpan:new{ width = 18 },
-        desk_widget,
-        VerticalSpan:new{ width = 14 },
-        ledger_widget,
-        VerticalSpan:new{ width = 14 },
-        almanac_widget,
-        VerticalSpan:new{ width = 14 },
-        catalogued_widget,
-        VerticalSpan:new{ width = 14 },
+        VerticalSpan:new{ width = 30 },
         highlights_widget,
         VerticalSpan:new{ width = 22 },
+        desk_widget,
+        VerticalSpan:new{ width = 22 },
+        ledger_widget,
+        VerticalSpan:new{ width = 22 },
+        almanac_widget,
+        VerticalSpan:new{ width = 22 },
+        catalogued_widget,
+        VerticalSpan:new{ width = 40 },
         exit_hint,
     }
 
