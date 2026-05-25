@@ -2,7 +2,6 @@
 -- "recent highlights" — 3 most-recent annotations across all books.
 -- Each: quote (Syne Mono) + source line (Plex italic small) + dotted divider.
 
-local TextBoxWidget = require("ui/widget/textboxwidget")
 local TextWidget = require("ui/widget/textwidget")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local VerticalSpan = require("ui/widget/verticalspan")
@@ -13,11 +12,14 @@ local Data = require("pen_data")
 local M = {}
 
 local function highlight_block(w, h)
-    local quote = TextBoxWidget:new{
+    -- v1.2.12.2: single-line quotes. TextWidget with max_width truncates
+    -- with an ellipsis when the quote runs past the column; saves vertical
+    -- space and keeps each entry one line tall.
+    local quote = TextWidget:new{
         text = '"' .. string.lower(h.text) .. '"',
         face = Style.fonts.headline(Style.size.highlight_q),
         fgcolor = Style.colors.ink,
-        width = w,
+        max_width = w,
     }
     local parts = { "— " }
     if h.book_author ~= "" then table.insert(parts, string.lower(h.book_author) .. ", ") end
