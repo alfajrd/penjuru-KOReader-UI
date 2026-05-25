@@ -7,6 +7,7 @@
 local FrameContainer = require("ui/widget/container/framecontainer")
 local HorizontalGroup = require("ui/widget/horizontalgroup")
 local InfoMessage = require("ui/widget/infomessage")
+local LineWidget = require("ui/widget/linewidget")
 local TextWidget = require("ui/widget/textwidget")
 local UIManager = require("ui/uimanager")
 local VerticalGroup = require("ui/widget/verticalgroup")
@@ -117,10 +118,22 @@ function M.render(content_width, action_dispatch)
         Widgets.dotted_rule(content_width, Style.rules.minor, Style.colors.rule),
     }
 
-    -- Cell widths.
-    local unit = content_width / TOTAL_FLEX
+    -- v1.2.14.1: 6 hairline dividers between the 7 cells. Subtract their
+    -- combined width from the cell budget so the row still fits
+    -- content_width exactly (dividers eat ~12px of 1116px on the PW).
+    local DIVIDER_W = 2
+    local DIVIDER_COUNT = 6
+    local effective_w = content_width - DIVIDER_W * DIVIDER_COUNT
+    local unit = effective_w / TOTAL_FLEX
     local chevron_w = math.floor(unit * CHEVRON_FLEX)
     local content_w_cell = math.floor(unit * CONTENT_FLEX)
+
+    local function divider()
+        return LineWidget:new{
+            dimen = { w = DIVIDER_W, h = NAV_HEIGHT },
+            background = Style.colors.rule_soft or Style.colors.ink_dim,
+        }
+    end
 
     local prev_disabled = (cur == 1)
     local next_disabled = (cur == total_pages)
@@ -143,7 +156,8 @@ function M.render(content_width, action_dispatch)
 
     local row = HorizontalGroup:new{ align = "top" }
     table.insert(row, prev_cell)
-    for _, tab in ipairs(page) do
+    table.insert(row, divider())
+    for idx, tab in ipairs(page) do
         local _tab = tab
         local on_tap = function()
             if action_dispatch then action_dispatch(_tab) end
@@ -166,6 +180,10 @@ function M.render(content_width, action_dispatch)
         local is_active = (tab.id == M._active_id)
         table.insert(row, make_cell(content_w_cell, tab.icon, tab.label,
             is_active, false, on_tap, on_hold))
+        -- Divider after every cell except the last content one (next chevron
+        -- gets its own leading divider via the explicit insert below).
+        table.insert(row, divider())
+        _ = idx  -- silence unused-loop-var warning
     end
     table.insert(row, next_cell)
 
