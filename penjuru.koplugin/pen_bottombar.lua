@@ -4,7 +4,9 @@
 -- Active-tab indicator: 7px top-edge bar.
 -- Hold any tab: opens placeholder InfoMessage (Plan D wires real settings).
 
+local CenterContainer = require("ui/widget/container/centercontainer")
 local FrameContainer = require("ui/widget/container/framecontainer")
+local Geom = require("ui/geometry")
 local HorizontalGroup = require("ui/widget/horizontalgroup")
 local InfoMessage = require("ui/widget/infomessage")
 local LineWidget = require("ui/widget/linewidget")
@@ -44,13 +46,21 @@ local function make_cell(cell_w, icon_name, label, is_active, is_disabled, on_ta
         face = Style.fonts.body(Style.size.nav_label),
         fgcolor = is_disabled and Style.colors.disabled or Style.colors.ink,
     }
-    local inner = VerticalGroup:new{
+
+    -- v1.2.14.2: icon + label centered inside a CenterContainer that
+    -- spans the full cell width. Without this the inner VerticalGroup
+    -- shrinks to its content's natural width and clings to the cell's
+    -- left edge (FrameContainer doesn't center its children).
+    local icon_label = VerticalGroup:new{
         align = "center",
-        VerticalSpan:new{ width = Style.gap.md },
         icon,
         VerticalSpan:new{ width = Style.gap.sm },
         txt,
-        VerticalSpan:new{ width = Style.gap.md },
+    }
+    local content_h = NAV_HEIGHT - Style.rules.active
+    local centered_content = CenterContainer:new{
+        dimen = Geom:new{ w = cell_w, h = content_h },
+        icon_label,
     }
 
     -- Top border: 7px black on active, equivalent transparent span otherwise
@@ -62,7 +72,7 @@ local function make_cell(cell_w, icon_name, label, is_active, is_disabled, on_ta
     local cell_inner = VerticalGroup:new{
         align = "center",
         top_bar,
-        inner,
+        centered_content,
     }
 
     local wrap = FrameContainer:new{
