@@ -26,8 +26,10 @@ local function defaults()
         topbar = {
             layout = {
                 -- v1.2.13: light intentionally omitted per user spec.
+                -- v1.2.13.2: "exit" pill appended on the right; tapping
+                -- it calls UIManager:quit() to leave KOReader cleanly.
                 left = { "clock", "wifi" },
-                right = { "disk", "battery" },
+                right = { "disk", "battery", "exit" },
             },
         },
         bottombar = {

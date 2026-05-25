@@ -278,26 +278,46 @@ end
 -- read_book_cover(book_path, target_w, target_h) -> BlitBuffer | nil
 -- Returns a scaled cover image, or nil if the file can't be read.
 --
--- v1.2.13.1: defer to KOReader's official FileManagerBookInfo.getCoverImage
--- when available — it handles three things the raw DocumentRegistry call
--- missed:
---   1. Custom cover sidecars (`<book>.sdr/cover.<ext>`) take precedence.
---   2. CreDocument (EPUB / FB2) needs loadDocument(false) before
---      getCoverPageImage to populate metadata.
---   3. The flow is the same one CoverBrowser uses, so anything that
---      renders in your file browser will render here too — including
---      CBZ/CBR mangas where the koptinterface renders page 1 as the cover.
+-- v1.2.13.2: three-tier extraction with the most-reliable strategy first.
+--
+-- Tier 1 (preferred): CoverBrowser's BookInfoManager SQLite cache. Every
+--   file the user has seen in the file browser has its cover stored there
+--   as a compressed BlitBuffer — instant lookup, no document opening. The
+--   plugin's path is added to package.path by PluginLoader at startup,
+--   so plain require("bookinfomanager") finds it.
+--
+-- Tier 2: FileManagerBookInfo.getCoverImage — the same path the file
+--   manager itself uses. Handles custom cover sidecars + the EPUB
+--   loadDocument(false) quirk.
+--
+-- Tier 3: raw DocumentRegistry:openDocument + getCoverPageImage. The
+--   last-ditch fallback.
+--
+-- Each tier logs to crash.log when it returns nil, so failures across
+-- many books can be diagnosed without instrumenting render time.
 function M.read_book_cover(book_path, target_w, target_h)
     if not book_path or book_path == "" then return nil end
     local cover_bb
-    local ok_bi, BookInfo = pcall(require, "apps/filemanager/filemanagerbookinfo")
-    if ok_bi and BookInfo and BookInfo.getCoverImage then
-        -- getCoverImage uses `:` syntax but never reads self; nil is fine.
-        local ok_call, bb = pcall(BookInfo.getCoverImage, nil, nil, book_path, false)
-        if ok_call then cover_bb = bb end
+
+    -- Tier 1: coverbrowser SQLite cache.
+    local ok_bim, BIM = pcall(require, "bookinfomanager")
+    if ok_bim and BIM and BIM.getBookInfo then
+        local ok_call, info = pcall(BIM.getBookInfo, BIM, book_path, true)
+        if ok_call and type(info) == "table" and info.cover_bb then
+            cover_bb = info.cover_bb
+        end
     end
-    -- Last-ditch fallback: the original raw path, in case BookInfo isn't
-    -- available (e.g. very old KOReader build).
+
+    -- Tier 2: FileManagerBookInfo.getCoverImage.
+    if not cover_bb then
+        local ok_bi, BookInfo = pcall(require, "apps/filemanager/filemanagerbookinfo")
+        if ok_bi and BookInfo and BookInfo.getCoverImage then
+            local ok_call, bb = pcall(BookInfo.getCoverImage, nil, nil, book_path, false)
+            if ok_call then cover_bb = bb end
+        end
+    end
+
+    -- Tier 3: raw DocumentRegistry path.
     if not cover_bb then
         local ok, DocumentRegistry = pcall(require, "document/documentregistry")
         if not ok then return nil end
@@ -310,6 +330,7 @@ function M.read_book_cover(book_path, target_w, target_h)
         cover_bb = doc:getCoverPageImage()
         pcall(doc.close, doc)
     end
+
     if not cover_bb then
         logger.warn("pen_data: no cover image returned for", book_path)
         return nil

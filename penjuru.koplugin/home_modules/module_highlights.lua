@@ -57,7 +57,9 @@ local function highlight_block(w, h)
 end
 
 function M.render(content_width)
-    local hs = Data.read_recent_highlights(3)
+    -- v1.2.13.2: dropped from 3 → 2 to free vertical space ahead of
+    -- v1.2.14's persistent bottom nav.
+    local hs = Data.read_recent_highlights(2)
     local children = { Widgets.section_head(content_width, "recent highlights") }
     if #hs == 0 then
         table.insert(children, TextWidget:new{

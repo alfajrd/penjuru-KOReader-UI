@@ -8,6 +8,7 @@
 local HorizontalGroup = require("ui/widget/horizontalgroup")
 local HorizontalSpan = require("ui/widget/horizontalspan")
 local TextWidget = require("ui/widget/textwidget")
+local UIManager = require("ui/uimanager")
 local VerticalGroup = require("ui/widget/verticalgroup")
 local VerticalSpan = require("ui/widget/verticalspan")
 local Style = require("pen_style")
@@ -16,9 +17,11 @@ local Status = require("pen_status")
 
 local M = {}
 
+-- v1.2.13.2: defaults pin clock + wi-fi on the left and a "exit" pill on
+-- the right end so the user can leave KOReader from the home overlay.
 local DEFAULT_LAYOUT = {
-    left = { "clock", "wifi", "light" },
-    right = { "disk", "battery" },
+    left = { "clock", "wifi" },
+    right = { "disk", "battery", "exit" },
 }
 
 local LABEL_FOR = {
@@ -27,6 +30,12 @@ local LABEL_FOR = {
     light = function() return Status.frontlight_label() end,
     disk = function() return Status.disk_label() end,
     battery = function() return Status.battery_label() end,
+    exit = function() return "× exit" end,
+}
+
+-- Items that should render as tap targets (with their on_tap callbacks).
+local TAPPABLE = {
+    exit = function() UIManager:quit() end,
 }
 
 local function user_layout()
@@ -50,7 +59,17 @@ local function cluster(items, want_separator)
         local fn = LABEL_FOR[key]
         local txt = fn and fn()
         if txt and txt ~= "" then
-            table.insert(g, pill(txt, want_separator and not first))
+            local widget = pill(txt, want_separator and not first)
+            if TAPPABLE[key] then
+                -- v1.2.13.2: wrap tappable pills (e.g. "× exit") in a
+                -- Widgets.tappable so KOReader dispatches the tap by
+                -- method name (TapArea → :onTapArea), the only proven
+                -- pattern that doesn't lock up the device.
+                local pw = widget:getSize().w
+                local ph = widget:getSize().h
+                widget = Widgets.tappable(widget, pw, ph, TAPPABLE[key])
+            end
+            table.insert(g, widget)
             table.insert(g, HorizontalSpan:new{ width = 18 })
             first = false
         end
