@@ -185,9 +185,18 @@ function MastheadWidget:init()
     -- pen_actions (folder jumps, wifi toggle, etc.). Tap a chevron →
     -- bottombar updates its _current_page and calls on_paginate, which
     -- re-renders the entire home so the new page's cells appear.
+    --
+    -- v1.2.14.3: close the home BEFORE dispatching the action. Otherwise
+    -- the overlay sits on top of whatever the action navigates to (e.g.
+    -- the file manager jumps to /mnt/us/mangas but you can't see it
+    -- because the home is in the way). For modal actions (wifi toggle,
+    -- brightness widget, power confirm) the action's own UI pops above
+    -- the FM beneath the home, but closing first keeps the visual flow
+    -- predictable.
     Bottombar.set_on_paginate(function() Homescreen.refresh() end)
     Bottombar.set_active("home")
     local bottombar_widget = Bottombar.render(body_w, function(tab)
+        Homescreen.close()
         Actions.dispatch(tab)
     end)
 
@@ -233,37 +242,18 @@ function MastheadWidget:init()
 
     self.dimen = Geom:new{ x = 0, y = 0, w = screen_w, h = screen_h }
 
-    -- KOReader's proven dismissable pattern (verbatim from infomessage.lua):
-    -- the ges_events table KEY must match a method NAME on this widget
-    -- (key "TapClose" → method ":onTapClose()"). The `handler` field in
-    -- the table value is IGNORED. v1.0 used `handler = function()...end`
-    -- and got the user stuck because the methods never fired.
-    if Device:isTouchDevice() then
-        local fullscreen = Geom:new{
-            x = 0, y = 0,
-            w = Screen:getWidth(),
-            h = Screen:getHeight(),
-        }
-        self.ges_events.TapClose = {
-            GestureRange:new{ ges = "tap", range = fullscreen },
-        }
-        self.ges_events.HoldClose = {
-            GestureRange:new{ ges = "hold", range = fullscreen },
-        }
-        self.ges_events.SwipeClose = {
-            GestureRange:new{ ges = "swipe", range = fullscreen },
-        }
-    end
+    -- v1.2.14.3: tap-anywhere-to-exit removed. Reasons:
+    --   1. Tapping the disabled "next" chevron on page 2 of the bottom
+    --      nav fell through to the masthead's TapClose and crashed the
+    --      app (still tracing the exact race; remove the trigger so it
+    --      can't happen).
+    --   2. The "× exit" pill in the top-right of the status bar lets
+    --      the user leave KOReader; the bound gesture "Simple UI:
+    --      Toggle Homescreen / Library" dismisses the home overlay.
+    --      Tap-anywhere-to-exit is redundant.
+    -- (Old TapClose / HoldClose / SwipeClose / AnyKeyPressed handlers
+    -- and their gesture range registrations all removed.)
 end
-
-function MastheadWidget:onTapClose()
-    UIManager:close(self)
-    return true
-end
--- Aliases so Hold and Swipe also close (the table keys above map to these).
-MastheadWidget.onHoldClose = MastheadWidget.onTapClose
-MastheadWidget.onSwipeClose = MastheadWidget.onTapClose
-MastheadWidget.onAnyKeyPressed = MastheadWidget.onTapClose
 
 function MastheadWidget:onCloseWidget()
     if Homescreen._instance == self then

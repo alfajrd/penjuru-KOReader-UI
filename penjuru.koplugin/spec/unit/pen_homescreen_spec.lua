@@ -19,11 +19,15 @@ describe("pen_homescreen v1.1-safe", function()
         assert.is_nil(Homescreen._instance)
     end)
 
-    -- The CRITICAL test: the masthead widget instance must define both
-    -- the gesture range (ges_events.TapClose etc) AND the matching method
-    -- (:onTapClose). v1.0 had the gesture range but no matching method,
-    -- so taps were silently ignored and the user got stuck on the device.
-    describe("dismiss wiring (copied verbatim from KOReader's infomessage.lua pattern)", function()
+    -- v1.2.14.3: dismiss-by-tap-anywhere was removed. The masthead no
+    -- longer registers TapClose / HoldClose / SwipeClose; the user
+    -- dismisses the home via the bottom-nav buttons (each tap closes
+    -- the home before dispatching) or the "× exit" pill in the topbar
+    -- (exits KOReader entirely). The previous regression spec asserted
+    -- the OLD behaviour (TapClose present + onTapClose method); the
+    -- new equivalent asserts the OPPOSITE — none of those handlers
+    -- should be on the widget after show().
+    describe("no tap-anywhere-to-exit handlers (v1.2.14.3)", function()
         local widget
         setup(function()
             Homescreen.show()
@@ -35,31 +39,10 @@ describe("pen_homescreen v1.1-safe", function()
             assert.is_not_nil(widget)
         end)
 
-        it("registers TapClose / HoldClose / SwipeClose gesture ranges", function()
-            assert.is_not_nil(widget.ges_events.TapClose)
-            assert.is_not_nil(widget.ges_events.HoldClose)
-            assert.is_not_nil(widget.ges_events.SwipeClose)
-        end)
-
-        it("defines matching methods for each gesture key", function()
-            -- KOReader InputContainer dispatches by method name derived
-            -- from the ges_events key. Key 'TapClose' must have method
-            -- ':onTapClose()'. If this assert fails, taps will be
-            -- silently swallowed and the user can only escape via
-            -- hardware restart.
-            assert.is_function(widget.onTapClose)
-            assert.is_function(widget.onHoldClose)
-            assert.is_function(widget.onSwipeClose)
-        end)
-
-        it(":onTapClose closes the widget", function()
-            -- Directly call the method; should set Homescreen._instance to nil
-            -- (via onCloseWidget lifecycle hook).
-            widget:onTapClose()
-            -- UIManager:close fires onCloseWidget asynchronously in real
-            -- KOReader; in busted, the call returns true synchronously
-            -- and we test that the method itself returns true (handled).
-            -- The lifecycle hook is verified separately below.
+        it("does NOT register TapClose / HoldClose / SwipeClose", function()
+            assert.is_nil(widget.ges_events.TapClose)
+            assert.is_nil(widget.ges_events.HoldClose)
+            assert.is_nil(widget.ges_events.SwipeClose)
         end)
     end)
 
