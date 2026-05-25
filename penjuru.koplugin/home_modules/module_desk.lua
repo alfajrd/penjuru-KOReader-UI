@@ -18,9 +18,12 @@ local M = {}
 
 local COVER_COUNT = 5
 local COVER_GAP = 11
+-- v1.2.11: covers shrunk from 1.5x to 1.3x to reclaim vertical space after
+-- folding the lead book into this row (was its own currently-reading card).
+local COVER_ASPECT = 1.3
 
 local function cover_cell(cell_w, book)
-    local cell_h = math.floor(cell_w * 1.5)  -- 2:3 aspect
+    local cell_h = math.floor(cell_w * COVER_ASPECT)
 
     local cover_widget
     local cover_bb = book.file and Data.read_book_cover(book.file, cell_w, cell_h)
@@ -77,8 +80,12 @@ local function cover_cell(cell_w, book)
 end
 
 function M.render(content_width)
+    -- v1.2.11: lead book (most-recently opened from history.lua) now lives
+    -- here as the first cover; the dedicated currently-reading card has been
+    -- retired so the home fits on one Paperwhite screen.
     local lead = Data.read_lead_book()
     local books = Data.read_in_progress_books(lead and lead.file)
+    if lead then table.insert(books, 1, lead) end
 
     local cell_w = math.floor((content_width - COVER_GAP * (COVER_COUNT - 1)) / COVER_COUNT)
     local row = HorizontalGroup:new{ align = "top" }

@@ -43,7 +43,8 @@ local Dates           = require("pen_dates")
 local InstallDate     = require("pen_install_date")
 local Almanac         = require("home_modules/module_almanac")
 local Ledger          = require("home_modules/module_ledger")
-local Currently       = require("home_modules/module_currently")
+-- v1.2.11: module_currently is retired. The lead book now lives as the
+-- first cover in module_desk so the home fits on a single screen.
 local Desk            = require("home_modules/module_desk")
 local Catalogued      = require("home_modules/module_catalogued")
 local Highlights      = require("home_modules/module_highlights")
@@ -140,13 +141,8 @@ function MastheadWidget:init()
     -- falls back to zeros if the Statistics plugin isn't installed.
     local ledger_widget = Ledger.render(body_w)
 
-    -- v1.2.4 — currently-reading lead story (headline + byline + pull
-    -- quote + progress). Reads KOReader history.lua + per-book .sdr.
-    -- Renders a graceful "no entries today" placeholder when history empty.
-    local currently_widget = Currently.render(body_w)
-
-    -- v1.2.8 — final three home modules:
-    --   desk: 5 cover thumbnails of other in-progress books (excludes lead)
+    -- v1.2.8 — home modules:
+    --   desk: 5 cover thumbnails of in-progress books (lead first since v1.2.11)
     --   catalogued: 3 most-recently-added unstarted books (tap → open)
     --   highlights: 3 most recent annotations across all books (tap →
     --               open book at that page)
@@ -155,28 +151,29 @@ function MastheadWidget:init()
     local catalogued_widget = Catalogued.render(body_w)
     local highlights_widget = Highlights.render(body_w)
 
+    -- v1.2.11: vertical rhythm tightened across the board so all six
+    -- visible modules + masthead + dateline + exit hint fit on one
+    -- Paperwhite screen (1648px) without scrolling.
     local stack = VerticalGroup:new{
         align = "center",
         name,
-        VerticalSpan:new{ width = 8 },
+        VerticalSpan:new{ width = 6 },
         tagline,
-        VerticalSpan:new{ width = 14 },
+        VerticalSpan:new{ width = 10 },
         masthead_rule,
-        VerticalSpan:new{ width = 12 },
+        VerticalSpan:new{ width = 8 },
         dateline_row,
-        VerticalSpan:new{ width = 30 },
-        currently_widget,
-        VerticalSpan:new{ width = 22 },
+        VerticalSpan:new{ width = 18 },
         desk_widget,
-        VerticalSpan:new{ width = 22 },
+        VerticalSpan:new{ width = 14 },
         ledger_widget,
-        VerticalSpan:new{ width = 22 },
+        VerticalSpan:new{ width = 14 },
         almanac_widget,
-        VerticalSpan:new{ width = 22 },
+        VerticalSpan:new{ width = 14 },
         catalogued_widget,
-        VerticalSpan:new{ width = 22 },
+        VerticalSpan:new{ width = 14 },
         highlights_widget,
-        VerticalSpan:new{ width = 40 },
+        VerticalSpan:new{ width = 22 },
         exit_hint,
     }
 
