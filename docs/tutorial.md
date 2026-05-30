@@ -27,23 +27,64 @@ You need **all four** of these in place before installing penjuru:
 
 | # | Component | Why | Get it from |
 |---|-----------|-----|-------------|
-| 1 | Jailbroken Kindle | Lets you run third-party launchers and KOReader | [MobileRead jailbreak guide](https://www.mobileread.com/forums/forumdisplay.php?f=150) |
+| 1 | Jailbroken Kindle | Lets you run third-party launchers and KOReader | [KindleModding jailbreaking guide](https://kindlemodding.org/jailbreaking/index.html) |
 | 2 | KUAL (Kindle Unified Application Launcher) | The launcher you tap penjuru from | [KindleModding guide](https://kindlemodding.org/jailbreaking/post-jailbreak/installing-kual-mrpi/) |
 | 3 | MRPI (MobileRead Package Installer) | Helps install other .bin packages cleanly | Bundled in same guide as KUAL above |
 | 4 | KOReader | The reader engine penjuru is a plugin for | [KOReader install on Kindle](https://github.com/koreader/koreader/wiki/Installation-on-Kindle-devices) |
 
 ### Step 1 — Jailbreak your Kindle
 
-Jailbreaking lets the Kindle execute third-party launchers. The MobileRead community maintains the canonical guides for each model and firmware combination — **find your exact Kindle model number and current firmware version first**, then follow the matching thread:
+Jailbreaking lets the Kindle execute third-party launchers like KUAL and KOReader. The **KindleModding wiki** maintains the canonical guides — pick the jailbreak that matches your Kindle model **and** current firmware:
 
-1. On your Kindle: **Home → Menu → Settings → Device Options → Device Info**. Note the model (e.g. *Paperwhite (11th Generation)*) and software version (e.g. *5.16.6*).
-2. Search the [MobileRead Kindle Developer's Corner](https://www.mobileread.com/forums/forumdisplay.php?f=150) for your model + firmware combination.
-3. Follow that thread's exact instructions. Jailbreaks are model-and-firmware-specific — using the wrong one can brick your device.
+→ **[kindlemodding.org/jailbreaking](https://kindlemodding.org/jailbreaking/index.html)** — landing page with every supported jailbreak (WinterBreak, WinterBreak2, AdBreak, Nosebleed, etc.)
+
+To find which one to use:
+
+1. On your Kindle: **Home → Menu → Settings → Device Options → Device Info**. Note the model (e.g. *Paperwhite (11th Generation)*) and software version (e.g. *5.16.6*). Or grab the first 8 characters of your serial number and paste them into the **"Find Your Jailbreak"** tool at [kindlemodding.org/kindle-models.html](https://kindlemodding.org/kindle-models.html) — it'll tell you exactly which jailbreak to run.
+2. Cross-reference against the table below — sourced live from KindleModding's models database, current as of the May 2026 fetch.
+3. Follow the linked guide's exact steps. **Jailbreaks are model-and-firmware-specific** — using the wrong one can brick your device.
 
 ![device info screen on kindle](screenshots/02-device-info.png)
 <!-- SCREENSHOT: phone-photo of your Kindle showing Settings → Device Options → Device Info. -->
 
-> **If you already updated past a supported firmware**, you may need to downgrade. Most jailbreak threads have downgrade instructions; follow them carefully.
+> ⚠️ **Firmwares 5.19 and onwards have no current Kindle jailbreaks.** If your Kindle has auto-updated past 5.18.x you'll need to downgrade first — see [KindleModding's downgrade guide](https://kindlemodding.org/firmware-and-flashing/downgrading/).
+
+#### All supported Kindle models
+
+| Amazon Name | Nickname | Last Firmware | Recommended Jailbreak |
+|---|---|---|---|
+| Kindle (1st Generation) | K1 | 1.2.1 | LEGACY |
+| Kindle (2nd Generation) | K2 | 2.5.8 | [NiLuJe K2/DX/DXG/K3 Jailbreak](https://kindlemodding.org/jailbreaking/Legacy/K2DXDXGK3-Jailbreak/) |
+| Kindle DX (2nd Generation) | DX | 2.5.8 | [NiLuJe K2/DX/DXG/K3 Jailbreak](https://kindlemodding.org/jailbreaking/Legacy/K2DXDXGK3-Jailbreak/) |
+| Kindle Keyboard (3rd Generation) | K3, K3G | 3.4.3 | [NiLuJe K2/DX/DXG/K3 Jailbreak](https://kindlemodding.org/jailbreaking/Legacy/K2DXDXGK3-Jailbreak/) |
+| Kindle (4th Generation) | K4, K4S | 4.1.4 | [NiLuJe K4 Jailbreak](https://kindlemodding.org/jailbreaking/Legacy/K4-Jailbreak/) |
+| Kindle Touch (4th Generation) | KT, K5 | 5.3.7.3 | [K5 JailBreak (5.0.x - 5.4.4.2)](https://kindlemodding.org/jailbreaking/Legacy/K5-Jailbreak/) |
+| Kindle Paperwhite (5th Generation) | PW, PWG | 5.6.1.1 | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak](https://kindlemodding.org/jailbreaking/WinterBreak) |
+| Kindle (5th Generation) | K4, K4B | 4.1.4 | [NiLuJe K4 Jailbreak](https://kindlemodding.org/jailbreaking/Legacy/K4-Jailbreak/) |
+| Kindle Paperwhite (6th Generation) | PW2, PW2J | 5.12.2.2 | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak](https://kindlemodding.org/jailbreaking/WinterBreak) |
+| Kindle Voyage (7th Generation) | KV | 5.13.6 | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak](https://kindlemodding.org/jailbreaking/WinterBreak) |
+| Kindle (7th Generation) | KT2, BASIC | 5.12.2.2 | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak](https://kindlemodding.org/jailbreaking/WinterBreak) |
+| Kindle Paperwhite (7th Generation) | PW3 | 5.16.2.1.1 | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak](https://kindlemodding.org/jailbreaking/WinterBreak) |
+| Kindle Oasis (8th Generation) | KOA | 5.16.2.1.1 | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak](https://kindlemodding.org/jailbreaking/WinterBreak) |
+| Kindle (8th Generation) | KT3 | 5.16.2.1.1 | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak](https://kindlemodding.org/jailbreaking/WinterBreak) |
+| Kindle x Migu | KM | 5.7.2.8 (Based on Android 5.1.1?) | Runs Android — try traditional Android JB methods |
+| Kindle Oasis (9th Generation) | KOA2 | 5.16.2.1.1 | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak](https://kindlemodding.org/jailbreaking/WinterBreak) |
+| Kindle Paperwhite (10th Generation) | PW4 | 5.18.1 | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak < 5.18.1](https://kindlemodding.org/jailbreaking/WinterBreak), [AdBreak 5.18.1+](https://kindlemodding.org/jailbreaking/AdBreak) |
+| Kindle (10th Generation) | KT4 | 5.18.1 | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak < 5.18.1](https://kindlemodding.org/jailbreaking/WinterBreak), [AdBreak 5.18.1+](https://kindlemodding.org/jailbreaking/AdBreak) |
+| Kindle Oasis (10th Generation) | KOA3, KOA3W32C | 5.18.2 | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak < 5.18.1](https://kindlemodding.org/jailbreaking/WinterBreak), [AdBreak 5.18.1+](https://kindlemodding.org/jailbreaking/AdBreak) |
+| **Kindle Paperwhite (11th Generation)** | **PW5, PW5SE** | Not Yet Discontinued | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak < 5.18.1](https://kindlemodding.org/jailbreaking/WinterBreak), [AdBreak 5.18.1 - 5.18.5.0.1](https://kindlemodding.org/jailbreaking/AdBreak), [Nosebleed 5.18.6](https://kindlemodding.org/jailbreaking/Nosebleed) |
+| Kindle (11th Generation) — 2022 Release | KT5 | Not Yet Discontinued | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak < 5.18.1](https://kindlemodding.org/jailbreaking/WinterBreak), [AdBreak 5.18.1 - 5.18.5.0.1](https://kindlemodding.org/jailbreaking/AdBreak), [Nosebleed 5.18.6](https://kindlemodding.org/jailbreaking/Nosebleed) |
+| Kindle Scribe — 2022 Release | KS | Not Yet Discontinued | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak < 5.18.1](https://kindlemodding.org/jailbreaking/WinterBreak), [AdBreak 5.18.1 - 5.18.5.0.1](https://kindlemodding.org/jailbreaking/AdBreak) |
+| Kindle (11th Generation) — 2024 Release | KT6 | Not Yet Discontinued | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak < 5.18.1](https://kindlemodding.org/jailbreaking/WinterBreak), [AdBreak 5.18.1 - 5.18.5.0.1](https://kindlemodding.org/jailbreaking/AdBreak) |
+| Kindle Paperwhite (12th Generation) — 2024 Release | PW6 | Not Yet Discontinued | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak < 5.18.1](https://kindlemodding.org/jailbreaking/WinterBreak), [AdBreak 5.18.1 - 5.18.5.0.1](https://kindlemodding.org/jailbreaking/AdBreak) |
+| Kindle Scribe — 2024 Release | KS2 | Not Yet Discontinued | [WinterBreak2 < 5.16.4](https://kindlemodding.org/jailbreaking/WinterBreak2), [WinterBreak < 5.18.1](https://kindlemodding.org/jailbreaking/WinterBreak) |
+| Kindle Colorsoft (1st Generation) | CS | Not Yet Discontinued | [WinterBreak < 5.18.0.2](https://kindlemodding.org/jailbreaking/WinterBreak) |
+| Kindle Scribe (3rd Generation) | KS3 | Not Yet Discontinued | None Available |
+| Kindle Scribe Colorsoft (1st Generation) | KSC | Not Yet Discontinued | None Available |
+
+> *Source: [kindlemodding.org/kindle-models.html](https://kindlemodding.org/kindle-models.html). The KindleModding "Find Your Jailbreak" tool at the same URL takes the first 8 chars of your serial number and tells you exactly which jailbreak to use — faster than scanning this table by hand.*
+
+The **bolded row** (Paperwhite 11th gen) is the device this tutorial was tested on.
 
 ### Step 2 — Install KUAL and MRPI
 
