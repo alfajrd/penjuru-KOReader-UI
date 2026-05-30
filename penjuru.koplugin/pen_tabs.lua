@@ -26,8 +26,11 @@ local DEFAULT_TABS = {
                    action = { type="folder", target="/mnt/us/mangas" } },
     books      = { id="books", label="books", icon="tab-books",
                    action = { type="folder", target="/mnt/us/books" } },
+    -- v1.2.14.10: games now opens the gnomegames KUAL extension folder
+    -- (where the user keeps emulator/game launchers). Was a non-functional
+    -- type="kual" placeholder that just showed an InfoMessage.
     games      = { id="games", label="games", icon="tab-games",
-                   action = { type="kual" } },
+                   action = { type="folder", target="/mnt/us/extensions/gnomegames" } },
 }
 M.catalog = DEFAULT_TABS
 
