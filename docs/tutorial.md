@@ -379,6 +379,10 @@ Open an issue at **[github.com/alfajrd/penjuru-KOReader-UI/issues](https://githu
 - A description of what you expected vs. what happened
 - If KOReader crashed: the contents of `/mnt/us/koreader/crash.log`
 
+## Contributing
+
+penjuru is MIT-licensed and you're welcome to **[fork the repo](https://github.com/alfajrd/penjuru-KOReader-UI/fork)** and adapt it to your own reading style — different masthead text, different module layout, different bottom-nav tabs, different fonts. The source is in plain Lua, the home is a single `pen_homescreen.lua` that composes modules from `home_modules/`, and the bottom-nav layout is data-driven from `pen_tabs.lua`. PRs welcome too, especially for jailbreaks / models not in the table above.
+
 ---
 
 ## Screenshot capture cheat sheet
