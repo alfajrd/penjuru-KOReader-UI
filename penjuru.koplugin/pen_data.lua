@@ -188,12 +188,46 @@ function M.read_today_stats()
     }
 end
 
+-- v1.2.14.18: extension allowlist for the home modules that pull from
+-- KOReader's history. Without this filter, anything the user tapped
+-- once in the file manager (shell scripts, KUAL `.sh` shortcuts, hotfix
+-- `.zip` installers, …) shows up on the "on the desk" row alongside
+-- real books — the user reported gnomechess.sh and a ganbatte installer
+-- bleeding into the row. Restricting to actual book formats keeps the
+-- desk honest.
+--
+-- Order matters slightly: .epub first since it's the most common hit
+-- and we short-circuit `BOOK_EXTS[ext]` on a match.
+local BOOK_EXTS = {
+    epub=true, mobi=true, azw=true, azw3=true, pdf=true,
+    cbz=true, cbr=true, cbt=true,
+    fb2=true, djvu=true, txt=true, rtf=true,
+    html=true, htm=true, doc=true, docx=true, odt=true, chm=true,
+}
+
+local function is_book_path(path)
+    if type(path) ~= "string" or path == "" then return false end
+    local ext = path:match("%.([^./\\]+)$")
+    if not ext then return false end
+    return BOOK_EXTS[ext:lower()] == true
+end
+
+M._is_book_path = is_book_path  -- exported for tests
+
 -- read_lead_book() -> table | nil
 -- Returns metadata for the most recently opened book, or nil if history empty.
 function M.read_lead_book()
     local history = M.read_history()
     if #history == 0 then return nil end
-    local top = history[1]
+    -- v1.2.14.18: walk history until we find an actual book — skip
+    -- shell scripts and other non-book entries (see is_book_path).
+    local top
+    for _, entry in ipairs(history) do
+        if entry and entry.file and is_book_path(entry.file) then
+            top = entry
+            break
+        end
+    end
     if not top or not top.file then return nil end
 
     local sdr = M.read_sdr_metadata(top.file) or {}
@@ -252,7 +286,12 @@ function M.read_in_progress_books(exclude_path)
     local history = M.read_history()
     local seen, out = {}, {}
     for _, entry in ipairs(history) do
-        if entry.file and entry.file ~= exclude_path and not seen[entry.file] then
+        -- v1.2.14.18: is_book_path filter — only real book formats
+        -- make it to the on-the-desk row. Shell scripts, KUAL
+        -- shortcuts, hotfix installers, etc. are dropped.
+        if entry.file and entry.file ~= exclude_path
+                and is_book_path(entry.file)
+                and not seen[entry.file] then
             seen[entry.file] = true
             local sdr = M.read_sdr_metadata(entry.file) or {}
             local pct = sdr.percent_finished or 0

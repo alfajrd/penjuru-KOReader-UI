@@ -31,14 +31,26 @@ HANDLERS.library = function()
 end
 
 HANDLERS.wifi_toggle = function()
+    -- v1.2.14.18: was a silent on/off toggle which felt unresponsive
+    -- (no visible UI change unless the topbar Wi-Fi label refreshed).
+    -- Now opens KOReader's network picker — same dialog that fires
+    -- when you tap the Wi-Fi icon in the device-status bar. Lists
+    -- available SSIDs, lets the user connect / disconnect / change
+    -- network. The `interactive` flag tells NetworkMgr to surface
+    -- prompts and errors rather than swallowing them.
     local ok, NetworkMgr = pcall(require, "ui/network/manager")
     if not ok or not NetworkMgr then return false end
-    local on_ok, is_on = pcall(NetworkMgr.isWifiOn, NetworkMgr)
-    if on_ok and is_on then
-        pcall(NetworkMgr.turnOffWifi, NetworkMgr)
-    else
-        pcall(NetworkMgr.turnOnWifi, NetworkMgr)
+    if not NetworkMgr.reconnectOrShowNetworkMenu then
+        -- Older KOReader: fall back to the old toggle behavior.
+        local on_ok, is_on = pcall(NetworkMgr.isWifiOn, NetworkMgr)
+        if on_ok and is_on then
+            pcall(NetworkMgr.turnOffWifi, NetworkMgr)
+        else
+            pcall(NetworkMgr.turnOnWifi, NetworkMgr)
+        end
+        return true
     end
+    pcall(NetworkMgr.reconnectOrShowNetworkMenu, NetworkMgr, nil, true)
     return true
 end
 
