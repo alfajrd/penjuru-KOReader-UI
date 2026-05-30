@@ -26,15 +26,15 @@ local DEFAULT_TABS = {
                    action = { type="folder", target="/mnt/us/mangas" } },
     books      = { id="books", label="books", icon="tab-books",
                    action = { type="folder", target="/mnt/us/books" } },
-    -- v1.2.14.14: REVERTED to folder action after v1.2.14.13 bricked the
-    -- Kindle. The wrapper script SIGSTOPped awesome+cvm but the game
-    -- never reached normal exit, so SIGCONT was never called → frozen
-    -- framework → hard reset. Until the wrapper is rewritten with a
-    -- `trap restore EXIT INT TERM` guarantee + a `timeout` budget, the
-    -- safe behavior is just to open the gnomegames folder in the file
-    -- manager. Type="exec" still works for other action callers.
+    -- v1.2.14.15: re-wired to launch Gnome Mines directly. The
+    -- v1.2.14.13 attempt bricked the Kindle when the game hung and the
+    -- wrapper never reached its SIGCONT cleanup. The new
+    -- kindle_launch_game.sh arms a `trap restore_framework EXIT INT
+    -- TERM HUP QUIT` BEFORE re-pausing awesome/cvm, and bounds the
+    -- game with `timeout 600`, so SIGCONT runs on any exit path the
+    -- shell can observe (normal/error/signal/parent-kill).
     games      = { id="games", label="games", icon="tab-games",
-                   action = { type="folder", target="/mnt/us/extensions/gnomegames" } },
+                   action = { type="exec", target="/mnt/us/extensions/gnomegames/shortcut_gnomine.sh" } },
 }
 M.catalog = DEFAULT_TABS
 
