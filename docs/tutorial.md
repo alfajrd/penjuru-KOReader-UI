@@ -319,12 +319,19 @@ penjuru ships with sensible defaults. To change them:
 
 **Hamburger → Tools → penjuru → Settings**:
 
-- **Annual reading goal**: integer, defaults to 40 books/year. Used by today's-ledger module.
-- **Location** (latitude, longitude, timezone): drives sunrise / sunset and moon phase in the almanac. Defaults to Sleman, Yogyakarta (-7.7167, 110.3500, +7).
-- **"Newly catalogued" threshold**: days, defaults to 30. (Module unmounted by default in current layout but configurable for when it's re-enabled.)
+The penjuru menu sits under **Tools** in KOReader's hamburger menu. Tap the `penjuru` entry and you'll see two items — `Open home` and `Settings`:
 
-![settings menu](screenshots/14-settings.png)
-<!-- SCREENSHOT: penjuru's Settings sub-menu inside KOReader. Take from emulator. -->
+![penjuru menu with Settings entry](screenshots/14a-settings-menu.jpeg)
+<!-- SCREENSHOT: penjuru sub-menu inside Tools, showing "Open home" + "Settings". -->
+
+Tap **Settings**. The detail screen lets you tweak three things:
+
+- **Annual reading goal**: integer, defaults to 40 books/year. Used by today's-ledger module to compute the `X/40` progress shown on the left column.
+- **Location** (latitude, longitude, timezone): drives sunrise / sunset and moon phase in the almanac. Defaults to Sleman, Yogyakarta (-7.7167, 110.3500, +7).
+- **"Newly catalogued" threshold**: days, defaults to 30. The module is unmounted from the default home layout right now, but the setting is here for forks/customizations that re-enable it.
+
+![settings detail](screenshots/14b-settings-detail.jpeg)
+<!-- SCREENSHOT: the Settings detail screen showing the three configurable items. -->
 
 ---
 
