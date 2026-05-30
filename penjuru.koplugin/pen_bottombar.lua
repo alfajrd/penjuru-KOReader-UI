@@ -26,10 +26,12 @@ M._current_page = 1
 M._active_id = "home"
 M._on_paginate = nil
 
--- Flex ratio per cell. Chevron : content : chevron = 10 : (16 x 5) : 10 = 100.
+-- Flex ratio per cell. Chevron : content : chevron.
+-- v1.2.14.16: TOTAL_FLEX is computed PER PAGE from the actual tab count
+-- so a 4-tab page renders as cleanly as a 5-tab one. Page can have any
+-- number of content tabs.
 local CHEVRON_FLEX = 10
 local CONTENT_FLEX = 16
-local TOTAL_FLEX = CHEVRON_FLEX * 2 + CONTENT_FLEX * 5
 
 -- On the Kindle PW (1648px tall) the home body already takes ~1300px;
 -- giving the nav a tall 170px cell pushed everything past the screen
@@ -128,11 +130,13 @@ function M.render(content_width, action_dispatch)
         Widgets.dotted_rule(content_width, Style.rules.minor, Style.colors.rule),
     }
 
-    -- v1.2.14.1: 6 hairline dividers between the 7 cells. Subtract their
-    -- combined width from the cell budget so the row still fits
-    -- content_width exactly (dividers eat ~12px of 1116px on the PW).
+    -- v1.2.14.16: divider count + total flex computed from the actual
+    -- page size. With N content tabs there are N+2 cells (2 chevrons +
+    -- N content) and N+1 dividers between them.
     local DIVIDER_W = 2
-    local DIVIDER_COUNT = 6
+    local num_content = #page
+    local DIVIDER_COUNT = num_content + 1
+    local TOTAL_FLEX = CHEVRON_FLEX * 2 + CONTENT_FLEX * num_content
     local effective_w = content_width - DIVIDER_W * DIVIDER_COUNT
     local unit = effective_w / TOTAL_FLEX
     local chevron_w = math.floor(unit * CHEVRON_FLEX)

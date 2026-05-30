@@ -26,28 +26,25 @@ local DEFAULT_TABS = {
                    action = { type="folder", target="/mnt/us/mangas" } },
     books      = { id="books", label="books", icon="tab-books",
                    action = { type="folder", target="/mnt/us/books" } },
-    -- v1.2.14.15: re-wired to launch Gnome Mines directly. The
-    -- v1.2.14.13 attempt bricked the Kindle when the game hung and the
-    -- wrapper never reached its SIGCONT cleanup. The new
-    -- kindle_launch_game.sh arms a `trap restore_framework EXIT INT
-    -- TERM HUP QUIT` BEFORE re-pausing awesome/cvm, and bounds the
-    -- game with `timeout 600`, so SIGCONT runs on any exit path the
-    -- shell can observe (normal/error/signal/parent-kill).
+    -- v1.2.14.16: REMOVED from default_pages entirely. The exec-launch
+    -- path bricked the Kindle twice (v1.2.14.13, v1.2.14.15). Even with
+    -- a trap + timeout, something about SIGSTOPping awesome/cvm from a
+    -- detached subshell after koreader.sh's own SIGCONTs leaves the
+    -- device unrecoverable. The descriptor stays in the catalog so a
+    -- future safer launcher (e.g. a custom KUAL bridge extension) can
+    -- restore it without code changes — but it does NOT appear on any
+    -- visible page.
     games      = { id="games", label="games", icon="tab-games",
                    action = { type="exec", target="/mnt/us/extensions/gnomegames/shortcut_gnomine.sh" } },
 }
 M.catalog = DEFAULT_TABS
 
 function M.default_pages()
-    -- v1.2.14.12: stats restored to page-2 slot 1. The `usb` swap from
-    -- v1.2.14.9 didn't pan out — Kindle's KOReader doesn't expose USB
-    -- mass-storage toggle (canToggleMassStorage returns false in the
-    -- base device class, only Kobo/Cervantes override). The user has
-    -- no USBNetwork extension installed for us to shell out to either.
-    -- The `usb` descriptor stays in the catalog so a future
-    -- settings-driven page editor can wire it back when needed.
+    -- v1.2.14.16: `games` dropped from page 1 — the exec-launch attempts
+    -- bricked the Kindle twice. Page 1 now has 4 content tabs; pen_bottombar
+    -- computes its flex layout dynamically so the bar still fits.
     return {
-        { DEFAULT_TABS.manga, DEFAULT_TABS.books, DEFAULT_TABS.home, DEFAULT_TABS.wifi, DEFAULT_TABS.games },
+        { DEFAULT_TABS.manga, DEFAULT_TABS.books, DEFAULT_TABS.home, DEFAULT_TABS.wifi },
         { DEFAULT_TABS.stats, DEFAULT_TABS.brightness, DEFAULT_TABS.power, DEFAULT_TABS.search, DEFAULT_TABS.library },
     }
 end

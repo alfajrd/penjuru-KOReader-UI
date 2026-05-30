@@ -13,9 +13,11 @@ describe("pen_tabs", function()
             assert.equals(2, #pages)
         end)
 
-        it("each page has exactly 5 tabs", function()
+        it("pages have the spec'd tab counts", function()
+            -- v1.2.14.16: page 1 lost `games` (kept bricking) so it has
+            -- 4 content tabs. pen_bottombar adapts its flex math.
             local pages = Tabs.default_pages()
-            assert.equals(5, #pages[1])
+            assert.equals(4, #pages[1])
             assert.equals(5, #pages[2])
         end)
 
@@ -25,7 +27,6 @@ describe("pen_tabs", function()
             assert.equals("books", p1[2].id)
             assert.equals("home", p1[3].id)
             assert.equals("wifi", p1[4].id)
-            assert.equals("games", p1[5].id)
         end)
 
         it("page 2 has utilities", function()

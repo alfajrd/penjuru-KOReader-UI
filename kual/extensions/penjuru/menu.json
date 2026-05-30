@@ -1,5 +1,5 @@
 {
 	"items": [
-		{"name": "penjuru", "priority": 0, "action": "sh run.sh", "exitmenu": true}
+		{"name": "penjuru", "priority": 0, "action": "sh run.sh", "exitmenu": false}
 	]
 }
