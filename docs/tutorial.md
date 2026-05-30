@@ -47,7 +47,7 @@ To find which one to use:
 ![device info screen on kindle](screenshots/02-device-info.png)
 <!-- SCREENSHOT: phone-photo of your Kindle showing Settings → Device Options → Device Info. -->
 
-> ⚠️ **Firmwares 5.19 and onwards have no current Kindle jailbreaks.** If your Kindle has auto-updated past 5.18.x you'll need to downgrade first — see [KindleModding's downgrade guide](https://kindlemodding.org/firmware-and-flashing/downgrading/).
+> ⚠️ **Firmwares 5.19 and onwards have no current Kindle jailbreaks.** If your Kindle has auto-updated past 5.18.x and was **never previously jailbroken**, you're stuck — KindleModding's downgrade methods all require the Kindle to already be jailbroken (they're tools you run *after* having root). If you're an *already-jailbroken* Kindle that auto-updated past 5.18.x, see [KindleModding's downgrade guide](https://kindlemodding.org/firmware-and-flashing/downgrading/) — that path works. Otherwise, your only option is to wait for a new jailbreak to be developed for your firmware.
 
 #### All supported Kindle models
 
