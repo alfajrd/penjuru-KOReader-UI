@@ -29,9 +29,13 @@ describe("pen_tabs", function()
         end)
 
         it("page 2 has utilities", function()
-            -- v1.2.14.9: slot 1 swapped from "stats" to "usb" (mass-storage).
+            -- v1.2.14.12: slot 1 reverted from "usb" back to "stats" —
+            -- Kindle doesn't support programmatic mass-storage toggle
+            -- (canToggleMassStorage = no in base device, no Kindle
+            -- override) and the user has no USBNetwork extension to
+            -- shell out to.
             local p2 = Tabs.default_pages()[2]
-            assert.equals("usb", p2[1].id)
+            assert.equals("stats", p2[1].id)
             assert.equals("brightness", p2[2].id)
             assert.equals("power", p2[3].id)
             assert.equals("search", p2[4].id)

@@ -36,12 +36,16 @@ local DEFAULT_TABS = {
 M.catalog = DEFAULT_TABS
 
 function M.default_pages()
-    -- v1.2.14.9: page-2 slot 1 swapped from `stats` to `usb` per user. The
-    -- stats descriptor is still in the catalog so a settings-driven page
-    -- editor (v1.1 onboarding) can restore it without a code change.
+    -- v1.2.14.12: stats restored to page-2 slot 1. The `usb` swap from
+    -- v1.2.14.9 didn't pan out — Kindle's KOReader doesn't expose USB
+    -- mass-storage toggle (canToggleMassStorage returns false in the
+    -- base device class, only Kobo/Cervantes override). The user has
+    -- no USBNetwork extension installed for us to shell out to either.
+    -- The `usb` descriptor stays in the catalog so a future
+    -- settings-driven page editor can wire it back when needed.
     return {
         { DEFAULT_TABS.manga, DEFAULT_TABS.books, DEFAULT_TABS.home, DEFAULT_TABS.wifi, DEFAULT_TABS.games },
-        { DEFAULT_TABS.usb,   DEFAULT_TABS.brightness, DEFAULT_TABS.power, DEFAULT_TABS.search, DEFAULT_TABS.library },
+        { DEFAULT_TABS.stats, DEFAULT_TABS.brightness, DEFAULT_TABS.power, DEFAULT_TABS.search, DEFAULT_TABS.library },
     }
 end
 
