@@ -152,11 +152,17 @@ local function dispatch_kual()
     return true
 end
 
--- v1.2.14.11: dispatch_exec — launch an external shell script (e.g. a
--- KUAL extension shortcut) and quit KOReader so the game/app gets the
--- framebuffer. Backgrounded with `&` so KOReader's quit doesn't kill
--- the child; the subshell wrapper detaches it from KOReader's
--- process group.
+-- v1.2.14.11 / v1.2.14.13: dispatch_exec — launch an external shell
+-- script (e.g. a KUAL extension shortcut) and quit KOReader so the
+-- game/app gets the framebuffer.
+--
+-- v1.2.14.13: the simple "background it and quit KOReader" version
+-- got the game killed by Kindle's framework (awesome / cvm) that
+-- koreader.sh SIGCONTs on exit. We now wrap the target in our own
+-- kindle_launch_game.sh script which sleeps for koreader.sh to
+-- finish, re-SIGSTOPs awesome + cvm, runs the game synchronously,
+-- then SIGCONTs them back so the user lands at Kindle home when
+-- they're done playing.
 local function dispatch_exec(target)
     if not target or target == "" then return false end
     local ok_lfs, lfs = pcall(require, "libs/libkoreader-lfs")
@@ -168,9 +174,16 @@ local function dispatch_exec(target)
         })
         return false
     end
-    -- Backgrounded subshell + nohup-style redirect so the child survives
-    -- KOReader's quit and doesn't try to write to KOReader's stdio.
-    os.execute('(setsid sh "' .. target .. '" </dev/null >/dev/null 2>&1 &)')
+    -- Resolve our plugin's scripts/ dir for the wrapper.
+    local plugin_dir = debug.getinfo(1, "S").source:sub(2):match("(.*/)")
+    local wrapper = plugin_dir .. "scripts/kindle_launch_game.sh"
+    -- setsid + redirected stdio + backgrounded subshell so the wrapper
+    -- (and the game it runs) survive KOReader's quit and don't try to
+    -- write to KOReader's stdio.
+    local cmd = string.format(
+        '(setsid sh "%s" "%s" </dev/null >/dev/null 2>&1 &)',
+        wrapper, target)
+    os.execute(cmd)
     UIManager:scheduleIn(0.2, function() UIManager:quit() end)
     return true
 end
