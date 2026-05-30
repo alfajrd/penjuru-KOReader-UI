@@ -91,13 +91,26 @@ HANDLERS.stats = function()
 end
 
 HANDLERS.usbms = function()
-    -- v1.2.14.9: switch the Kindle into USB mass-storage mode so the
-    -- user can attach to a computer without backing out to KUAL.
-    -- Mirrors KOReader's Dispatcher "start_usbms" action, which fires
-    -- the same RequestUSBMS event (see frontend/dispatcher.lua:82).
-    local ok, Event = pcall(require, "ui/event")
-    if not ok or not Event then return false end
-    UIManager:broadcastEvent(Event:new("RequestUSBMS"))
+    -- v1.2.14.11: call MassStorage:start directly instead of broadcasting
+    -- RequestUSBMS. The broadcast went through DeviceListener:onRequestUSBMS
+    -- → MassStorage:start(false), which SILENTLY returned when
+    -- canToggleMassStorage()/isEnabled() were false — the user saw nothing
+    -- happen and the home revealed the underlying reader, looking like
+    -- "usb opened a book". By calling start directly we can surface a
+    -- visible error when the device or settings refuse the toggle.
+    local Device = require("device")
+    if not Device:canToggleMassStorage() then
+        local InfoMessage = require("ui/widget/infomessage")
+        UIManager:show(InfoMessage:new{
+            text = "this device doesn't support USB-storage toggle.\n"
+                .. "plug in the USB cable to enter mass storage normally.",
+            timeout = 4,
+        })
+        return false
+    end
+    local ok, MassStorage = pcall(require, "ui/elements/mass_storage")
+    if not ok or not MassStorage then return false end
+    MassStorage:start(false)  -- false = skip the "share storage via USB?" confirm
     return true
 end
 
@@ -139,6 +152,29 @@ local function dispatch_kual()
     return true
 end
 
+-- v1.2.14.11: dispatch_exec — launch an external shell script (e.g. a
+-- KUAL extension shortcut) and quit KOReader so the game/app gets the
+-- framebuffer. Backgrounded with `&` so KOReader's quit doesn't kill
+-- the child; the subshell wrapper detaches it from KOReader's
+-- process group.
+local function dispatch_exec(target)
+    if not target or target == "" then return false end
+    local ok_lfs, lfs = pcall(require, "libs/libkoreader-lfs")
+    if not ok_lfs or not lfs.attributes(target) then
+        local InfoMessage = require("ui/widget/infomessage")
+        UIManager:show(InfoMessage:new{
+            text = "script not found:\n" .. target,
+            timeout = 3,
+        })
+        return false
+    end
+    -- Backgrounded subshell + nohup-style redirect so the child survives
+    -- KOReader's quit and doesn't try to write to KOReader's stdio.
+    os.execute('(setsid sh "' .. target .. '" </dev/null >/dev/null 2>&1 &)')
+    UIManager:scheduleIn(0.2, function() UIManager:quit() end)
+    return true
+end
+
 local function dispatch_plugin(target)
     if not target then return false end
     local ok, plugin = pcall(require, target)
@@ -168,6 +204,7 @@ function M.dispatch(tab)
         if action.type == "folder" then return dispatch_folder(action.target) end
         if action.type == "kual" then return dispatch_kual() end
         if action.type == "plugin" then return dispatch_plugin(action.target) end
+        if action.type == "exec" then return dispatch_exec(action.target) end
     end
     return false
 end
