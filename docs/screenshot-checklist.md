@@ -98,6 +98,23 @@ To transfer:
 
 ---
 
+## Heads-up: which shots are affected by recent fixes
+
+If you took any of these **before v1.2.14.18**, retake — the layout / content changed:
+
+- **#01 (home overview)** and **#10 (on-the-desk zoom)** — v1.2.14.18 filtered shell scripts and installer files out of the desk row. If your earlier screenshot showed entries like `gnomechess.sh` or `ganbatte`, retake after restarting KOReader; the desk should now be book-only.
+- **#12 (nav page 1)** — must be the current 5-tab layout: `< · mangas · books · home · wi-fi · library · >`. (If your shot still has `games` in slot 5, it's pre-v1.2.14.16 — retake.)
+- **#13 (nav page 2)** — must be the current 4-tab layout: `< · stats · brightness · power · search · >`. (If yours has `library` in slot 5, it's pre-v1.2.14.17 — retake.)
+
+## Optional new shot worth adding
+
+- [ ] **15 — `15-wifi-network-picker.png`** 🖼️
+  *KOReader's network-picker dialog (the "scanning for networks…" / SSID list dialog) that pops up when you tap the **wi-fi** tab on page 1 of the bottom nav. Shows the user what the button actually does — much more informative than just "toggles Wi-Fi."*
+  → Tap **wi-fi** on the bottom nav, wait for the network list, four-corner tap. To reference it in the tutorial, add this near the bottom-nav section:
+  ```
+  ![wi-fi network picker](screenshots/15-wifi-network-picker.png)
+  ```
+
 ## What if you skip some?
 
 The tutorial reads fine without screenshots — the placeholders are inside HTML comments that GitHub / Hugo / Jekyll won't render. Prioritize:
