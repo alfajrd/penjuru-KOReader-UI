@@ -78,10 +78,15 @@ HANDLERS.search = function()
 end
 
 HANDLERS.stats = function()
-    -- Statistics plugin listens for ShowReaderStatistics event.
+    -- v1.2.14.8: previous handler broadcast "ShowReaderStatistics", an
+    -- event no plugin registers — so nothing happened, the home closed,
+    -- and the user saw whatever was underneath (the last-opened book on
+    -- a KUAL boot). The Statistics plugin registers ShowCalendarView
+    -- (full reading-history calendar), ShowReaderProgress, ShowTimeRange,
+    -- and ShowBookStats. Calendar view is the closest match to "stats".
     local ok, Event = pcall(require, "ui/event")
     if not ok or not Event then return false end
-    UIManager:broadcastEvent(Event:new("ShowReaderStatistics"))
+    UIManager:broadcastEvent(Event:new("ShowCalendarView"))
     return true
 end
 
