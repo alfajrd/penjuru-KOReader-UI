@@ -16,6 +16,8 @@ local DEFAULT_TABS = {
     power      = { id="power",      label="power",      icon="tab-power",      action="power_menu" },
     search     = { id="search",     label="search",     icon="tab-search",     action="search" },
     stats      = { id="stats",      label="stats",      icon="tab-stats",      action="stats" },
+    -- v1.2.14.9: kindle USB mass-storage toggle, lives in slot 1 of page 2.
+    usb        = { id="usb",        label="usb",        icon="tab-usb",        action="usbms" },
     -- Folder shortcuts and KUAL: need target paths; defaults match the
     -- typical Kindle layout (books and manga at /mnt/us/ root, not under
     -- /mnt/us/koreader/). Users can override via settings; v1.1 will add a
@@ -30,9 +32,12 @@ local DEFAULT_TABS = {
 M.catalog = DEFAULT_TABS
 
 function M.default_pages()
+    -- v1.2.14.9: page-2 slot 1 swapped from `stats` to `usb` per user. The
+    -- stats descriptor is still in the catalog so a settings-driven page
+    -- editor (v1.1 onboarding) can restore it without a code change.
     return {
         { DEFAULT_TABS.manga, DEFAULT_TABS.books, DEFAULT_TABS.home, DEFAULT_TABS.wifi, DEFAULT_TABS.games },
-        { DEFAULT_TABS.stats, DEFAULT_TABS.brightness, DEFAULT_TABS.power, DEFAULT_TABS.search, DEFAULT_TABS.library },
+        { DEFAULT_TABS.usb,   DEFAULT_TABS.brightness, DEFAULT_TABS.power, DEFAULT_TABS.search, DEFAULT_TABS.library },
     }
 end
 

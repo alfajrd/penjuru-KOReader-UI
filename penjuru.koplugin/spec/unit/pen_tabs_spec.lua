@@ -29,8 +29,9 @@ describe("pen_tabs", function()
         end)
 
         it("page 2 has utilities", function()
+            -- v1.2.14.9: slot 1 swapped from "stats" to "usb" (mass-storage).
             local p2 = Tabs.default_pages()[2]
-            assert.equals("stats", p2[1].id)
+            assert.equals("usb", p2[1].id)
             assert.equals("brightness", p2[2].id)
             assert.equals("power", p2[3].id)
             assert.equals("search", p2[4].id)

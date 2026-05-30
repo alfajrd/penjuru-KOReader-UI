@@ -90,6 +90,17 @@ HANDLERS.stats = function()
     return true
 end
 
+HANDLERS.usbms = function()
+    -- v1.2.14.9: switch the Kindle into USB mass-storage mode so the
+    -- user can attach to a computer without backing out to KUAL.
+    -- Mirrors KOReader's Dispatcher "start_usbms" action, which fires
+    -- the same RequestUSBMS event (see frontend/dispatcher.lua:82).
+    local ok, Event = pcall(require, "ui/event")
+    if not ok or not Event then return false end
+    UIManager:broadcastEvent(Event:new("RequestUSBMS"))
+    return true
+end
+
 local function dispatch_folder(target)
     if not target or target == "" then return false end
     local ok_lfs, lfs = pcall(require, "libs/libkoreader-lfs")
