@@ -14,11 +14,12 @@ describe("pen_tabs", function()
         end)
 
         it("pages have the spec'd tab counts", function()
-            -- v1.2.14.16: page 1 lost `games` (kept bricking) so it has
-            -- 4 content tabs. pen_bottombar adapts its flex math.
+            -- v1.2.14.17: `library` promoted from page 2 to page 1, so
+            -- page 1 is back to 5 tabs and page 2 drops to 4.
+            -- pen_bottombar adapts its flex math per page.
             local pages = Tabs.default_pages()
-            assert.equals(4, #pages[1])
-            assert.equals(5, #pages[2])
+            assert.equals(5, #pages[1])
+            assert.equals(4, #pages[2])
         end)
 
         it("page 1 has tabs in the spec'd order", function()
@@ -27,20 +28,16 @@ describe("pen_tabs", function()
             assert.equals("books", p1[2].id)
             assert.equals("home", p1[3].id)
             assert.equals("wifi", p1[4].id)
+            assert.equals("library", p1[5].id)
         end)
 
         it("page 2 has utilities", function()
-            -- v1.2.14.12: slot 1 reverted from "usb" back to "stats" —
-            -- Kindle doesn't support programmatic mass-storage toggle
-            -- (canToggleMassStorage = no in base device, no Kindle
-            -- override) and the user has no USBNetwork extension to
-            -- shell out to.
+            -- v1.2.14.17: library moved to page 1; page 2 is now 4 tabs.
             local p2 = Tabs.default_pages()[2]
             assert.equals("stats", p2[1].id)
             assert.equals("brightness", p2[2].id)
             assert.equals("power", p2[3].id)
             assert.equals("search", p2[4].id)
-            assert.equals("library", p2[5].id)
         end)
 
         it("every tab has id, label, icon fields", function()

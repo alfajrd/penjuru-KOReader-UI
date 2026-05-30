@@ -40,12 +40,14 @@ local DEFAULT_TABS = {
 M.catalog = DEFAULT_TABS
 
 function M.default_pages()
-    -- v1.2.14.16: `games` dropped from page 1 — the exec-launch attempts
-    -- bricked the Kindle twice. Page 1 now has 4 content tabs; pen_bottombar
-    -- computes its flex layout dynamically so the bar still fits.
+    -- v1.2.14.17: `library` promoted from page-2 slot 5 to page-1 slot 5
+    -- so page 1 is back to 5 content tabs (mangas / books / home / wifi /
+    -- library — the "browsing & finding books" cluster). Page 2 is now
+    -- 4 content tabs (stats / brightness / power / search — the
+    -- "utility" cluster).
     return {
-        { DEFAULT_TABS.manga, DEFAULT_TABS.books, DEFAULT_TABS.home, DEFAULT_TABS.wifi },
-        { DEFAULT_TABS.stats, DEFAULT_TABS.brightness, DEFAULT_TABS.power, DEFAULT_TABS.search, DEFAULT_TABS.library },
+        { DEFAULT_TABS.manga, DEFAULT_TABS.books, DEFAULT_TABS.home, DEFAULT_TABS.wifi, DEFAULT_TABS.library },
+        { DEFAULT_TABS.stats, DEFAULT_TABS.brightness, DEFAULT_TABS.power, DEFAULT_TABS.search },
     }
 end
 
